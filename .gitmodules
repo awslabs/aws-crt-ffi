@@ -22,3 +22,6 @@
 [submodule "s2n"]
 	path = crt/s2n
 	url = https://github.com/awslabs/s2n.git
+[submodule "aws-checksums"]
+	path = crt/aws-checksums
+	url = https://github.com/awslabs/aws-checksums.git
