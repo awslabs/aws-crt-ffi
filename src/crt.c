@@ -28,6 +28,16 @@ void aws_crt_init(void) {
     aws_auth_library_init(allocator);
 }
 
+void aws_crt_clean_up(void) {
+    aws_crt_global_thread_creator_shutdown_wait_for(5);
+    aws_auth_library_clean_up();
+    aws_cal_library_clean_up();
+    aws_http_library_clean_up();
+    aws_compression_library_clean_up();
+    aws_io_library_clean_up();
+    aws_common_library_clean_up();
+}
+
 int aws_crt_test_error(int err) {
     return aws_raise_error(err);
 }
