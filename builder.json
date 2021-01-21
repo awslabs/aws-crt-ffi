@@ -1,5 +1,8 @@
 {
     "name": "aws-crt-ffi",
+    "cmake_args": [
+        "-DPERFORM_HEADER_CHECK=OFF"
+    ],
     "targets": {
         "linux": {
             "imports": [
