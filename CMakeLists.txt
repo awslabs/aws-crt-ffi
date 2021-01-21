@@ -36,6 +36,8 @@ set(IN_SOURCE_BUILD ON)
 # Turn off using `option` instead of `set`, or CTest will declare
 # it as an option later and override the existing variable.
 option(BUILD_TESTING OFF)
+# Do not worry about the C++ header checker for this lib
+option(PERFORM_HEADER_CHECK OFF)
 
 add_subdirectory(crt/aws-c-common)
 
