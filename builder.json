@@ -1,0 +1,15 @@
+{
+    "name": "aws-crt-ffi",
+    "targets": {
+        "linux": {
+            "imports": [
+                "libcrypto"
+            ]
+        },
+        "android": {
+            "imports": [
+                "libcrypto"
+            ]
+        }
+    }
+}
