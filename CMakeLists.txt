@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 project(aws-crt-ffi C)
 message(STATUS "CMake ${CMAKE_VERSION}")
 
+option(BUILD_SHARED_LIBS "Build shared library for FFI: default: ON" ON)
+
 if (POLICY CMP0069)
     cmake_policy(SET CMP0069 NEW) # Enable LTO/IPO if available in the compiler
 endif()
@@ -56,7 +58,7 @@ include(AwsSharedLibSetup)
 
 file(GLOB AWS_CRT_SRC "src/*.h" "src/*.c")
 
-add_library(${PROJECT_NAME} SHARED ${AWS_CRT_SRC})
+add_library(${PROJECT_NAME} ${AWS_CRT_SRC})
 
 aws_use_package(aws-c-common)
 aws_use_package(aws-c-io)
