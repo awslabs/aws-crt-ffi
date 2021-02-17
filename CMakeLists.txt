@@ -12,13 +12,11 @@ if (DEFINED CMAKE_PREFIX_PATH)
     file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
 endif()
 
-if (UNIX AND NOT APPLE)
-    include(GNUInstallDirs)
-elseif(NOT DEFINED CMAKE_INSTALL_LIBDIR)
+if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
     set(CMAKE_INSTALL_LIBDIR "lib")
 endif()
 
-if (${CMAKE_INSTALL_LIBDIR} STREQUAL "lib64")
+if (UNIX AND NOT APPLE)
     set(FIND_LIBRARY_USE_LIB64_PATHS true)
 endif()
 
@@ -59,6 +57,8 @@ include(AwsSharedLibSetup)
 file(GLOB AWS_CRT_SRC "src/*.h" "src/*.c")
 
 add_library(${PROJECT_NAME} ${AWS_CRT_SRC})
+aws_set_common_properties(${PROJECT_NAME})
+aws_prepare_shared_lib_exports(${PROJECT_NAME})
 
 aws_use_package(aws-c-common)
 aws_use_package(aws-c-io)
