@@ -37,12 +37,16 @@ set(IN_SOURCE_BUILD ON)
 # it as an option later and override the existing variable.
 set(BUILD_TESTING OFF)
 
-add_subdirectory(crt/aws-c-common)
+# Disable BUILD_SHARED_LIBS for all CRT libs
+set(SHARED_FFI_LIB ${BUILD_SHARED_LIBS})
+set(BUILD_SHARED_LIBS OFF)
 
+# CRT Libraries
+add_subdirectory(crt/aws-c-common)
 if (UNIX AND NOT APPLE)
+    include(crt/aws-c-cal/cmake/modules/aws-lc.cmake)
     add_subdirectory(crt/s2n)
 endif()
-
 add_subdirectory(crt/aws-c-io)
 add_subdirectory(crt/aws-c-cal)
 add_subdirectory(crt/aws-c-compression)
@@ -50,6 +54,9 @@ add_subdirectory(crt/aws-c-http)
 add_subdirectory(crt/aws-c-auth)
 add_subdirectory(crt/aws-c-event-stream)
 add_subdirectory(crt/aws-checksums)
+
+# Restore BUILD_SHARED_LIBS for this project
+set(BUILD_SHARED_LIBS ${SHARED_FFI_LIB})
 
 include(AwsCFlags)
 include(AwsSharedLibSetup)
