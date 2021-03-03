@@ -14,11 +14,6 @@ struct aws_allocator *aws_crt_allocator(void) {
   return aws_default_allocator();
 }
 
-int aws_crt_global_thread_creator_shutdown_wait_for(
-    uint32_t wait_timeout_in_seconds) {
-  return aws_global_thread_creator_shutdown_wait_for(wait_timeout_in_seconds);
-}
-
 void aws_crt_init(void) {
   struct aws_allocator *allocator = aws_crt_allocator();
   aws_common_library_init(allocator);
@@ -30,7 +25,6 @@ void aws_crt_init(void) {
 }
 
 void aws_crt_clean_up(void) {
-  aws_crt_global_thread_creator_shutdown_wait_for(5);
   aws_auth_library_clean_up();
   aws_cal_library_clean_up();
   aws_http_library_clean_up();
