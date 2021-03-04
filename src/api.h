@@ -302,8 +302,7 @@ AWS_CRT_API int aws_crt_signing_config_aws_get_signed_body_header_type(aws_signi
 AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_header_type(
     struct aws_signing_config_aws *signing_config,
     int signed_body_header_type);
-AWS_CRT_API uint64_t
-    aws_crt_signing_config_aws_get_expiration_in_seconds(aws_signing_config_aws *signing_config);
+AWS_CRT_API uint64_t aws_crt_signing_config_aws_get_expiration_in_seconds(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
     struct aws_signing_config_aws *signing_config,
     uint64_t expiration_in_seconds);

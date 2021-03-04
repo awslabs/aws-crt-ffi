@@ -19,7 +19,8 @@ typedef struct _aws_crt_input_stream_options {
 typedef aws_crt_input_stream_options aws_external_input_stream;
 
 aws_crt_input_stream_options *aws_crt_input_stream_options_new() {
-    aws_crt_input_stream_options *options = aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_input_stream_options));
+    aws_crt_input_stream_options *options =
+        aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_input_stream_options));
     AWS_FATAL_ASSERT(options != NULL);
     AWS_ZERO_STRUCT(*options);
     return options;
@@ -29,9 +30,7 @@ void aws_crt_input_stream_options_release(aws_crt_input_stream_options *options)
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-void aws_crt_input_stream_options_set_user_data(
-    aws_crt_input_stream_options *options,
-    void *user_data) {
+void aws_crt_input_stream_options_set_user_data(aws_crt_input_stream_options *options, void *user_data) {
     options->user_data = user_data;
 }
 
@@ -65,7 +64,10 @@ void aws_crt_input_stream_options_set_destroy(
     options->destroy = destroy_fn;
 }
 
-static int s_external_input_stream_seek(struct aws_input_stream *stream, aws_off_t offset, enum aws_stream_seek_basis basis) {
+static int s_external_input_stream_seek(
+    struct aws_input_stream *stream,
+    aws_off_t offset,
+    enum aws_stream_seek_basis basis) {
     aws_external_input_stream *ext_stream = stream->impl;
     return ext_stream->seek(ext_stream, (int64_t)offset, (int)basis);
 }
@@ -101,12 +103,7 @@ struct aws_crt_input_stream *aws_crt_input_stream_new(aws_crt_input_stream_optio
     aws_crt_input_stream *stream = NULL;
     aws_external_input_stream *impl = NULL;
     aws_mem_acquire_many(
-        aws_crt_allocator(),
-        2,
-        &options,
-        sizeof(aws_crt_input_stream),
-        &impl,
-        sizeof(aws_external_input_stream));
+        aws_crt_allocator(), 2, &options, sizeof(aws_crt_input_stream), &impl, sizeof(aws_external_input_stream));
     AWS_FATAL_ASSERT(stream != NULL && impl != NULL);
     AWS_ZERO_STRUCT(*stream);
     AWS_ZERO_STRUCT(*impl);
