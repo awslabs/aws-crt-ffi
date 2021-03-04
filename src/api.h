@@ -53,16 +53,12 @@ typedef struct _aws_crt_input_stream_options aws_crt_input_stream_options;
 typedef struct aws_stream_status aws_crt_stream_status;
 typedef int(aws_crt_input_stream_seek_fn)(void *user_data, int64_t offset, int seek_basis);
 typedef int(aws_crt_input_stream_read_fn)(void *user_data, uint8_t *dest, size_t dest_length);
-typedef int(aws_crt_input_stream_get_status_fn)(
-    void *user_data,
-    aws_crt_stream_status *status);
+typedef int(aws_crt_input_stream_get_status_fn)(void *user_data, aws_crt_stream_status *status);
 typedef int(aws_crt_input_stream_get_length_fn)(void *user_data, int64_t *out_length);
 typedef int(aws_crt_input_stream_destroy_fn)(void *user_data);
 AWS_CRT_API aws_crt_input_stream_options *aws_crt_input_stream_options_new(void);
 AWS_CRT_API void aws_crt_input_stream_options_release(aws_crt_input_stream_options *options);
-AWS_CRT_API void aws_crt_input_stream_options_set_user_data(
-    aws_crt_input_stream_options *options,
-    void *user_data);
+AWS_CRT_API void aws_crt_input_stream_options_set_user_data(aws_crt_input_stream_options *options, void *user_data);
 AWS_CRT_API void aws_crt_input_stream_options_set_seek(
     aws_crt_input_stream_options *options,
     aws_crt_input_stream_seek_fn *seek_fn);
@@ -279,9 +275,7 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_credentials_provider(
     struct aws_signing_config_aws *signing_config,
     aws_crt_credentials_provider *credentials_provider);
 AWS_CRT_API const char *aws_crt_signing_config_aws_get_region(aws_crt_signing_config_aws *signing_config);
-AWS_CRT_API void aws_crt_signing_config_aws_set_region(
-    aws_crt_signing_config_aws *signing_config,
-    const char *region);
+AWS_CRT_API void aws_crt_signing_config_aws_set_region(aws_crt_signing_config_aws *signing_config, const char *region);
 AWS_CRT_API const char *aws_crt_signing_config_aws_get_service(aws_crt_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_service(
     aws_crt_signing_config_aws *signing_config,
@@ -290,8 +284,7 @@ AWS_CRT_API bool aws_crt_signing_config_aws_get_use_double_uri_encode(aws_crt_si
 AWS_CRT_API void aws_crt_signing_config_aws_set_use_double_uri_encode(
     aws_crt_signing_config_aws *signing_config,
     bool use_double_uri_encode);
-AWS_CRT_API bool aws_crt_signing_config_aws_get_should_normalize_uri_path(
-    aws_crt_signing_config_aws *signing_config);
+AWS_CRT_API bool aws_crt_signing_config_aws_get_should_normalize_uri_path(aws_crt_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_should_normalize_uri_path(
     aws_crt_signing_config_aws *signing_config,
     bool should_normalize_uri_path);
