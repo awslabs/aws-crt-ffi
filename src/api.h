@@ -37,19 +37,20 @@ AWS_CRT_API void aws_crt_reset_error(void);
 /* IO */
 typedef struct aws_event_loop_group aws_crt_event_loop_group;
 AWS_CRT_API struct aws_crt_event_loop_group *aws_crt_event_loop_group_new(uint16_t max_threads);
-AWS_CRT_API void aws_crt_event_loop_group_release(struct aws_crt_event_loop_group *elg);
+AWS_CRT_API void aws_crt_event_loop_group_release(aws_crt_event_loop_group *elg);
 
 /* Input stream */
 typedef struct aws_input_stream aws_crt_input_stream;
-int(aws_crt_input_stream_seek_fn)(struct aws_crt_input_stream *input_stream, int64_t offset, int seek_basis);
-int(aws_crt_input_stream_read_fn)(struct aws_crt_input_stream *input_stream, uint8_t *dest, size_t dest_length);
+typedef struct _aws_crt_input_stream_options aws_crt_input_stream_options;
+int(aws_crt_input_stream_seek_fn)(aws_crt_input_stream *input_stream, int64_t offset, int seek_basis);
+int(aws_crt_input_stream_read_fn)(aws_crt_input_stream *input_stream, uint8_t *dest, size_t dest_length);
 int(aws_crt_input_stream_get_status_fn)(
     struct aws_crt_input_stream *input_stream,
     struct aws_crt_stream_status *status);
-int(aws_crt_input_stream_get_length_fn)(struct aws_crt_input_stream *input_stream, int64_t *out_length);
-int(aws_crt_input_stream_destroy_fn)(struct aws_crt_input_stream *input_stream);
+int(aws_crt_input_stream_get_length_fn)(aws_crt_input_stream *input_stream, int64_t *out_length);
+int(aws_crt_input_stream_destroy_fn)(aws_crt_input_stream *input_stream);
 AWS_CRT_API struct aws_crt_input_stream_options *aws_crt_input_stream_options_new(void);
-AWS_CRT_API void aws_crt_input_stream_options_release(struct aws_crt_input_stream_options *options);
+AWS_CRT_API void aws_crt_input_stream_options_release(aws_crt_input_stream_options *options);
 AWS_CRT_API void aws_crt_input_stream_options_set_user_data(
     struct aws_crt_input_stream_options *options,
     void *user_data);
@@ -69,8 +70,8 @@ AWS_CRT_API void aws_crt_input_stream_options_set_destroy(
     struct aws_crt_input_stream_options *options,
     aws_crt_input_stream_destroy_fn *destroy_fn);
 
-AWS_CRT_API struct aws_crt_input_stream *aws_crt_input_stream_new(struct aws_crt_input_stream_options *options);
-AWS_CRT_API void aws_crt_input_stream_release(struct aws_crt_input_stream *input_stream);
+AWS_CRT_API struct aws_crt_input_stream *aws_crt_input_stream_new(aws_crt_input_stream_options *options);
+AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream);
 
 /* Auth */
 typedef struct aws_credentials aws_crt_credentials;
@@ -255,11 +256,11 @@ AWS_CRT_API void aws_crt_credentials_provider_release(aws_crt_credentials_provid
 /* aws_signing_config_aws */
 typedef struct aws_signing_config_aws aws_crt_signing_config_aws;
 AWS_CRT_API struct aws_signing_config_aws *aws_crt_signing_config_aws_new(void);
-AWS_CRT_API void aws_crt_signing_config_aws_release(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API void aws_crt_signing_config_aws_release(aws_signing_config_aws *signing_config);
 
-AWS_CRT_API int aws_crt_signing_config_aws_get_algorithm(struct aws_signing_config_aws *signing_config);
-AWS_CRT_API void aws_crt_signing_config_aws_set_algorithm(struct aws_signing_config_aws *signing_config, int algorithm);
-AWS_CRT_API int aws_crt_signing_config_aws_get_signature_type(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API int aws_crt_signing_config_aws_get_algorithm(aws_signing_config_aws *signing_config);
+AWS_CRT_API void aws_crt_signing_config_aws_set_algorithm(aws_signing_config_aws *signing_config, int algorithm);
+AWS_CRT_API int aws_crt_signing_config_aws_get_signature_type(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signature_type(
     struct aws_signing_config_aws *signing_config,
     int sig_type);
@@ -268,15 +269,15 @@ AWS_CRT_API struct aws_crt_credentials_provider *aws_crt_signing_config_aws_get_
 AWS_CRT_API void aws_crt_signing_config_aws_set_credentials_provider(
     struct aws_signing_config *signing_config,
     struct aws_crt_credentials_provider *credentials_provider);
-AWS_CRT_API const char *aws_crt_signing_config_aws_get_region(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API const char *aws_crt_signing_config_aws_get_region(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_region(
     struct aws_signing_config_aws *signing_config,
     const char *region);
-AWS_CRT_API const char *aws_crt_signing_config_aws_get_service(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API const char *aws_crt_signing_config_aws_get_service(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_service(
     struct aws_signing_config_aws *signing_config,
     const char *service);
-AWS_CRT_API bool aws_crt_signing_config_aws_get_use_double_uri_encode(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API bool aws_crt_signing_config_aws_get_use_double_uri_encode(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_use_double_uri_encode(
     struct aws_signing_config_aws *signing_config,
     bool use_double_uri_encode);
@@ -285,7 +286,7 @@ AWS_CRT_API bool aws_crt_signing_config_aws_get_should_normalize_uri_path(
 AWS_CRT_API void aws_crt_signing_config_aws_set_should_normalize_uri_path(
     struct aws_signing_config_aws *signing_config,
     bool should_normalize_uri_path);
-AWS_CRT_API bool aws_crt_signing_config_aws_get_omit_session_token(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API bool aws_crt_signing_config_aws_get_omit_session_token(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_omit_session_token(
     struct aws_signing_config_aws *signing_config,
     bool omit_session_token);
@@ -297,12 +298,12 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_value(
     struct aws_signing_config_aws *signing_config,
     uint8_t *signed_body,
     size_t signed_body_length);
-AWS_CRT_API int aws_crt_signing_config_aws_get_signed_body_header_type(struct aws_signing_config_aws *signing_config);
+AWS_CRT_API int aws_crt_signing_config_aws_get_signed_body_header_type(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_header_type(
     struct aws_signing_config_aws *signing_config,
     int signed_body_header_type);
 AWS_CRT_API uint64_t
-    aws_crt_signing_config_aws_get_expiration_in_seconds(struct aws_signing_config_aws *signing_config);
+    aws_crt_signing_config_aws_get_expiration_in_seconds(aws_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
     struct aws_signing_config_aws *signing_config,
     uint64_t expiration_in_seconds);
@@ -310,12 +311,12 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;
 AWS_CRT_API struct aws_signable *aws_crt_signable_new(void);
-AWS_CRT_API void aws_crt_signable aws_crt_signable_release(struct aws_signable *signable);
+AWS_CRT_API void aws_crt_signable aws_crt_signable_release(aws_signable *signable);
 AWS_CRT_API void aws_crt_signable_append_property(
     struct aws_signable *signable,
     const char *property_name,
     const char *property_value);
-AWS_CRT_API void aws_crt_signable_set_payload_stream(struct aws_signable *signable, aws_crt_input_stream *input_stream);
+AWS_CRT_API void aws_crt_signable_set_payload_stream(aws_signable *signable, aws_crt_input_stream *input_stream);
 
 /* aws_sign_request_aws */
 typedef struct aws_signing_result aws_crt_signing_result;
