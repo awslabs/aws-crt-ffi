@@ -274,7 +274,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_sts_web_i
 AWS_CRT_API void aws_crt_credentials_provider_release(aws_crt_credentials_provider *credentials_provider);
 
 /* aws_signing_config_aws */
-typedef struct aws_signing_config_aws aws_crt_signing_config_aws;
+typedef struct _aws_crt_signing_config_aws aws_crt_signing_config_aws;
 AWS_CRT_API aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void);
 AWS_CRT_API void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_config);
 
@@ -287,7 +287,7 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_signature_type(
 AWS_CRT_API aws_crt_credentials_provider *aws_crt_signing_config_aws_get_credentials_provider(
     aws_crt_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_credentials_provider(
-    struct aws_signing_config_aws *signing_config,
+    aws_crt_signing_config_aws *signing_config,
     aws_crt_credentials_provider *credentials_provider);
 AWS_CRT_API const char *aws_crt_signing_config_aws_get_region(aws_crt_signing_config_aws *signing_config);
 AWS_CRT_API void aws_crt_signing_config_aws_set_region(aws_crt_signing_config_aws *signing_config, const char *region);
