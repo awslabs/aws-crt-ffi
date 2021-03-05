@@ -75,7 +75,7 @@ void aws_crt_signing_config_aws_set_service(aws_crt_signing_config_aws *signing_
 }
 
 bool aws_crt_signing_config_aws_get_use_double_uri_encode(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.flags.use_double_uri_encode;
+    return signing_config->config.flags.use_double_uri_encode != 0;
 }
 
 void aws_crt_signing_config_aws_set_use_double_uri_encode(
@@ -85,7 +85,7 @@ void aws_crt_signing_config_aws_set_use_double_uri_encode(
 }
 
 bool aws_crt_signing_config_aws_get_should_normalize_uri_path(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.flags.should_normalize_uri_path;
+    return signing_config->config.flags.should_normalize_uri_path != 0;
 }
 
 void aws_crt_signing_config_aws_set_should_normalize_uri_path(
@@ -95,7 +95,7 @@ void aws_crt_signing_config_aws_set_should_normalize_uri_path(
 }
 
 bool aws_crt_signing_config_aws_get_omit_session_token(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.flags.omit_session_token;
+    return signing_config->config.flags.omit_session_token != 0;
 }
 
 void aws_crt_signing_config_aws_set_omit_session_token(
