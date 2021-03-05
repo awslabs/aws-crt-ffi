@@ -9,6 +9,8 @@
 #include <aws/common/string.h>
 #include <aws/http/request_response.h>
 
+#include "http.h"
+
 struct _aws_crt_signing_config_aws {
     struct aws_signing_config_aws config;
     struct aws_byte_buf region;
@@ -143,7 +145,7 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
 }
 
 aws_crt_signable *aws_crt_signable_new_from_http_request(aws_crt_http_message *request) {
-    return aws_signable_new_http_request(aws_crt_allocator(), request);
+    return aws_signable_new_http_request(aws_crt_allocator(), request->message);
 }
 
 aws_crt_signable *aws_crt_signable_new_from_chunk(

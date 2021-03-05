@@ -18,12 +18,6 @@
 #    endif
 #endif
 
-struct _aws_crt_input_stream_options;
-struct _aws_crt_event_loop_group_options;
-struct _aws_crt_credentials_provider_static_options;
-struct _aws_crt_credentials_provider_profile_options;
-struct _aws_crt_credentials_provider_x509_options;
-
 /* Public function definitions */
 AWS_EXTERN_C_BEGIN
 
@@ -82,7 +76,22 @@ AWS_CRT_API aws_crt_input_stream *aws_crt_input_stream_new(aws_crt_input_stream_
 AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream);
 
 /* HTTP */
-typedef struct aws_http_message aws_crt_http_message;
+typedef struct _aws_crt_http_headers aws_crt_http_headers;
+AWS_CRT_API aws_crt_http_headers *aws_crt_http_headers_new_from_blob(uint8_t *blob, size_t blob_length);
+AWS_CRT_API void aws_crt_http_headers_release(aws_crt_http_headers *headers);
+AWS_CRT_API void aws_crt_http_headers_to_blob(
+    aws_crt_http_headers *headers,
+    uint8_t **out_blob,
+    size_t *out_blob_length);
+
+
+typedef struct _aws_crt_http_message aws_crt_http_message;
+AWS_CRT_API aws_crt_http_message *aws_crt_http_message_new_from_blob(uint8_t *blob, size_t blob_length);
+AWS_CRT_API void aws_crt_http_message_release(aws_crt_http_message *message);
+AWS_CRT_API void aws_crt_http_message_to_blob(
+    aws_crt_http_message *message,
+    uint8_t **out_blob,
+    size_t *out_blob_length);
 
 /* Auth */
 typedef struct aws_credentials aws_crt_credentials;
