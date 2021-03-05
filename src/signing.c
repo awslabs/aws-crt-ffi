@@ -4,8 +4,8 @@
  */
 #include "crt.h"
 
-#include <aws/auth/signing.h>
 #include <aws/auth/signable.h>
+#include <aws/auth/signing.h>
 #include <aws/common/string.h>
 #include <aws/http/request_response.h>
 
@@ -150,16 +150,25 @@ aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
     uint8_t *previous_signature,
     size_t previous_signature_length) {
-    return
-        aws_signable_new_chunk(aws_crt_allocator(), chunk_stream, aws_byte_cursor_from_array(previous_signature, previous_signature_length));
+    return aws_signable_new_chunk(
+        aws_crt_allocator(), chunk_stream, aws_byte_cursor_from_array(previous_signature, previous_signature_length));
 }
 
 aws_crt_signable *aws_crt_signable_new_from_canonical_request(
     uint8_t *canonical_request,
     size_t canonical_request_length) {
-    return aws_signable_new_canonical_request(aws_crt_allocator(), aws_byte_cursor_from_array(canonical_request, canonical_request_length));
+    return aws_signable_new_canonical_request(
+        aws_crt_allocator(), aws_byte_cursor_from_array(canonical_request, canonical_request_length));
 }
 
 void aws_crt_signable_release(aws_crt_signable *signable) {
     aws_signable_destroy(signable);
+}
+
+int aws_crt_sign_request_aws(
+    aws_crt_signable *signable,
+    aws_crt_signing_config_aws *signing_config,
+    aws_crt_signing_complete_fn *on_complete,
+    void *user_data) {
+    return aws_sign_request_aws(aws_crt_allocator(), signable, (struct aws_signing_config_base*)&signing_config->config, on_complete, user_data);
 }
