@@ -191,7 +191,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_imds_new(
     aws_crt_credentials_provider_imds_options *options);
 
 /* ECS credentials provider */
-typedef struct aws_credentials_provider_ecs_options *aws_crt_credentials_provider_ecs_options;
+typedef struct _aws_crt_credentials_provider_ecs_options aws_crt_credentials_provider_ecs_options;
 AWS_CRT_API aws_crt_credentials_provider_ecs_options *aws_crt_credentials_provider_ecs_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_ecs_options_release(aws_crt_credentials_provider_ecs_options *options);
 AWS_CRT_API void aws_crt_credentials_provider_ecs_options_get_host(
