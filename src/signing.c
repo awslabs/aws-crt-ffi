@@ -170,5 +170,10 @@ int aws_crt_sign_request_aws(
     aws_crt_signing_config_aws *signing_config,
     aws_crt_signing_complete_fn *on_complete,
     void *user_data) {
-    return aws_sign_request_aws(aws_crt_allocator(), signable, (struct aws_signing_config_base*)&signing_config->config, on_complete, user_data);
+    return aws_sign_request_aws(
+        aws_crt_allocator(),
+        signable,
+        (struct aws_signing_config_base *)&signing_config->config,
+        on_complete,
+        user_data);
 }
