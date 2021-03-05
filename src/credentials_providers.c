@@ -373,3 +373,18 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
     options->options.endpoint = aws_byte_cursor_from_buf(&options->endpoint);
     return aws_credentials_provider_new_x509(aws_crt_allocator(), &options->options);
 }
+
+aws_crt_credentials_provider_sts_web_identity_options *
+    aws_crt_credentials_provider_sts_web_identity_options_new(void){
+    return aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_credentials_provider_sts_web_identity_options));
+}
+
+void aws_crt_credentials_provider_sts_web_identity_options_release(
+    aws_crt_credentials_provider_sts_web_identity_options *options){
+    aws_mem_release(aws_crt_allocator(), options);
+}
+
+aws_crt_credentials_provider *aws_crt_credentials_provider_sts_web_identity_new(
+    aws_crt_credentials_provider_sts_web_identity_options *options){
+    return aws_credentials_provider_new_sts_web_identity(aws_crt_allocator(), options);
+}
