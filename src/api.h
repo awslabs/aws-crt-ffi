@@ -84,7 +84,6 @@ AWS_CRT_API void aws_crt_http_headers_to_blob(
     uint8_t **out_blob,
     size_t *out_blob_length);
 
-
 typedef struct _aws_crt_http_message aws_crt_http_message;
 AWS_CRT_API aws_crt_http_message *aws_crt_http_message_new_from_blob(uint8_t *blob, size_t blob_length);
 AWS_CRT_API void aws_crt_http_message_release(aws_crt_http_message *message);

@@ -6,8 +6,7 @@
 
 #include "http.h"
 
-aws_crt_http_headers *
-    aws_crt_http_headers_new_from_blob(uint8_t *blob, size_t blob_length) {
+aws_crt_http_headers *aws_crt_http_headers_new_from_blob(uint8_t *blob, size_t blob_length) {
     aws_crt_http_headers *headers = aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_http_headers));
     headers->headers = aws_http_headers_new(aws_crt_allocator());
     struct aws_byte_cursor cursor = aws_byte_cursor_from_array(blob, blob_length);
@@ -116,7 +115,10 @@ void aws_crt_http_message_to_blob(aws_crt_http_message *message, uint8_t **out_b
     };
     aws_crt_http_headers_to_blob(&headers, &header_blob.ptr, &header_blob.len);
 
-    aws_byte_buf_init(&message->encoded_message, aws_crt_allocator(), sizeof(uint32_t) + sizeof(uint32_t) + method.len + path.len + header_blob.len);
+    aws_byte_buf_init(
+        &message->encoded_message,
+        aws_crt_allocator(),
+        sizeof(uint32_t) + sizeof(uint32_t) + method.len + path.len + header_blob.len);
     aws_byte_buf_write_be32(&message->encoded_message, method.len);
     aws_byte_buf_write_from_whole_cursor(&message->encoded_message, method);
     aws_byte_buf_write_be32(&message->encoded_message, path.len);
