@@ -292,3 +292,84 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_ecs_new(aws_crt_crede
     options->options.auth_token = aws_byte_cursor_from_buf(&options->auth_token);
     return aws_credentials_provider_new_ecs(aws_crt_allocator(), &options->options);
 }
+
+struct _aws_crt_credentials_provider_x509_options {
+    struct aws_credentials_provider_x509_options options;
+    struct aws_byte_buf thing_name;
+    struct aws_byte_buf role_alias;
+    struct aws_byte_buf endpoint;
+};
+
+aws_crt_credentials_provider_x509_options *
+    aws_crt_credentials_provider_x509_options_new(void) {
+    return aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_credentials_provider_x509_options));
+}
+
+void aws_crt_credentials_provider_x509_options_release(aws_crt_credentials_provider_x509_options *options) {
+    aws_byte_buf_clean_up(&options->thing_name);
+    aws_byte_buf_clean_up(&options->role_alias);
+    aws_byte_buf_clean_up(&options->endpoint);
+    aws_mem_release(aws_crt_allocator(), options);
+}
+
+void aws_crt_credentials_provider_x509_options_get_thing_name(
+    aws_crt_credentials_provider_x509_options *options,
+    uint8_t **out_thing_name,
+    size_t *out_thing_name_length) {
+    if (options->thing_name.len > 0) {
+        *out_thing_name = options->thing_name.buffer;
+        *out_thing_name_length = options->thing_name.len;
+    }
+}
+
+void aws_crt_credentials_provider_x509_options_set_thing_name(
+    aws_crt_credentials_provider_x509_options *options,
+    uint8_t *thing_name,
+    size_t thing_name_length) {
+    struct aws_byte_buf input = aws_byte_buf_from_array(thing_name, thing_name_length);
+    aws_byte_buf_init_copy(&options->thing_name, aws_crt_allocator(), &input);
+}
+
+void aws_crt_credentials_provider_x509_options_get_role_alias(
+    aws_crt_credentials_provider_x509_options *options,
+    uint8_t **out_role_alias,
+    size_t *out_role_alias_length) {
+    if (options->role_alias.len > 0) {
+        *out_role_alias = options->role_alias.buffer;
+        *out_role_alias_length = options->role_alias.len;
+    }
+}
+
+void aws_crt_credentials_provider_x509_options_set_role_alias(
+    aws_crt_credentials_provider_x509_options *options,
+    uint8_t *role_alias,
+    size_t role_alias_length) {
+    struct aws_byte_buf input = aws_byte_buf_from_array(role_alias, role_alias_length);
+    aws_byte_buf_init_copy(&options->role_alias, aws_crt_allocator(), &input);
+}
+
+void aws_crt_credentials_provider_x509_options_get_endpoint(
+    aws_crt_credentials_provider_x509_options *options,
+    uint8_t **out_endpoint,
+    size_t *out_endpoint_length) {
+    if (options->endpoint.len > 0) {
+        *out_endpoint = options->endpoint.buffer;
+        *out_endpoint_length = options->endpoint.len;
+    }
+}
+
+void aws_crt_credentials_provider_x509_options_set_endpoint(
+    aws_crt_credentials_provider_x509_options *options,
+    uint8_t *endpoint,
+    size_t endpoint_length) {
+    struct aws_byte_buf input = aws_byte_buf_from_array(endpoint, endpoint_length);
+    aws_byte_buf_init_copy(&options->endpoint, aws_crt_allocator(), &input);
+}
+
+aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
+    aws_crt_credentials_provider_x509_options *options) {
+    options->options.thing_name = aws_byte_cursor_from_buf(&options->thing_name);
+    options->options.role_alias = aws_byte_cursor_from_buf(&options->role_alias);
+    options->options.endpoint = aws_byte_cursor_from_buf(&options->endpoint);
+    return aws_credentials_provider_new_x509(aws_crt_allocator(), &options->options);
+}

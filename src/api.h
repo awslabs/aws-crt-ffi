@@ -22,6 +22,7 @@ struct _aws_crt_input_stream_options;
 struct _aws_crt_event_loop_group_options;
 struct _aws_crt_credentials_provider_static_options;
 struct _aws_crt_credentials_provider_profile_options;
+struct _aws_crt_credentials_provider_x509_options;
 
 /* Public function definitions */
 AWS_EXTERN_C_BEGIN
@@ -85,10 +86,18 @@ typedef struct aws_credentials aws_crt_credentials;
 typedef struct _aws_crt_credentials_options aws_crt_credentials_options;
 AWS_CRT_API aws_crt_credentials_options *aws_crt_credentials_options_new(void);
 AWS_CRT_API void aws_crt_credentials_options_release(aws_crt_credentials_options *options);
-AWS_CRT_API void aws_crt_credentials_options_set_access_key_id(aws_crt_credentials_options *options, const char *access_key_id);
-AWS_CRT_API void aws_crt_credentials_options_set_secret_access_key(aws_crt_credentials_options *options, const char *secret_access_key);
-AWS_CRT_API void aws_crt_credentials_options_set_session_token(aws_crt_credentials_options *options, const char *session_token);
-AWS_CRT_API void aws_crt_credentials_options_set_expiration_timepoint_seconds(aws_crt_credentials_options *options, uint64_t expiration_timepoint_seconds);
+AWS_CRT_API void aws_crt_credentials_options_set_access_key_id(
+    aws_crt_credentials_options *options,
+    const char *access_key_id);
+AWS_CRT_API void aws_crt_credentials_options_set_secret_access_key(
+    aws_crt_credentials_options *options,
+    const char *secret_access_key);
+AWS_CRT_API void aws_crt_credentials_options_set_session_token(
+    aws_crt_credentials_options *options,
+    const char *session_token);
+AWS_CRT_API void aws_crt_credentials_options_set_expiration_timepoint_seconds(
+    aws_crt_credentials_options *options,
+    uint64_t expiration_timepoint_seconds);
 AWS_CRT_API aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *options);
 AWS_CRT_API void aws_crt_credentials_release(aws_crt_credentials *credentials);
 AWS_CRT_API struct aws_byte_cursor aws_crt_credentials_get_access_key_id(const aws_crt_credentials *credentials);
@@ -222,7 +231,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_ecs_new(
     aws_crt_credentials_provider_ecs_options *options);
 
 /* X509 credentials provider */
-typedef struct aws_credentials_provider_x509_options aws_crt_credentials_provider_x509_options;
+typedef struct _aws_crt_credentials_provider_x509_options aws_crt_credentials_provider_x509_options;
 AWS_CRT_API aws_crt_credentials_provider_x509_options *aws_crt_credentials_provider_x509_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_x509_options_release(aws_crt_credentials_provider_x509_options *options);
 AWS_CRT_API void aws_crt_credentials_provider_x509_options_get_thing_name(
@@ -249,7 +258,8 @@ AWS_CRT_API void aws_crt_credentials_provider_x509_options_set_endpoint(
     aws_crt_credentials_provider_x509_options *options,
     uint8_t *endpoint,
     size_t endpoint_length);
-AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(void);
+AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
+    aws_crt_credentials_provider_x509_options *options);
 
 /* STS Web Identity provider */
 typedef struct aws_credentials_provider_sts_web_identity_options aws_crt_credentials_provider_sts_web_identity_options;
