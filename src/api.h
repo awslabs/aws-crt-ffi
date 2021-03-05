@@ -21,6 +21,7 @@
 struct _aws_crt_input_stream_options;
 struct _aws_crt_event_loop_group_options;
 struct _aws_crt_credentials_provider_static_options;
+struct _aws_crt_credentials_provider_profile_options;
 
 /* Public function definitions */
 AWS_EXTERN_C_BEGIN
@@ -133,7 +134,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_environme
     aws_crt_credentials_provider_environment_options *options);
 
 /* profile credentials provider */
-typedef struct aws_credentials_provider_profile_options aws_crt_credentials_provider_profile_options;
+typedef struct _aws_credentials_provider_profile_options aws_crt_credentials_provider_profile_options;
 AWS_CRT_API aws_crt_credentials_provider_profile_options *aws_crt_credentials_provider_profile_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_profile_options_release(
     aws_crt_credentials_provider_profile_options *options);
