@@ -53,7 +53,7 @@ void aws_crt_signing_config_aws_set_credentials_provider(
 }
 
 const char *aws_crt_signing_config_aws_get_region(aws_crt_signing_config_aws *signing_config) {
-    return (const char*)signing_config->region.buffer;
+    return (const char *)signing_config->region.buffer;
 }
 
 void aws_crt_signing_config_aws_set_region(aws_crt_signing_config_aws *signing_config, const char *region) {
@@ -63,7 +63,7 @@ void aws_crt_signing_config_aws_set_region(aws_crt_signing_config_aws *signing_c
 }
 
 const char *aws_crt_signing_config_aws_get_service(aws_crt_signing_config_aws *signing_config) {
-    return (const char*)signing_config->service.buffer;
+    return (const char *)signing_config->service.buffer;
 }
 
 void aws_crt_signing_config_aws_set_service(aws_crt_signing_config_aws *signing_config, const char *service) {
@@ -139,3 +139,20 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
     uint64_t expiration_in_seconds) {
     signing_config->config.expiration_in_seconds = expiration_in_seconds;
 }
+
+struct aws_crt_signable *aws_crt_signable_new(void) {
+    return aws_signable_
+}
+
+void aws_crt_signable_release(aws_crt_signable *signable) {
+    aws_signable_destroy(signable);
+}
+
+void aws_crt_signable_append_property(
+    struct aws_crt_signable *signable,
+    const char *property_name,
+    const char *property_value) {
+    aws_signable_
+}
+
+void aws_crt_signable_set_payload_stream(aws_crt_signable *signable, aws_crt_input_stream *input_stream) {}

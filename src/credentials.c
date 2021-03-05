@@ -30,7 +30,9 @@ void aws_crt_credentials_options_set_access_key_id(aws_crt_credentials_options *
     aws_byte_buf_init_copy(&options->access_key_id, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_options_set_secret_access_key(aws_crt_credentials_options *options, const char *secret_access_key) {
+void aws_crt_credentials_options_set_secret_access_key(
+    aws_crt_credentials_options *options,
+    const char *secret_access_key) {
     struct aws_byte_buf input = aws_byte_buf_from_c_str(secret_access_key);
     aws_byte_buf_init_copy(&options->secret_access_key, aws_crt_allocator(), &input);
 }
@@ -40,7 +42,9 @@ void aws_crt_credentials_options_set_session_token(aws_crt_credentials_options *
     aws_byte_buf_init_copy(&options->session_token, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_options_set_expiration_timepoint_seconds(aws_crt_credentials_options *options, uint64_t expiration_timepoint_seconds) {
+void aws_crt_credentials_options_set_expiration_timepoint_seconds(
+    aws_crt_credentials_options *options,
+    uint64_t expiration_timepoint_seconds) {
     options->expiration_timepoint_seconds = expiration_timepoint_seconds;
 }
 
