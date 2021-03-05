@@ -186,3 +186,27 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_cached_new(
     aws_crt_credentials_provider_cached_options *options){
     return aws_credentials_provider_new_cached(aws_crt_allocator(), options);
 }
+
+aws_crt_credentials_provider_imds_options *aws_crt_credentials_provider_imds_options_new(void){
+    return aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_credentials_provider_imds_options));
+}
+
+void aws_crt_credentials_provider_imds_options_release(aws_crt_credentials_provider_imds_options *options){
+    aws_mem_release(aws_crt_allocator(), options);
+}
+
+int aws_crt_credentials_provider_imds_options_get_imds_version(
+    aws_crt_credentials_provider_imds_options *options){
+    return options->imds_version;
+}
+
+void aws_crt_credentials_provider_imds_options_set_imds_version(
+    aws_crt_credentials_provider_imds_options *options,
+    int imds_version){
+    options->imds_version = imds_version;
+}
+
+aws_crt_credentials_provider *aws_crt_credentials_provider_imds_new(
+    aws_crt_credentials_provider_imds_options *options){
+    return aws_credentials_provider_new_imds(aws_crt_allocator(), options);
+}
