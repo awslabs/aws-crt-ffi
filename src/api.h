@@ -81,6 +81,9 @@ AWS_CRT_API void aws_crt_input_stream_options_set_destroy(
 AWS_CRT_API aws_crt_input_stream *aws_crt_input_stream_new(aws_crt_input_stream_options *options);
 AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream);
 
+/* HTTP */
+typedef struct aws_http_message aws_crt_http_message;
+
 /* Auth */
 typedef struct aws_credentials aws_crt_credentials;
 typedef struct _aws_crt_credentials_options aws_crt_credentials_options;
@@ -326,13 +329,13 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
 
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;
-AWS_CRT_API struct aws_crt_signable *aws_crt_signable_new(void);
+AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_http_request(aws_crt_http_message *http_request);
+AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_chunk(
+    aws_crt_input_stream *chunk_stream,
+    uint8_t *previous_signature,
+    size_t previous_signature_length);
+AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_canonical_request(uint8_t *request, size_t request_length);
 AWS_CRT_API void aws_crt_signable_release(aws_crt_signable *signable);
-AWS_CRT_API void aws_crt_signable_append_property(
-    struct aws_crt_signable *signable,
-    const char *property_name,
-    const char *property_value);
-AWS_CRT_API void aws_crt_signable_set_payload_stream(aws_crt_signable *signable, aws_crt_input_stream *input_stream);
 
 /* aws_sign_request_aws */
 typedef struct aws_signing_result aws_crt_signing_result;

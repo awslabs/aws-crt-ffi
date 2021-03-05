@@ -5,7 +5,9 @@
 #include "crt.h"
 
 #include <aws/auth/signing.h>
+#include <aws/auth/signable.h>
 #include <aws/common/string.h>
+#include <aws/http/request_response.h>
 
 struct _aws_crt_signing_config_aws {
     struct aws_signing_config_aws config;
@@ -140,19 +142,24 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
     signing_config->config.expiration_in_seconds = expiration_in_seconds;
 }
 
-struct aws_crt_signable *aws_crt_signable_new(void) {
-    return aws_signable_
+aws_crt_signable *aws_crt_signable_new_from_http_request(aws_crt_http_message *request) {
+    return aws_signable_new_http_request(aws_crt_allocator(), request);
+}
+
+aws_crt_signable *aws_crt_signable_new_from_chunk(
+    aws_crt_input_stream *chunk_stream,
+    uint8_t *previous_signature,
+    size_t previous_signature_length) {
+    return
+        aws_signable_new_chunk(aws_crt_allocator(), chunk_stream, aws_byte_cursor_from_array(previous_signature, previous_signature_length));
+}
+
+aws_crt_signable *aws_crt_signable_new_from_canonical_request(
+    uint8_t *canonical_request,
+    size_t canonical_request_length) {
+    return aws_signable_new_canonical_request(aws_crt_allocator(), aws_byte_cursor_from_array(canonical_request, canonical_request_length));
 }
 
 void aws_crt_signable_release(aws_crt_signable *signable) {
     aws_signable_destroy(signable);
 }
-
-void aws_crt_signable_append_property(
-    struct aws_crt_signable *signable,
-    const char *property_name,
-    const char *property_value) {
-    aws_signable_
-}
-
-void aws_crt_signable_set_payload_stream(aws_crt_signable *signable, aws_crt_input_stream *input_stream) {}
