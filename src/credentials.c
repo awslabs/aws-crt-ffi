@@ -7,19 +7,21 @@
 #include <aws/auth/credentials.h>
 #include <aws/common/string.h>
 
-struct aws_credentials *aws_crt_credentials_new(
-    const char *access_key_id,
-    const char *secret_access_key,
-    const char *session_token,
-    uint64_t expiration_timepoint_seconds) {
+struct _aws_crt_credentials_options {
+    struct aws_byte_buf access_key_id;
+    struct aws_byte_buf secret_access_key;
+    struct aws_byte_buf session_token;
+    uint64_t expiration_timepoint_seconds;
+};
 
+aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *options) {
     struct aws_allocator *allocator = aws_crt_allocator();
     return aws_credentials_new(
         allocator,
-        aws_byte_cursor_from_c_str(access_key_id),
-        aws_byte_cursor_from_c_str(secret_access_key),
-        aws_byte_cursor_from_c_str(session_token),
-        expiration_timepoint_seconds);
+        aws_byte_cursor_from_buf(&options->access_key_id),
+        aws_byte_cursor_from_buf(&options->secret_access_key),
+        aws_byte_cursor_from_buf(&options->session_token),
+        options->expiration_timepoint_seconds);
 }
 
 struct aws_byte_cursor aws_crt_credentials_get_access_key_id(const struct aws_credentials *credentials) {

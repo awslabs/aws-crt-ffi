@@ -20,6 +20,7 @@
 
 struct _aws_crt_input_stream_options;
 struct _aws_crt_event_loop_group_options;
+struct _aws_crt_credentials_provider_static_options;
 
 /* Public function definitions */
 AWS_EXTERN_C_BEGIN
@@ -80,11 +81,9 @@ AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream
 
 /* Auth */
 typedef struct aws_credentials aws_crt_credentials;
-AWS_CRT_API aws_crt_credentials *aws_crt_credentials_new(
-    const char *access_key_id,
-    const char *secret_access_key,
-    const char *session_token,
-    uint64_t expiration_timepoint_seconds);
+typedef struct _aws_crt_credentials_options aws_crt_credentials_options;
+AWS_CRT_API aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *options);
+
 AWS_CRT_API void aws_crt_credentials_release(aws_crt_credentials *credentials);
 AWS_CRT_API struct aws_byte_cursor aws_crt_credentials_get_access_key_id(const aws_crt_credentials *credentials);
 AWS_CRT_API struct aws_byte_cursor aws_crt_credentials_get_secret_access_key(const aws_crt_credentials *credentials);
@@ -95,10 +94,10 @@ AWS_CRT_API uint64_t aws_crt_credentials_get_expiration_timepoint_seconds(const 
 typedef struct aws_credentials_provider aws_crt_credentials_provider;
 
 /* static credentials provider */
-typedef struct aws_credentials_provider_static_options aws_crt_credentials_provider_static_options;
-AWS_CRT_API struct aws_credentials_provider_static_options *aws_crt_credentials_provider_static_options_new(void);
+typedef struct _aws_crt_credentials_provider_static_options aws_crt_credentials_provider_static_options;
+AWS_CRT_API aws_crt_credentials_provider_static_options *aws_crt_credentials_provider_static_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_options_static_release(
-    struct aws_credentials_provider_static_options *options);
+    aws_crt_credentials_provider_static_options *options);
 AWS_CRT_API const char *aws_crt_credentials_provider_static_options_get_access_key_id(
     aws_crt_credentials_provider_static_options *options);
 AWS_CRT_API void aws_crt_credentials_provider_static_options_set_access_key_id(
