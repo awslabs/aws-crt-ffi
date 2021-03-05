@@ -82,8 +82,13 @@ AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream
 /* Auth */
 typedef struct aws_credentials aws_crt_credentials;
 typedef struct _aws_crt_credentials_options aws_crt_credentials_options;
+AWS_CRT_API aws_crt_credentials_options *aws_crt_credentials_options_new(void);
+AWS_CRT_API void aws_crt_credentials_options_release(aws_crt_credentials_options *options);
+AWS_CRT_API void aws_crt_credentials_options_set_access_key_id(aws_crt_credentials_options *options, const char *access_key_id);
+AWS_CRT_API void aws_crt_credentials_options_set_secret_access_key(aws_crt_credentials_options *options, const char *secret_access_key);
+AWS_CRT_API void aws_crt_credentials_options_set_session_token(aws_crt_credentials_options *options, const char *session_token);
+AWS_CRT_API void aws_crt_credentials_options_set_expiration_timepoint_seconds(aws_crt_credentials_options *options, uint64_t expiration_timepoint_seconds);
 AWS_CRT_API aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *options);
-
 AWS_CRT_API void aws_crt_credentials_release(aws_crt_credentials *credentials);
 AWS_CRT_API struct aws_byte_cursor aws_crt_credentials_get_access_key_id(const aws_crt_credentials *credentials);
 AWS_CRT_API struct aws_byte_cursor aws_crt_credentials_get_secret_access_key(const aws_crt_credentials *credentials);
