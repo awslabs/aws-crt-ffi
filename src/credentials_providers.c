@@ -27,11 +27,6 @@ void aws_crt_credentials_provider_options_static_release(aws_crt_credentials_pro
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-const char *aws_crt_credentials_provider_static_options_get_access_key_id(
-    aws_crt_credentials_provider_static_options *options) {
-    return (const char *)options->access_key_id.buffer;
-}
-
 void aws_crt_credentials_provider_static_options_set_access_key_id(
     aws_crt_credentials_provider_static_options *options,
     const char *access_key_id) {
@@ -39,21 +34,11 @@ void aws_crt_credentials_provider_static_options_set_access_key_id(
     aws_byte_buf_init_copy(&options->access_key_id, aws_crt_allocator(), &input);
 }
 
-const char *aws_crt_credentials_provider_static_options_get_secret_access_key(
-    aws_crt_credentials_provider_static_options *options) {
-    return (const char *)options->secret_access_key.buffer;
-}
-
 void aws_crt_credentials_provider_static_options_set_secret_access_key(
     aws_crt_credentials_provider_static_options *options,
     const char *secret_access_key) {
     struct aws_byte_buf input = aws_byte_buf_from_c_str(secret_access_key);
     aws_byte_buf_init_copy(&options->secret_access_key, aws_crt_allocator(), &input);
-}
-
-const char *aws_crt_credentials_provider_static_options_get_session_token(
-    aws_crt_credentials_provider_static_options *options) {
-    return (const char *)options->session_token.buffer;
 }
 
 void aws_crt_credentials_provider_static_options_set_session_token(
@@ -105,16 +90,6 @@ void aws_crt_credentials_provider_options_release(aws_crt_credentials_provider_p
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-void aws_crt_credentials_provider_profile_options_get_profile_name_override(
-    aws_crt_credentials_provider_profile_options *options,
-    uint8_t **out_profile_name,
-    size_t *out_profile_name_len) {
-    if (options->profile_name.len > 0) {
-        *out_profile_name = options->profile_name.buffer;
-        *out_profile_name_len = options->profile_name.len;
-    }
-}
-
 void aws_crt_credentials_provider_profile_options_set_profile_name_override(
     aws_crt_credentials_provider_profile_options *options,
     uint8_t *profile_name,
@@ -123,32 +98,12 @@ void aws_crt_credentials_provider_profile_options_set_profile_name_override(
     aws_byte_buf_init_copy(&options->profile_name, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_provider_profile_options_get_config_file_name_override(
-    aws_crt_credentials_provider_profile_options *options,
-    uint8_t **out_config_file_name,
-    size_t *out_config_file_name_length) {
-    if (options->config_file_name.len > 0) {
-        *out_config_file_name = options->config_file_name.buffer;
-        *out_config_file_name_length = options->config_file_name.len;
-    }
-}
-
 void aws_crt_credentials_provider_profile_options_set_config_file_name_override(
     aws_crt_credentials_provider_profile_options *options,
     uint8_t *config_file_name,
     size_t config_file_name_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(config_file_name, config_file_name_length);
     aws_byte_buf_init_copy(&options->config_file_name, aws_crt_allocator(), &input);
-}
-
-void aws_crt_credentials_provider_profile_options_get_credentials_file_name_override(
-    aws_crt_credentials_provider_profile_options *options,
-    uint8_t **out_credentials_file_name,
-    size_t *out_credentials_file_name_length) {
-    if (options->credentials_file_name.len > 0) {
-        *out_credentials_file_name = options->credentials_file_name.buffer;
-        *out_credentials_file_name_length = options->credentials_file_name.len;
-    }
 }
 
 void aws_crt_credentials_provider_profile_options_set_credentials_file_name_override(
@@ -175,11 +130,6 @@ void aws_crt_credentials_provider_cached_options_release(aws_crt_credentials_pro
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-uint64_t aws_crt_credentials_provider_cached_options_get_refresh_time_in_milliseconds(
-    aws_crt_credentials_provider_cached_options *options) {
-    return options->refresh_time_in_milliseconds;
-}
-
 void aws_crt_credentials_provider_cached_options_set_refresh_time_in_milliseconds(
     aws_crt_credentials_provider_cached_options *options,
     uint64_t refresh_time_in_milliseconds) {
@@ -197,10 +147,6 @@ aws_crt_credentials_provider_imds_options *aws_crt_credentials_provider_imds_opt
 
 void aws_crt_credentials_provider_imds_options_release(aws_crt_credentials_provider_imds_options *options) {
     aws_mem_release(aws_crt_allocator(), options);
-}
-
-int aws_crt_credentials_provider_imds_options_get_imds_version(aws_crt_credentials_provider_imds_options *options) {
-    return options->imds_version;
 }
 
 void aws_crt_credentials_provider_imds_options_set_imds_version(
@@ -232,16 +178,6 @@ void aws_crt_credentials_provider_ecs_options_release(aws_crt_credentials_provid
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-void aws_crt_credentials_provider_ecs_options_get_host(
-    aws_crt_credentials_provider_ecs_options *options,
-    uint8_t **out_host,
-    size_t *out_host_length) {
-    if (options->host.len > 0) {
-        *out_host = options->host.buffer;
-        *out_host_length = options->host.len;
-    }
-}
-
 void aws_crt_credentials_provider_ecs_options_set_host(
     aws_crt_credentials_provider_ecs_options *options,
     uint8_t *host,
@@ -250,32 +186,12 @@ void aws_crt_credentials_provider_ecs_options_set_host(
     aws_byte_buf_init_copy(&options->host, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_provider_ecs_options_get_path_and_query(
-    aws_crt_credentials_provider_ecs_options *options,
-    uint8_t **out_path_and_query,
-    size_t *out_path_and_query_length) {
-    if (options->path_and_query.len > 0) {
-        *out_path_and_query = options->path_and_query.buffer;
-        *out_path_and_query_length = options->path_and_query.len;
-    }
-}
-
 void aws_crt_credentials_provider_ecs_options_set_path_and_query(
     aws_crt_credentials_provider_ecs_options *options,
     uint8_t *path_and_query,
     size_t path_and_query_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(path_and_query, path_and_query_length);
     aws_byte_buf_init_copy(&options->path_and_query, aws_crt_allocator(), &input);
-}
-
-void aws_crt_credentials_provider_ecs_options_get_auth_token(
-    aws_crt_credentials_provider_ecs_options *options,
-    uint8_t **out_auth_token,
-    size_t *out_auth_token_length) {
-    if (options->auth_token.len > 0) {
-        *out_auth_token = options->auth_token.buffer;
-        *out_auth_token_length = options->auth_token.len;
-    }
 }
 
 void aws_crt_credentials_provider_ecs_options_set_auth_token(
@@ -311,16 +227,6 @@ void aws_crt_credentials_provider_x509_options_release(aws_crt_credentials_provi
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-void aws_crt_credentials_provider_x509_options_get_thing_name(
-    aws_crt_credentials_provider_x509_options *options,
-    uint8_t **out_thing_name,
-    size_t *out_thing_name_length) {
-    if (options->thing_name.len > 0) {
-        *out_thing_name = options->thing_name.buffer;
-        *out_thing_name_length = options->thing_name.len;
-    }
-}
-
 void aws_crt_credentials_provider_x509_options_set_thing_name(
     aws_crt_credentials_provider_x509_options *options,
     uint8_t *thing_name,
@@ -329,32 +235,12 @@ void aws_crt_credentials_provider_x509_options_set_thing_name(
     aws_byte_buf_init_copy(&options->thing_name, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_provider_x509_options_get_role_alias(
-    aws_crt_credentials_provider_x509_options *options,
-    uint8_t **out_role_alias,
-    size_t *out_role_alias_length) {
-    if (options->role_alias.len > 0) {
-        *out_role_alias = options->role_alias.buffer;
-        *out_role_alias_length = options->role_alias.len;
-    }
-}
-
 void aws_crt_credentials_provider_x509_options_set_role_alias(
     aws_crt_credentials_provider_x509_options *options,
     uint8_t *role_alias,
     size_t role_alias_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(role_alias, role_alias_length);
     aws_byte_buf_init_copy(&options->role_alias, aws_crt_allocator(), &input);
-}
-
-void aws_crt_credentials_provider_x509_options_get_endpoint(
-    aws_crt_credentials_provider_x509_options *options,
-    uint8_t **out_endpoint,
-    size_t *out_endpoint_length) {
-    if (options->endpoint.len > 0) {
-        *out_endpoint = options->endpoint.buffer;
-        *out_endpoint_length = options->endpoint.len;
-    }
 }
 
 void aws_crt_credentials_provider_x509_options_set_endpoint(

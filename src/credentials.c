@@ -58,22 +58,6 @@ aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *option
         options->expiration_timepoint_seconds);
 }
 
-struct aws_byte_cursor aws_crt_credentials_get_access_key_id(const struct aws_credentials *credentials) {
-    return aws_credentials_get_access_key_id(credentials);
-}
-
-struct aws_byte_cursor aws_crt_credentials_get_secret_access_key(const struct aws_credentials *credentials) {
-    return aws_credentials_get_secret_access_key(credentials);
-}
-
-struct aws_byte_cursor aws_crt_credentials_get_session_token(const struct aws_credentials *credentials) {
-    return aws_credentials_get_session_token(credentials);
-}
-
-uint64_t aws_crt_credentials_get_expiration_timepoint_seconds(const struct aws_credentials *credentials) {
-    return aws_credentials_get_expiration_timepoint_seconds(credentials);
-}
-
 void aws_crt_credentials_release(struct aws_credentials *credentials) {
     aws_credentials_release(credentials);
 }

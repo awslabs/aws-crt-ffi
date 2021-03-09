@@ -29,25 +29,12 @@ void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_conf
     aws_mem_release(aws_crt_allocator(), signing_config);
 }
 
-int aws_crt_signing_config_aws_get_algorithm(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.algorithm;
-}
-
 void aws_crt_signing_config_aws_set_algorithm(aws_crt_signing_config_aws *signing_config, int algorithm) {
     signing_config->config.algorithm = algorithm;
 }
 
-int aws_crt_signing_config_aws_get_signature_type(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.signature_type;
-}
-
 void aws_crt_signing_config_aws_set_signature_type(aws_crt_signing_config_aws *signing_config, int sig_type) {
     signing_config->config.signature_type = sig_type;
-}
-
-aws_crt_credentials_provider *aws_crt_signing_config_aws_get_credentials_provider(
-    aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.credentials_provider;
 }
 
 void aws_crt_signing_config_aws_set_credentials_provider(
@@ -56,18 +43,10 @@ void aws_crt_signing_config_aws_set_credentials_provider(
     signing_config->config.credentials_provider = credentials_provider;
 }
 
-const char *aws_crt_signing_config_aws_get_region(aws_crt_signing_config_aws *signing_config) {
-    return (const char *)signing_config->region.buffer;
-}
-
 void aws_crt_signing_config_aws_set_region(aws_crt_signing_config_aws *signing_config, const char *region) {
     struct aws_byte_buf input = aws_byte_buf_from_c_str(region);
     input.len++; /* ensure copy is null terminated */
     aws_byte_buf_init_copy(&signing_config->region, aws_crt_allocator(), &input);
-}
-
-const char *aws_crt_signing_config_aws_get_service(aws_crt_signing_config_aws *signing_config) {
-    return (const char *)signing_config->service.buffer;
 }
 
 void aws_crt_signing_config_aws_set_service(aws_crt_signing_config_aws *signing_config, const char *service) {
@@ -76,18 +55,10 @@ void aws_crt_signing_config_aws_set_service(aws_crt_signing_config_aws *signing_
     aws_byte_buf_init_copy(&signing_config->service, aws_crt_allocator(), &input);
 }
 
-bool aws_crt_signing_config_aws_get_use_double_uri_encode(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.flags.use_double_uri_encode != 0;
-}
-
 void aws_crt_signing_config_aws_set_use_double_uri_encode(
     aws_crt_signing_config_aws *signing_config,
     bool use_double_uri_encode) {
     signing_config->config.flags.use_double_uri_encode = use_double_uri_encode;
-}
-
-bool aws_crt_signing_config_aws_get_should_normalize_uri_path(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.flags.should_normalize_uri_path != 0;
 }
 
 void aws_crt_signing_config_aws_set_should_normalize_uri_path(
@@ -96,24 +67,10 @@ void aws_crt_signing_config_aws_set_should_normalize_uri_path(
     signing_config->config.flags.should_normalize_uri_path = should_normalize_uri_path;
 }
 
-bool aws_crt_signing_config_aws_get_omit_session_token(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.flags.omit_session_token != 0;
-}
-
 void aws_crt_signing_config_aws_set_omit_session_token(
     aws_crt_signing_config_aws *signing_config,
     bool omit_session_token) {
     signing_config->config.flags.omit_session_token = omit_session_token;
-}
-
-void aws_crt_signing_config_aws_get_signed_body_value(
-    aws_crt_signing_config_aws *signing_config,
-    uint8_t **out_signed_body,
-    size_t *out_signed_body_length) {
-    if (signing_config->signed_body_value.len > 0) {
-        *out_signed_body = signing_config->signed_body_value.buffer;
-        *out_signed_body_length = signing_config->signed_body_value.len;
-    }
 }
 
 void aws_crt_signing_config_aws_set_signed_body_value(
@@ -124,18 +81,10 @@ void aws_crt_signing_config_aws_set_signed_body_value(
     aws_byte_buf_init_copy(&signing_config->signed_body_value, aws_crt_allocator(), &input);
 }
 
-int aws_crt_signing_config_aws_get_signed_body_header_type(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.signed_body_header;
-}
-
 void aws_crt_signing_config_aws_set_signed_body_header_type(
     aws_crt_signing_config_aws *signing_config,
     int signed_body_header_type) {
     signing_config->config.signed_body_header = signed_body_header_type;
-}
-
-uint64_t aws_crt_signing_config_aws_get_expiration_in_seconds(aws_crt_signing_config_aws *signing_config) {
-    return signing_config->config.expiration_in_seconds;
 }
 
 void aws_crt_signing_config_aws_set_expiration_in_seconds(
