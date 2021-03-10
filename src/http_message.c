@@ -123,9 +123,9 @@ void aws_crt_http_message_to_blob(aws_crt_http_message *message, uint8_t **out_b
         &message->encoded_message,
         aws_crt_allocator(),
         sizeof(uint32_t) + sizeof(uint32_t) + method.len + path.len + header_blob.len);
-    aws_byte_buf_write_be32(&message->encoded_message, method.len);
+    aws_byte_buf_write_be32(&message->encoded_message, (uint32_t)method.len);
     aws_byte_buf_write_from_whole_cursor(&message->encoded_message, method);
-    aws_byte_buf_write_be32(&message->encoded_message, path.len);
+    aws_byte_buf_write_be32(&message->encoded_message, (uint32_t)path.len);
     aws_byte_buf_write_from_whole_cursor(&message->encoded_message, path);
     aws_byte_buf_write_from_whole_cursor(&message->encoded_message, header_blob);
 
