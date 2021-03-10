@@ -32,13 +32,13 @@ void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_conf
 void aws_crt_signing_config_aws_set_algorithm(
     aws_crt_signing_config_aws *signing_config,
     enum aws_crt_signing_algorithm algorithm) {
-    signing_config->config.algorithm = algorithm;
+    signing_config->config.algorithm = (int)algorithm;
 }
 
 void aws_crt_signing_config_aws_set_signature_type(
     aws_crt_signing_config_aws *signing_config,
     enum aws_crt_signature_type sig_type) {
-    signing_config->config.signature_type = sig_type;
+    signing_config->config.signature_type = (int)sig_type;
 }
 
 void aws_crt_signing_config_aws_set_credentials_provider(
@@ -52,7 +52,7 @@ void aws_crt_signing_config_aws_set_region(
     const uint8_t *region,
     size_t region_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(region, region_length);
-    input.len++; /* ensure copy is null terminated */
+    input.buffer[input.len++] = 0; /* ensure copy is null terminated */
     aws_byte_buf_init_copy(&signing_config->region, aws_crt_allocator(), &input);
 }
 
@@ -61,7 +61,7 @@ void aws_crt_signing_config_aws_set_service(
     const uint8_t *service,
     size_t service_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(service, service_length);
-    input.len++; /* ensure copy is null terminated */
+    input.buffer[input.len++] = 0; /* ensure copy is null terminated */
     aws_byte_buf_init_copy(&signing_config->service, aws_crt_allocator(), &input);
 }
 
@@ -94,7 +94,7 @@ void aws_crt_signing_config_aws_set_signed_body_value(
 void aws_crt_signing_config_aws_set_signed_body_header_type(
     aws_crt_signing_config_aws *signing_config,
     enum aws_crt_signed_body_header_type signed_body_header_type) {
-    signing_config->config.signed_body_header = signed_body_header_type;
+    signing_config->config.signed_body_header = (int)signed_body_header_type;
 }
 
 void aws_crt_signing_config_aws_set_expiration_in_seconds(
