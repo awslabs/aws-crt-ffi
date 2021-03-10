@@ -69,7 +69,7 @@ static int s_external_input_stream_seek(
     aws_off_t offset,
     enum aws_stream_seek_basis basis) {
     aws_external_input_stream *ext_stream = stream->impl;
-    return ext_stream->seek(ext_stream->user_data, (int64_t)offset, (int)basis);
+    return ext_stream->seek(ext_stream->user_data, (int64_t)offset, (aws_crt_stream_seek_basis)basis);
 }
 
 static int s_external_input_stream_read(struct aws_input_stream *stream, struct aws_byte_buf *dest) {
@@ -101,7 +101,7 @@ static struct aws_input_stream_vtable s_external_input_stream_vtable = {
     .destroy = s_external_input_stream_destroy,
 };
 
-aws_crt_input_stream *aws_crt_input_stream_new(aws_crt_input_stream_options *options) {
+aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_options *options) {
     aws_crt_input_stream *stream = NULL;
     aws_external_input_stream *impl = NULL;
     aws_mem_acquire_many(

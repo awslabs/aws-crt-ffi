@@ -6,7 +6,7 @@
 
 #include "http.h"
 
-aws_crt_http_headers *aws_crt_http_headers_new_from_blob(uint8_t *blob, size_t blob_length) {
+aws_crt_http_headers *aws_crt_http_headers_new_from_blob(const uint8_t *blob, size_t blob_length) {
     aws_crt_http_headers *headers = aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_http_headers));
     headers->headers = aws_http_headers_new(aws_crt_allocator());
     struct aws_byte_cursor cursor = aws_byte_cursor_from_array(blob, blob_length);
@@ -40,6 +40,10 @@ bad_format:
     return NULL;
 }
 
+void aws_crt_http_headers_acquire(aws_crt_http_headers *headers) {
+    aws_http_headers_acquire(headers->headers);
+}
+
 void aws_crt_http_headers_release(aws_crt_http_headers *headers) {
     aws_http_headers_release(headers->headers);
     aws_byte_buf_clean_up(&headers->encoded_headers);
@@ -64,7 +68,7 @@ void aws_crt_http_headers_to_blob(aws_crt_http_headers *headers, uint8_t **out_b
     *out_blob_length = headers->encoded_headers.len;
 }
 
-aws_crt_http_message *aws_crt_http_message_new_from_blob(uint8_t *blob, size_t blob_length) {
+aws_crt_http_message *aws_crt_http_message_new_from_blob(const uint8_t *blob, size_t blob_length) {
     struct aws_byte_cursor cursor = aws_byte_cursor_from_array(blob, blob_length);
 
     uint32_t entry_len = 0;

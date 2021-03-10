@@ -25,20 +25,20 @@ void aws_crt_credentials_options_release(aws_crt_credentials_options *options) {
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-void aws_crt_credentials_options_set_access_key_id(aws_crt_credentials_options *options, const char *access_key_id) {
-    struct aws_byte_buf input = aws_byte_buf_from_c_str(access_key_id);
+void aws_crt_credentials_options_set_access_key_id(aws_crt_credentials_options *options, const uint8_t *access_key_id, size_t access_key_id_length) {
+    struct aws_byte_buf input = aws_byte_buf_from_array(access_key_id, access_key_id_length);
     aws_byte_buf_init_copy(&options->access_key_id, aws_crt_allocator(), &input);
 }
 
 void aws_crt_credentials_options_set_secret_access_key(
     aws_crt_credentials_options *options,
-    const char *secret_access_key) {
-    struct aws_byte_buf input = aws_byte_buf_from_c_str(secret_access_key);
+    const uint8_t *secret_access_key, size_t secret_access_key_length) {
+    struct aws_byte_buf input = aws_byte_buf_from_array(secret_access_key, secret_access_key_length);
     aws_byte_buf_init_copy(&options->secret_access_key, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_options_set_session_token(aws_crt_credentials_options *options, const char *session_token) {
-    struct aws_byte_buf input = aws_byte_buf_from_c_str(session_token);
+void aws_crt_credentials_options_set_session_token(aws_crt_credentials_options *options, const uint8_t *session_token, size_t session_token_length) {
+    struct aws_byte_buf input = aws_byte_buf_from_array(session_token, session_token_length);
     aws_byte_buf_init_copy(&options->session_token, aws_crt_allocator(), &input);
 }
 
@@ -48,7 +48,7 @@ void aws_crt_credentials_options_set_expiration_timepoint_seconds(
     options->expiration_timepoint_seconds = expiration_timepoint_seconds;
 }
 
-aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *options) {
+aws_crt_credentials *aws_crt_credentials_new(const aws_crt_credentials_options *options) {
     struct aws_allocator *allocator = aws_crt_allocator();
     return aws_credentials_new(
         allocator,
@@ -58,6 +58,10 @@ aws_crt_credentials *aws_crt_credentials_new(aws_crt_credentials_options *option
         options->expiration_timepoint_seconds);
 }
 
-void aws_crt_credentials_release(struct aws_credentials *credentials) {
+void aws_crt_credentials_acquire(aws_crt_credentials *credentials) {
+    aws_credentials_acquire(credentials);
+}
+
+void aws_crt_credentials_release(aws_crt_credentials *credentials) {
     aws_credentials_release(credentials);
 }
