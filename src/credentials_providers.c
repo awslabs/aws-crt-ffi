@@ -167,7 +167,7 @@ void aws_crt_credentials_provider_imds_options_release(aws_crt_credentials_provi
 void aws_crt_credentials_provider_imds_options_set_imds_version(
     aws_crt_credentials_provider_imds_options *options,
     enum aws_crt_imds_protocol_version imds_version) {
-    options->imds_version = imds_version;
+    options->imds_version = (int)imds_version;
 }
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_imds_new(
