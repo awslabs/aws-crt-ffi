@@ -25,19 +25,26 @@ void aws_crt_credentials_options_release(aws_crt_credentials_options *options) {
     aws_mem_release(aws_crt_allocator(), options);
 }
 
-void aws_crt_credentials_options_set_access_key_id(aws_crt_credentials_options *options, const uint8_t *access_key_id, size_t access_key_id_length) {
+void aws_crt_credentials_options_set_access_key_id(
+    aws_crt_credentials_options *options,
+    const uint8_t *access_key_id,
+    size_t access_key_id_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(access_key_id, access_key_id_length);
     aws_byte_buf_init_copy(&options->access_key_id, aws_crt_allocator(), &input);
 }
 
 void aws_crt_credentials_options_set_secret_access_key(
     aws_crt_credentials_options *options,
-    const uint8_t *secret_access_key, size_t secret_access_key_length) {
+    const uint8_t *secret_access_key,
+    size_t secret_access_key_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(secret_access_key, secret_access_key_length);
     aws_byte_buf_init_copy(&options->secret_access_key, aws_crt_allocator(), &input);
 }
 
-void aws_crt_credentials_options_set_session_token(aws_crt_credentials_options *options, const uint8_t *session_token, size_t session_token_length) {
+void aws_crt_credentials_options_set_session_token(
+    aws_crt_credentials_options *options,
+    const uint8_t *session_token,
+    size_t session_token_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(session_token, session_token_length);
     aws_byte_buf_init_copy(&options->session_token, aws_crt_allocator(), &input);
 }

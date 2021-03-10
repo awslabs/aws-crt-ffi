@@ -29,11 +29,15 @@ void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_conf
     aws_mem_release(aws_crt_allocator(), signing_config);
 }
 
-void aws_crt_signing_config_aws_set_algorithm(aws_crt_signing_config_aws *signing_config, enum aws_crt_signing_algorithm algorithm) {
+void aws_crt_signing_config_aws_set_algorithm(
+    aws_crt_signing_config_aws *signing_config,
+    enum aws_crt_signing_algorithm algorithm) {
     signing_config->config.algorithm = algorithm;
 }
 
-void aws_crt_signing_config_aws_set_signature_type(aws_crt_signing_config_aws *signing_config, enum aws_crt_signature_type sig_type) {
+void aws_crt_signing_config_aws_set_signature_type(
+    aws_crt_signing_config_aws *signing_config,
+    enum aws_crt_signature_type sig_type) {
     signing_config->config.signature_type = sig_type;
 }
 

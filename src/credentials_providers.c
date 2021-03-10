@@ -61,7 +61,8 @@ void aws_crt_credentials_provider_static_options_set_session_token(
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_static_new(
     const aws_crt_credentials_provider_static_options *options) {
-    aws_crt_credentials_provider_static_options *mutable_options = (aws_crt_credentials_provider_static_options*)options;
+    aws_crt_credentials_provider_static_options *mutable_options =
+        (aws_crt_credentials_provider_static_options *)options;
     mutable_options->options.access_key_id = aws_byte_cursor_from_buf(&options->access_key_id);
     mutable_options->options.secret_access_key = aws_byte_cursor_from_buf(&options->secret_access_key);
     mutable_options->options.session_token = aws_byte_cursor_from_buf(&options->session_token);
@@ -216,7 +217,8 @@ void aws_crt_credentials_provider_ecs_options_set_auth_token(
     aws_byte_buf_init_copy(&options->auth_token, aws_crt_allocator(), &input);
 }
 
-aws_crt_credentials_provider *aws_crt_credentials_provider_ecs_new(const aws_crt_credentials_provider_ecs_options *options) {
+aws_crt_credentials_provider *aws_crt_credentials_provider_ecs_new(
+    const aws_crt_credentials_provider_ecs_options *options) {
     aws_crt_credentials_provider_ecs_options *mutable_options = (aws_crt_credentials_provider_ecs_options *)options;
     mutable_options->options.host = aws_byte_cursor_from_buf(&options->host);
     mutable_options->options.path_and_query = aws_byte_cursor_from_buf(&options->path_and_query);

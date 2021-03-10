@@ -105,13 +105,16 @@ AWS_CRT_API aws_crt_credentials_options *aws_crt_credentials_options_new(void);
 AWS_CRT_API void aws_crt_credentials_options_release(aws_crt_credentials_options *options);
 AWS_CRT_API void aws_crt_credentials_options_set_access_key_id(
     aws_crt_credentials_options *options,
-    const uint8_t *access_key_id, size_t access_key_id_length);
+    const uint8_t *access_key_id,
+    size_t access_key_id_length);
 AWS_CRT_API void aws_crt_credentials_options_set_secret_access_key(
     aws_crt_credentials_options *options,
-    const uint8_t *secret_access_key, size_t secret_access_key_length);
+    const uint8_t *secret_access_key,
+    size_t secret_access_key_length);
 AWS_CRT_API void aws_crt_credentials_options_set_session_token(
     aws_crt_credentials_options *options,
-    const uint8_t *session_token, size_t session_token_length);
+    const uint8_t *session_token,
+    size_t session_token_length);
 AWS_CRT_API void aws_crt_credentials_options_set_expiration_timepoint_seconds(
     aws_crt_credentials_options *options,
     uint64_t expiration_timepoint_seconds);
@@ -132,13 +135,16 @@ AWS_CRT_API void aws_crt_credentials_provider_options_static_release(
     aws_crt_credentials_provider_static_options *options);
 AWS_CRT_API void aws_crt_credentials_provider_static_options_set_access_key_id(
     aws_crt_credentials_provider_static_options *options,
-    const uint8_t *access_key_id, size_t access_key_id_length);
+    const uint8_t *access_key_id,
+    size_t access_key_id_length);
 AWS_CRT_API void aws_crt_credentials_provider_static_options_set_secret_access_key(
     aws_crt_credentials_provider_static_options *options,
-    const uint8_t *secret_access_key, size_t secret_access_key_length);
+    const uint8_t *secret_access_key,
+    size_t secret_access_key_length);
 AWS_CRT_API void aws_crt_credentials_provider_static_options_set_session_token(
     aws_crt_credentials_provider_static_options *options,
-    const uint8_t *session_token, size_t session_token_length);
+    const uint8_t *session_token,
+    size_t session_token_length);
 
 AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_static_new(
     const aws_crt_credentials_provider_static_options *options);
@@ -264,17 +270,23 @@ typedef enum aws_crt_signed_body_header_type {
 AWS_CRT_API aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void);
 AWS_CRT_API void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_config);
 
-AWS_CRT_API void aws_crt_signing_config_aws_set_algorithm(aws_crt_signing_config_aws *signing_config, enum aws_crt_signing_algorithm algorithm);
+AWS_CRT_API void aws_crt_signing_config_aws_set_algorithm(
+    aws_crt_signing_config_aws *signing_config,
+    enum aws_crt_signing_algorithm algorithm);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signature_type(
     aws_crt_signing_config_aws *signing_config,
     enum aws_crt_signature_type sig_type);
 AWS_CRT_API void aws_crt_signing_config_aws_set_credentials_provider(
     aws_crt_signing_config_aws *signing_config,
     aws_crt_credentials_provider *credentials_provider);
-AWS_CRT_API void aws_crt_signing_config_aws_set_region(aws_crt_signing_config_aws *signing_config, const uint8_t *region, size_t region_length);
+AWS_CRT_API void aws_crt_signing_config_aws_set_region(
+    aws_crt_signing_config_aws *signing_config,
+    const uint8_t *region,
+    size_t region_length);
 AWS_CRT_API void aws_crt_signing_config_aws_set_service(
     aws_crt_signing_config_aws *signing_config,
-    const uint8_t *service, size_t service_length);
+    const uint8_t *service,
+    size_t service_length);
 AWS_CRT_API void aws_crt_signing_config_aws_set_use_double_uri_encode(
     aws_crt_signing_config_aws *signing_config,
     bool use_double_uri_encode);
