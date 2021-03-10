@@ -24,6 +24,7 @@ jobs:
           - manylinux2014-x64
           - manylinux2014-x86
           - al2-x64
+      fail-fast: false
     steps:
         # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
     - name: Build ${{ env.PACKAGE_NAME }}
