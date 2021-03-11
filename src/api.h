@@ -290,13 +290,13 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_service(
     size_t service_length);
 AWS_CRT_API void aws_crt_signing_config_aws_set_use_double_uri_encode(
     aws_crt_signing_config_aws *signing_config,
-    bool use_double_uri_encode);
+    _Bool use_double_uri_encode);
 AWS_CRT_API void aws_crt_signing_config_aws_set_should_normalize_uri_path(
     aws_crt_signing_config_aws *signing_config,
-    bool should_normalize_uri_path);
+    _Bool should_normalize_uri_path);
 AWS_CRT_API void aws_crt_signing_config_aws_set_omit_session_token(
     aws_crt_signing_config_aws *signing_config,
-    bool omit_session_token);
+    _Bool omit_session_token);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_value(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *signed_body,
