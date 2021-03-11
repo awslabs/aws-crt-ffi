@@ -310,7 +310,7 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
 
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;
-AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_http_request(aws_crt_http_message *http_request);
+AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *http_request);
 AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
     const uint8_t *previous_signature,

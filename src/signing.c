@@ -101,13 +101,13 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
     signing_config->config.expiration_in_seconds = expiration_in_seconds;
 }
 
-aws_crt_signable *aws_crt_signable_new_from_http_request(aws_crt_http_message *request) {
+aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
     return aws_signable_new_http_request(aws_crt_allocator(), request->message);
 }
 
 aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
-    uint8_t *previous_signature,
+    const uint8_t *previous_signature,
     size_t previous_signature_length) {
     return aws_signable_new_chunk(
         aws_crt_allocator(), chunk_stream, aws_byte_cursor_from_array(previous_signature, previous_signature_length));
