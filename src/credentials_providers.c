@@ -97,7 +97,7 @@ aws_crt_credentials_provider_profile_options *aws_crt_credentials_provider_profi
     return aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_credentials_provider_profile_options));
 }
 
-void aws_crt_credentials_provider_options_release(aws_crt_credentials_provider_profile_options *options) {
+void aws_crt_credentials_provider_profile_options_release(aws_crt_credentials_provider_profile_options *options) {
     aws_byte_buf_clean_up(&options->profile_name);
     aws_byte_buf_clean_up(&options->config_file_name);
     aws_byte_buf_clean_up(&options->credentials_file_name);
