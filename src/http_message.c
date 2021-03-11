@@ -50,19 +50,21 @@ void aws_crt_http_headers_release(aws_crt_http_headers *headers) {
     aws_mem_release(aws_crt_allocator(), headers);
 }
 
-void aws_crt_http_headers_to_blob(aws_crt_http_headers *headers, uint8_t **out_blob, size_t *out_blob_length) {
-    aws_byte_buf_init(&headers->encoded_headers, aws_crt_allocator(), 256);
+void aws_crt_http_headers_to_blob(const aws_crt_http_headers *headers, uint8_t **out_blob, size_t *out_blob_length) {
+    aws_crt_http_headers *mutable_headers = (aws_crt_http_headers *)headers;
+    aws_byte_buf_clean_up(&mutable_headers->encoded_headers);
+    aws_byte_buf_init(&mutable_headers->encoded_headers, aws_crt_allocator(), 256);
     const size_t header_count = aws_http_headers_count(headers->headers);
     for (size_t idx = 0; idx < header_count; ++idx) {
         struct aws_http_header header;
         aws_http_headers_get_index(headers->headers, idx, &header);
         aws_byte_buf_reserve_relative(
-            &headers->encoded_headers, sizeof(uint32_t) + sizeof(uint32_t) + header.name.len + header.value.len);
+            &mutable_headers->encoded_headers, sizeof(uint32_t) + sizeof(uint32_t) + header.name.len + header.value.len);
 
-        aws_byte_buf_write_be32(&headers->encoded_headers, (uint32_t)header.name.len);
-        aws_byte_buf_write_from_whole_cursor(&headers->encoded_headers, header.name);
-        aws_byte_buf_write_be32(&headers->encoded_headers, (uint32_t)header.value.len);
-        aws_byte_buf_write_from_whole_cursor(&headers->encoded_headers, header.value);
+        aws_byte_buf_write_be32(&mutable_headers->encoded_headers, (uint32_t)header.name.len);
+        aws_byte_buf_write_from_whole_cursor(&mutable_headers->encoded_headers, header.name);
+        aws_byte_buf_write_be32(&mutable_headers->encoded_headers, (uint32_t)header.value.len);
+        aws_byte_buf_write_from_whole_cursor(&mutable_headers->encoded_headers, header.value);
     }
     *out_blob = headers->encoded_headers.buffer;
     *out_blob_length = headers->encoded_headers.len;
@@ -105,7 +107,9 @@ void aws_crt_http_message_release(aws_crt_http_message *message) {
     aws_mem_release(aws_crt_allocator(), message);
 }
 
-void aws_crt_http_message_to_blob(aws_crt_http_message *message, uint8_t **out_blob, size_t *out_blob_length) {
+void aws_crt_http_message_to_blob(const aws_crt_http_message *message, uint8_t **out_blob, size_t *out_blob_length) {
+    aws_crt_http_message *mutable_message = (aws_crt_http_message *)message;
+
     struct aws_byte_cursor method;
     aws_http_message_get_request_method(message->message, &method);
 
@@ -119,15 +123,16 @@ void aws_crt_http_message_to_blob(aws_crt_http_message *message, uint8_t **out_b
     };
     aws_crt_http_headers_to_blob(&headers, &header_blob.ptr, &header_blob.len);
 
+    aws_byte_buf_clean_up(&mutable_message->encoded_message);
     aws_byte_buf_init(
-        &message->encoded_message,
+        &mutable_message->encoded_message,
         aws_crt_allocator(),
         sizeof(uint32_t) + sizeof(uint32_t) + method.len + path.len + header_blob.len);
-    aws_byte_buf_write_be32(&message->encoded_message, (uint32_t)method.len);
-    aws_byte_buf_write_from_whole_cursor(&message->encoded_message, method);
-    aws_byte_buf_write_be32(&message->encoded_message, (uint32_t)path.len);
-    aws_byte_buf_write_from_whole_cursor(&message->encoded_message, path);
-    aws_byte_buf_write_from_whole_cursor(&message->encoded_message, header_blob);
+    aws_byte_buf_write_be32(&mutable_message->encoded_message, (uint32_t)method.len);
+    aws_byte_buf_write_from_whole_cursor(&mutable_message->encoded_message, method);
+    aws_byte_buf_write_be32(&mutable_message->encoded_message, (uint32_t)path.len);
+    aws_byte_buf_write_from_whole_cursor(&mutable_message->encoded_message, path);
+    aws_byte_buf_write_from_whole_cursor(&mutable_message->encoded_message, header_blob);
 
     *out_blob = message->encoded_message.buffer;
     *out_blob_length = message->encoded_message.len;

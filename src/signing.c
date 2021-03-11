@@ -52,7 +52,6 @@ void aws_crt_signing_config_aws_set_region(
     const uint8_t *region,
     size_t region_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(region, region_length);
-    input.buffer[input.len++] = 0; /* ensure copy is null terminated */
     aws_byte_buf_init_copy(&signing_config->region, aws_crt_allocator(), &input);
 }
 
@@ -61,7 +60,6 @@ void aws_crt_signing_config_aws_set_service(
     const uint8_t *service,
     size_t service_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(service, service_length);
-    input.buffer[input.len++] = 0; /* ensure copy is null terminated */
     aws_byte_buf_init_copy(&signing_config->service, aws_crt_allocator(), &input);
 }
 
@@ -85,7 +83,7 @@ void aws_crt_signing_config_aws_set_omit_session_token(
 
 void aws_crt_signing_config_aws_set_signed_body_value(
     aws_crt_signing_config_aws *signing_config,
-    uint8_t *signed_body,
+    const uint8_t *signed_body,
     size_t signed_body_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(signed_body, signed_body_length);
     aws_byte_buf_init_copy(&signing_config->signed_body_value, aws_crt_allocator(), &input);
@@ -116,7 +114,7 @@ aws_crt_signable *aws_crt_signable_new_from_chunk(
 }
 
 aws_crt_signable *aws_crt_signable_new_from_canonical_request(
-    uint8_t *canonical_request,
+    const uint8_t *canonical_request,
     size_t canonical_request_length) {
     return aws_signable_new_canonical_request(
         aws_crt_allocator(), aws_byte_cursor_from_array(canonical_request, canonical_request_length));
@@ -128,7 +126,7 @@ void aws_crt_signable_release(aws_crt_signable *signable) {
 
 int aws_crt_sign_request_aws(
     aws_crt_signable *signable,
-    aws_crt_signing_config_aws *signing_config,
+    const aws_crt_signing_config_aws *signing_config,
     aws_crt_signing_complete_fn *on_complete,
     void *user_data) {
     return aws_sign_request_aws(

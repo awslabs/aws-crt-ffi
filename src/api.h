@@ -86,7 +86,7 @@ AWS_CRT_API aws_crt_http_headers *aws_crt_http_headers_new_from_blob(const uint8
 AWS_CRT_API void aws_crt_http_header_acquire(aws_crt_http_headers *headers);
 AWS_CRT_API void aws_crt_http_headers_release(aws_crt_http_headers *headers);
 AWS_CRT_API void aws_crt_http_headers_to_blob(
-    aws_crt_http_headers *headers,
+    const aws_crt_http_headers *headers,
     uint8_t **out_blob,
     size_t *out_blob_length);
 
@@ -94,7 +94,7 @@ typedef struct _aws_crt_http_message aws_crt_http_message;
 AWS_CRT_API aws_crt_http_message *aws_crt_http_message_new_from_blob(const uint8_t *blob, size_t blob_length);
 AWS_CRT_API void aws_crt_http_message_release(aws_crt_http_message *message);
 AWS_CRT_API void aws_crt_http_message_to_blob(
-    aws_crt_http_message *message,
+    const aws_crt_http_message *message,
     uint8_t **out_blob,
     size_t *out_blob_length);
 
@@ -199,7 +199,7 @@ AWS_CRT_API aws_crt_credentials_provider_imds_options *aws_crt_credentials_provi
 AWS_CRT_API void aws_crt_credentials_provider_imds_options_release(aws_crt_credentials_provider_imds_options *options);
 AWS_CRT_API void aws_crt_credentials_provider_imds_options_set_imds_version(
     aws_crt_credentials_provider_imds_options *options,
-    enum aws_crt_imds_protocol_version imds_version);
+    aws_crt_imds_protocol_version imds_version);
 AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_imds_new(
     const aws_crt_credentials_provider_imds_options *options);
 
@@ -272,10 +272,10 @@ AWS_CRT_API void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *
 
 AWS_CRT_API void aws_crt_signing_config_aws_set_algorithm(
     aws_crt_signing_config_aws *signing_config,
-    enum aws_crt_signing_algorithm algorithm);
+    aws_crt_signing_algorithm algorithm);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signature_type(
     aws_crt_signing_config_aws *signing_config,
-    enum aws_crt_signature_type sig_type);
+    aws_crt_signature_type sig_type);
 AWS_CRT_API void aws_crt_signing_config_aws_set_credentials_provider(
     aws_crt_signing_config_aws *signing_config,
     aws_crt_credentials_provider *credentials_provider);
@@ -298,7 +298,7 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_omit_session_token(
     bool omit_session_token);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_value(
     aws_crt_signing_config_aws *signing_config,
-    uint8_t *signed_body,
+    const uint8_t *signed_body,
     size_t signed_body_length);
 AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_header_type(
     aws_crt_signing_config_aws *signing_config,
@@ -314,7 +314,7 @@ AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
     uint8_t *previous_signature,
     size_t previous_signature_length);
-AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_canonical_request(uint8_t *request, size_t request_length);
+AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_canonical_request(const uint8_t *request, size_t request_length);
 AWS_CRT_API void aws_crt_signable_release(aws_crt_signable *signable);
 
 /* aws_sign_request_aws */
@@ -322,7 +322,7 @@ typedef struct aws_signing_result aws_crt_signing_result;
 typedef void(aws_crt_signing_complete_fn)(aws_crt_signing_result *result, int error_code, void *user_data);
 AWS_CRT_API int aws_crt_sign_request_aws(
     aws_crt_signable *signable,
-    aws_crt_signing_config_aws *signing_config,
+    const aws_crt_signing_config_aws *signing_config,
     aws_crt_signing_complete_fn *on_complete,
     void *user_data);
 
