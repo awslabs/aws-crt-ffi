@@ -42,7 +42,7 @@ AWS_CRT_API void aws_crt_event_loop_group_options_set_max_threads(
     aws_crt_event_loop_group_options *options,
     uint16_t max_threads);
 AWS_CRT_API aws_crt_event_loop_group *aws_crt_event_loop_group_new(const aws_crt_event_loop_group_options *options);
-AWS_CRT_API void aws_crt_event_loop_group_acquire(aws_crt_event_loop_group *elg);
+AWS_CRT_API aws_crt_event_loop_group *aws_crt_event_loop_group_acquire(aws_crt_event_loop_group *elg);
 AWS_CRT_API void aws_crt_event_loop_group_release(aws_crt_event_loop_group *elg);
 
 /* Input stream */
@@ -83,7 +83,7 @@ AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream
 /* HTTP */
 typedef struct _aws_crt_http_headers aws_crt_http_headers;
 AWS_CRT_API aws_crt_http_headers *aws_crt_http_headers_new_from_blob(const uint8_t *blob, size_t blob_length);
-AWS_CRT_API void aws_crt_http_header_acquire(aws_crt_http_headers *headers);
+AWS_CRT_API aws_crt_http_headers *aws_crt_http_header_acquire(aws_crt_http_headers *headers);
 AWS_CRT_API void aws_crt_http_headers_release(aws_crt_http_headers *headers);
 AWS_CRT_API void aws_crt_http_headers_to_blob(
     const aws_crt_http_headers *headers,
@@ -119,13 +119,13 @@ AWS_CRT_API void aws_crt_credentials_options_set_expiration_timepoint_seconds(
     aws_crt_credentials_options *options,
     uint64_t expiration_timepoint_seconds);
 AWS_CRT_API aws_crt_credentials *aws_crt_credentials_new(const aws_crt_credentials_options *options);
-AWS_CRT_API void aws_crt_credentials_acquire(aws_crt_credentials *credentials);
+AWS_CRT_API aws_crt_credentials *aws_crt_credentials_acquire(aws_crt_credentials *credentials);
 AWS_CRT_API void aws_crt_credentials_release(aws_crt_credentials *credentials);
 
 /* Credentials providers */
 typedef struct aws_credentials_provider aws_crt_credentials_provider;
 /* Generic credentials provider acquire/release */
-AWS_CRT_API void aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider);
+AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider);
 AWS_CRT_API void aws_crt_credentials_provider_release(aws_crt_credentials_provider *credentials_provider);
 
 /* static credentials provider */

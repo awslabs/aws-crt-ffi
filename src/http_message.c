@@ -40,8 +40,9 @@ bad_format:
     return NULL;
 }
 
-void aws_crt_http_headers_acquire(aws_crt_http_headers *headers) {
+aws_crt_http_headers *aws_crt_http_headers_acquire(aws_crt_http_headers *headers) {
     aws_http_headers_acquire(headers->headers);
+    return headers;
 }
 
 void aws_crt_http_headers_release(aws_crt_http_headers *headers) {

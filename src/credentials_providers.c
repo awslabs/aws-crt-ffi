@@ -14,8 +14,9 @@ struct _aws_crt_credentials_provider_static_options {
     struct aws_byte_buf session_token;
 };
 
-void aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider) {
+aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider) {
     aws_credentials_provider_acquire(credentials_provider);
+    return credentials_provider;
 }
 
 void aws_crt_credentials_provider_release(aws_crt_credentials_provider *credentials_provider) {

@@ -65,8 +65,9 @@ aws_crt_credentials *aws_crt_credentials_new(const aws_crt_credentials_options *
         options->expiration_timepoint_seconds);
 }
 
-void aws_crt_credentials_acquire(aws_crt_credentials *credentials) {
+aws_crt_credentials *aws_crt_credentials_acquire(aws_crt_credentials *credentials) {
     aws_credentials_acquire(credentials);
+    return credentials;
 }
 
 void aws_crt_credentials_release(aws_crt_credentials *credentials) {
