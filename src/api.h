@@ -125,7 +125,8 @@ AWS_CRT_API void aws_crt_credentials_release(aws_crt_credentials *credentials);
 /* Credentials providers */
 typedef struct aws_credentials_provider aws_crt_credentials_provider;
 /* Generic credentials provider acquire/release */
-AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider);
+AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(
+    aws_crt_credentials_provider *credentials_provider);
 AWS_CRT_API void aws_crt_credentials_provider_release(aws_crt_credentials_provider *credentials_provider);
 
 /* static credentials provider */
@@ -312,9 +313,11 @@ typedef struct aws_signable aws_crt_signable;
 AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_http_request(aws_crt_http_message *http_request);
 AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
-    uint8_t *previous_signature,
+    const uint8_t *previous_signature,
     size_t previous_signature_length);
-AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_canonical_request(const uint8_t *request, size_t request_length);
+AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_canonical_request(
+    const uint8_t *request,
+    size_t request_length);
 AWS_CRT_API void aws_crt_signable_release(aws_crt_signable *signable);
 
 /* aws_sign_request_aws */

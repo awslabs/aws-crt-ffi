@@ -60,7 +60,8 @@ void aws_crt_http_headers_to_blob(const aws_crt_http_headers *headers, uint8_t *
         struct aws_http_header header;
         aws_http_headers_get_index(headers->headers, idx, &header);
         aws_byte_buf_reserve_relative(
-            &mutable_headers->encoded_headers, sizeof(uint32_t) + sizeof(uint32_t) + header.name.len + header.value.len);
+            &mutable_headers->encoded_headers,
+            sizeof(uint32_t) + sizeof(uint32_t) + header.name.len + header.value.len);
 
         aws_byte_buf_write_be32(&mutable_headers->encoded_headers, (uint32_t)header.name.len);
         aws_byte_buf_write_from_whole_cursor(&mutable_headers->encoded_headers, header.name);
