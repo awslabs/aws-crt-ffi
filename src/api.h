@@ -83,7 +83,7 @@ AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream
 /* HTTP */
 typedef struct _aws_crt_http_headers aws_crt_http_headers;
 AWS_CRT_API aws_crt_http_headers *aws_crt_http_headers_new_from_blob(const uint8_t *blob, size_t blob_length);
-AWS_CRT_API aws_crt_http_headers *aws_crt_http_header_acquire(aws_crt_http_headers *headers);
+AWS_CRT_API aws_crt_http_headers *aws_crt_http_headers_acquire(aws_crt_http_headers *headers);
 AWS_CRT_API void aws_crt_http_headers_release(aws_crt_http_headers *headers);
 AWS_CRT_API void aws_crt_http_headers_to_blob(
     const aws_crt_http_headers *headers,
