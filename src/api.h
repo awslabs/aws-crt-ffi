@@ -132,7 +132,7 @@ AWS_CRT_API void aws_crt_credentials_provider_release(aws_crt_credentials_provid
 /* static credentials provider */
 typedef struct _aws_crt_credentials_provider_static_options aws_crt_credentials_provider_static_options;
 AWS_CRT_API aws_crt_credentials_provider_static_options *aws_crt_credentials_provider_static_options_new(void);
-AWS_CRT_API void aws_crt_credentials_provider_options_static_release(
+AWS_CRT_API void aws_crt_credentials_provider_static_options_release(
     aws_crt_credentials_provider_static_options *options);
 AWS_CRT_API void aws_crt_credentials_provider_static_options_set_access_key_id(
     aws_crt_credentials_provider_static_options *options,

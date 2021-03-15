@@ -29,7 +29,7 @@ aws_crt_credentials_provider_static_options *aws_crt_credentials_provider_static
     return options;
 }
 
-void aws_crt_credentials_provider_options_static_release(aws_crt_credentials_provider_static_options *options) {
+void aws_crt_credentials_provider_static_options_release(aws_crt_credentials_provider_static_options *options) {
     aws_byte_buf_clean_up_secure(&options->access_key_id);
     aws_byte_buf_clean_up_secure(&options->secret_access_key);
     aws_byte_buf_clean_up_secure(&options->session_token);
