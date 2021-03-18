@@ -126,7 +126,7 @@ int aws_crt_input_stream_seek(aws_crt_input_stream *stream, int64_t offset, aws_
 }
 
 int aws_crt_input_stream_read(aws_crt_input_stream *stream, uint8_t *dest, size_t dest_length) {
-    struct aws_byte_buf buf = aws_byte_buf_from_array(dest, dest_length);
+    struct aws_byte_buf buf = aws_byte_buf_from_empty_array(dest, dest_length);
     return aws_input_stream_read(stream, &buf);
 }
 
