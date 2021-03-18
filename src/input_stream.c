@@ -69,7 +69,7 @@ static int s_external_input_stream_seek(
     aws_off_t offset,
     enum aws_stream_seek_basis basis) {
     aws_external_input_stream *ext_stream = stream->impl;
-    return ext_stream->seek(ext_stream->user_data, (int64_t)offset, (aws_crt_stream_seek_basis)basis);
+    return ext_stream->seek(ext_stream->user_data, (int64_t)offset, (aws_crt_input_stream_seek_basis)basis);
 }
 
 static int s_external_input_stream_read(struct aws_input_stream *stream, struct aws_byte_buf *dest) {
@@ -79,7 +79,7 @@ static int s_external_input_stream_read(struct aws_input_stream *stream, struct 
 
 static int s_external_input_stream_get_status(struct aws_input_stream *stream, struct aws_stream_status *status) {
     aws_external_input_stream *ext_stream = stream->impl;
-    return ext_stream->get_status(ext_stream->user_data, status);
+    return ext_stream->get_status(ext_stream->user_data, (aws_crt_input_stream_status*)status);
 }
 
 static int s_external_input_stream_get_length(struct aws_input_stream *stream, int64_t *out_length) {
@@ -119,4 +119,21 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
 
 void aws_crt_input_stream_release(aws_crt_input_stream *stream) {
     aws_input_stream_destroy(stream);
+}
+
+int aws_crt_input_stream_seek(aws_crt_input_stream *stream, int64_t offset, aws_crt_input_stream_seek_basis basis) {
+    return aws_input_stream_seek(stream, offset, basis);
+}
+
+int aws_crt_input_stream_read(aws_crt_input_stream *stream, uint8_t *dest, size_t dest_length) {
+    struct aws_byte_buf buf = aws_byte_buf_from_array(dest, dest_length);
+    return aws_input_stream_read(stream, &buf);
+}
+
+int aws_crt_input_stream_get_status(aws_crt_input_stream *stream, aws_crt_input_stream_status *status) {
+    return aws_input_stream_get_status(stream, (struct aws_stream_status *)status);
+}
+
+int aws_crt_input_stream_get_length(aws_crt_input_stream *stream, int64_t *out_length) {
+    return aws_input_stream_get_length(stream, out_length);
 }

@@ -51,14 +51,14 @@ typedef struct _aws_crt_input_stream_options aws_crt_input_stream_options;
 typedef struct _aws_crt_stream_status {
     _Bool is_end_of_stream;
     _Bool is_valid;
-} aws_crt_stream_status;
+} aws_crt_input_stream_status;
 typedef enum aws_crt_stream_seek_basis {
     AWS_CRT_STREAM_SEEK_BASIS_BEGIN = 0,
     AWS_CRT_STREAM_SEEK_BASIS_END = 2,
-} aws_crt_stream_seek_basis;
-typedef int(aws_crt_input_stream_seek_fn)(void *user_data, int64_t offset, aws_crt_stream_seek_basis seek_basis);
+} aws_crt_input_stream_seek_basis;
+typedef int(aws_crt_input_stream_seek_fn)(void *user_data, int64_t offset, aws_crt_input_stream_seek_basis seek_basis);
 typedef int(aws_crt_input_stream_read_fn)(void *user_data, uint8_t *dest, size_t dest_length);
-typedef int(aws_crt_input_stream_get_status_fn)(void *user_data, aws_crt_stream_status *out_status);
+typedef int(aws_crt_input_stream_get_status_fn)(void *user_data, aws_crt_input_stream_status *out_status);
 typedef int(aws_crt_input_stream_get_length_fn)(void *user_data, int64_t *out_length);
 typedef void(aws_crt_input_stream_destroy_fn)(void *user_data);
 AWS_CRT_API aws_crt_input_stream_options *aws_crt_input_stream_options_new(void);
@@ -82,6 +82,13 @@ AWS_CRT_API void aws_crt_input_stream_options_set_destroy(
 
 AWS_CRT_API aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_options *options);
 AWS_CRT_API void aws_crt_input_stream_release(aws_crt_input_stream *input_stream);
+AWS_CRT_API int aws_crt_input_stream_seek(
+    aws_crt_input_stream *input_stream,
+    int64_t offset,
+    aws_crt_input_stream_seek_basis seek_basis);
+AWS_CRT_API int aws_crt_input_stream_read(aws_crt_input_stream *stream, uint8_t *dest, size_t dest_length);
+AWS_CRT_API int aws_crt_input_stream_get_status(aws_crt_input_stream *stream, aws_crt_input_stream_status *status);
+AWS_CRT_API int aws_crt_input_stream_get_length(aws_crt_input_stream *stream, int64_t *length);
 
 /* HTTP */
 typedef struct _aws_crt_http_headers aws_crt_http_headers;
