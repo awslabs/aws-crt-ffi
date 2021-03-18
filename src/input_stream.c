@@ -74,7 +74,7 @@ static int s_external_input_stream_seek(
 
 static int s_external_input_stream_read(struct aws_input_stream *stream, struct aws_byte_buf *dest) {
     aws_external_input_stream *ext_stream = stream->impl;
-    return ext_stream->read(ext_stream->user_data, dest->buffer, dest->len);
+    return ext_stream->read(ext_stream->user_data, dest->buffer, dest->capacity);
 }
 
 static int s_external_input_stream_get_status(struct aws_input_stream *stream, struct aws_stream_status *status) {
