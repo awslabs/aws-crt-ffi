@@ -41,3 +41,11 @@ struct aws_crt_test_struct *aws_crt_test_pointer_error(void) {
     aws_raise_error(AWS_ERROR_OOM);
     return NULL;
 }
+
+void *aws_crt_mem_acquire(size_t size) {
+    return aws_mem_acquire(aws_crt_allocator(), size);
+}
+
+void aws_crt_mem_release(void *ptr) {
+    aws_mem_release(aws_crt_allocator(), ptr);
+}

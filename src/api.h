@@ -26,6 +26,9 @@ AWS_CRT_API void aws_crt_init(void);
 AWS_CRT_API void aws_crt_clean_up(void);
 AWS_CRT_API int aws_crt_test_error(int);
 
+AWS_CRT_API void *aws_crt_mem_acquire(size_t size);
+AWS_CRT_API void aws_crt_mem_release(void *mem);
+
 /* Errors */
 AWS_CRT_API int aws_crt_last_error(void);
 AWS_CRT_API const char *aws_crt_error_str(int);
