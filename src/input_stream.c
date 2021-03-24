@@ -122,7 +122,7 @@ void aws_crt_input_stream_release(aws_crt_input_stream *stream) {
 }
 
 int aws_crt_input_stream_seek(aws_crt_input_stream *stream, int64_t offset, aws_crt_input_stream_seek_basis basis) {
-    return aws_input_stream_seek(stream, offset, basis);
+    return aws_input_stream_seek(stream, offset, (int)basis);
 }
 
 int aws_crt_input_stream_read(aws_crt_input_stream *stream, uint8_t *dest, size_t dest_length) {
