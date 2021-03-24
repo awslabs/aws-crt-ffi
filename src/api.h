@@ -51,11 +51,11 @@ AWS_CRT_API void aws_crt_event_loop_group_release(aws_crt_event_loop_group *elg)
 /* Input stream */
 typedef struct aws_input_stream aws_crt_input_stream;
 typedef struct _aws_crt_input_stream_options aws_crt_input_stream_options;
-typedef struct _aws_crt_stream_status {
+typedef struct _aws_crt_input_stream_status {
     _Bool is_end_of_stream;
     _Bool is_valid;
 } aws_crt_input_stream_status;
-typedef enum aws_crt_stream_seek_basis {
+typedef enum aws_crt_input_stream_seek_basis {
     AWS_CRT_STREAM_SEEK_BASIS_BEGIN = 0,
     AWS_CRT_STREAM_SEEK_BASIS_END = 2,
 } aws_crt_input_stream_seek_basis;
