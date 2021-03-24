@@ -79,7 +79,7 @@ static int s_external_input_stream_read(struct aws_input_stream *stream, struct 
 
 static int s_external_input_stream_get_status(struct aws_input_stream *stream, struct aws_stream_status *status) {
     aws_external_input_stream *ext_stream = stream->impl;
-    return ext_stream->get_status(ext_stream->user_data, (aws_crt_input_stream_status*)status);
+    return ext_stream->get_status(ext_stream->user_data, (aws_crt_input_stream_status *)status);
 }
 
 static int s_external_input_stream_get_length(struct aws_input_stream *stream, int64_t *out_length) {
