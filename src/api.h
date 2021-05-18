@@ -336,7 +336,9 @@ AWS_CRT_API void aws_crt_signable_release(aws_crt_signable *signable);
 /* aws_signing_result */
 typedef struct aws_signing_result aws_crt_signing_result;
 AWS_CRT_API void aws_crt_signing_result_release(aws_crt_signing_result *result);
-AWS_CRT_API int aws_crt_signing_result_apply_to_http_request(aws_crt_http_message *request, const aws_crt_signing_result *result);
+AWS_CRT_API int aws_crt_signing_result_apply_to_http_request(
+    aws_crt_http_message *request,
+    const aws_crt_signing_result *result);
 
 /* aws_sign_request_aws */
 typedef void(aws_crt_signing_complete_fn)(aws_crt_signing_result *result, int error_code, void *user_data);
