@@ -6,6 +6,7 @@
 
 #include <aws/auth/signable.h>
 #include <aws/auth/signing.h>
+#include <aws/auth/signing_result.h>
 #include <aws/common/string.h>
 #include <aws/http/request_response.h>
 
@@ -122,6 +123,15 @@ aws_crt_signable *aws_crt_signable_new_from_canonical_request(
 
 void aws_crt_signable_release(aws_crt_signable *signable) {
     aws_signable_destroy(signable);
+}
+
+int aws_crt_signing_result_apply_to_http_request(aws_crt_http_message *request, const aws_crt_signing_result *result) {
+    return aws_apply_signing_result_to_http_request(request->message, aws_crt_allocator(), result);
+}
+
+void aws_crt_signing_result_release(aws_crt_signing_result *result) {
+    aws_signing_result_clean_up(result);
+    aws_mem_release(aws_crt_allocator(), result);
 }
 
 int aws_crt_sign_request_aws(
