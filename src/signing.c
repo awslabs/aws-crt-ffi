@@ -125,7 +125,7 @@ void aws_crt_signable_release(aws_crt_signable *signable) {
     aws_signable_destroy(signable);
 }
 
-int aws_crt_signing_result_apply_to_http_request(aws_crt_http_message *request, const aws_crt_signing_result *result) {
+int aws_crt_signing_result_apply_to_http_request(const aws_crt_signing_result *result, aws_crt_http_message *request) {
     return aws_apply_signing_result_to_http_request(request->message, aws_crt_allocator(), result);
 }
 
