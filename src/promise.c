@@ -15,6 +15,7 @@ struct _aws_crt_promise {
     /* atomic allows for observability without holding the lock */
     struct aws_atomic_var complete;
     int error_code;
+    void *value;
 };
 
 aws_crt_promise *aws_crt_promise_new(void) {
@@ -56,8 +57,11 @@ _Bool aws_crt_promise_completed(aws_crt_promise *promise) {
     aws_atomic_load_int(&promise->complete);
 }
 
-void aws_crt_promise_complete(aws_crt_promise *promise) {
+void aws_crt_promise_complete(aws_crt_promise *promise, void *value) {
+    aws_mutex_lock(&promise->mutex);
     aws_atomic_store_int(&promise->complete, 1);
+    promise->value = value;
+    aws_mutex_unlock(&promise->mutex);
     aws_condition_variable_notify_one(&promise->cv);
 }
 
@@ -69,4 +73,9 @@ void aws_crt_promise_fail(aws_crt_promise *promise, int error_code) {
 
 int aws_crt_promise_error_code(aws_crt_promise *promise) {
     return promise->error_code;
+}
+
+void *aws_crt_promise_value(aws_crt_promise *promise) {
+    AWS_FATAL_ASSERT(aws_crt_promise_completed(promise));
+    return promise->value;
 }
