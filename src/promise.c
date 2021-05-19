@@ -6,8 +6,8 @@
 #include "api.h"
 
 #include <aws/common/atomics.h>
-#include <aws/common/mutex.h>
 #include <aws/common/condition_variable.h>
+#include <aws/common/mutex.h>
 
 struct _aws_crt_promise {
     struct aws_mutex mutex;
@@ -22,7 +22,7 @@ aws_crt_promise *aws_crt_promise_new(void) {
     aws_crt_promise *promise = aws_crt_mem_acquire(sizeof(aws_crt_promise));
     aws_mutex_init(&promise->mutex);
     aws_condition_variable_init(&promise->cv);
-    aws_atomic_init_int(&promise->complete,0);
+    aws_atomic_init_int(&promise->complete, 0);
     promise->error_code = 0;
     promise->value = NULL;
     return promise;
