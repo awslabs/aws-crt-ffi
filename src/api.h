@@ -42,6 +42,16 @@ AWS_CRT_API void aws_crt_mutex_delete(aws_crt_mutex *mutex);
 AWS_CRT_API void aws_crt_mutex_lock(aws_crt_mutex *mutex);
 AWS_CRT_API void aws_crt_mutex_unlock(aws_crt_mutex *mutex);
 
+typedef struct _aws_crt_promise aws_crt_promise;
+AWS_CRT_API aws_crt_promise *aws_crt_promise_new(void);
+AWS_CRT_API void aws_crt_promise_delete(aws_crt_promise *promise);
+AWS_CRT_API _Bool aws_crt_promise_wait(aws_crt_promise *promise);
+AWS_CRT_API _Bool aws_crt_promise_wait_for(aws_crt_promise *promise, size_t milliseconds);
+AWS_CRT_API void aws_crt_promise_complete(aws_crt_promise *promise);
+AWS_CRT_API void aws_crt_promise_fail(aws_crt_promise *promise, int error_code);
+AWS_CRT_API _Bool aws_crt_promise_completed(aws_crt_promise *promise);
+AWS_CRT_API int aws_crt_promise_error_code(aws_crt_promise *promise);
+
 /* IO */
 typedef struct aws_event_loop_group aws_crt_event_loop_group;
 typedef struct _aws_crt_event_loop_group_options aws_crt_event_loop_group_options;
