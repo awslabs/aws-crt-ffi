@@ -71,5 +71,6 @@ void aws_crt_mutex_unlock(aws_crt_mutex *mutex) {
 }
 
 void *aws_crt_current_thread_id(void) {
-    return (void *)aws_thread_current_thread_id();
+    uintptr_t thread_id = (uintptr_t)aws_thread_current_thread_id();
+    return (void *)thread_id;
 }
