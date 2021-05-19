@@ -22,7 +22,7 @@ aws_crt_promise *aws_crt_promise_new(void) {
     aws_crt_promise *promise = aws_crt_mem_acquire(sizeof(aws_crt_promise));
     aws_mutex_init(&promise->mutex);
     aws_condition_variable_init(&promise->cv);
-    promise->complete = AWS_ATOMIC_INIT_INT(0);
+    aws_atomic_init_int(&promise->complete,0);
     promise->error_code = 0;
     promise->value = NULL;
     return promise;
@@ -36,7 +36,7 @@ void aws_crt_promise_delete(aws_crt_promise *promise) {
 
 static bool s_promise_completed(void *user_data) {
     aws_crt_promise *promise = user_data;
-    return aws_atomic_load_int(&promise->completed) != 0;
+    return aws_crt_promise_completed(promise);
 }
 
 _Bool aws_crt_promise_wait(aws_crt_promise *promise) {
@@ -55,7 +55,7 @@ _Bool aws_crt_promise_wait_for(aws_crt_promise *promise, size_t milliseconds) {
 }
 
 _Bool aws_crt_promise_completed(aws_crt_promise *promise) {
-    aws_atomic_load_int(&promise->complete);
+    return aws_atomic_load_int(&promise->complete) != 0;
 }
 
 void aws_crt_promise_complete(aws_crt_promise *promise, void *value) {
