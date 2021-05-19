@@ -24,6 +24,7 @@ aws_crt_promise *aws_crt_promise_new(void) {
     aws_condition_variable_init(&promise->cv);
     promise->complete = AWS_ATOMIC_INIT_INT(0);
     promise->error_code = 0;
+    promise->value = NULL;
     return promise;
 }
 
