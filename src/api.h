@@ -51,7 +51,7 @@ AWS_CRT_API void aws_crt_promise_complete(aws_crt_promise *promise, void *value)
 AWS_CRT_API void aws_crt_promise_fail(aws_crt_promise *promise, int error_code);
 AWS_CRT_API _Bool aws_crt_promise_completed(aws_crt_promise *promise);
 AWS_CRT_API int aws_crt_promise_error_code(aws_crt_promise *promise);
-AWS_CRT_API void* aws_crt_promise_value(aws_crt_promise *promise);
+AWS_CRT_API void *aws_crt_promise_value(aws_crt_promise *promise);
 
 /* IO */
 typedef struct aws_event_loop_group aws_crt_event_loop_group;
