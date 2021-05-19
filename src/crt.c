@@ -6,6 +6,7 @@
 
 #include <aws/auth/auth.h>
 #include <aws/cal/cal.h>
+#include <aws/common/mutex.h>
 #include <aws/common/ref_count.h>
 #include <aws/compression/compression.h>
 #include <aws/http/http.h>
@@ -48,4 +49,23 @@ void *aws_crt_mem_acquire(size_t size) {
 
 void aws_crt_mem_release(void *ptr) {
     aws_mem_release(aws_crt_allocator(), ptr);
+}
+
+aws_crt_mutex *aws_crt_mutex_new(void) {
+    aws_crt_mutex *mutex = aws_crt_mem_acquire(sizeof(aws_crt_mutex));
+    aws_mutex_init(mutex);
+    return mutex;
+}
+
+void aws_crt_mutex_delete(aws_crt_mutex *mutex) {
+    aws_mutex_clean_up(mutex);
+    aws_crt_mem_release(mutex);
+}
+
+void aws_crt_mutex_lock(aws_crt_mutex *mutex) {
+    aws_mutex_lock(mutex);
+}
+
+void aws_crt_mutex_unlock(aws_crt_mutex *mutex) {
+    aws_mutex_unlock(mutex);
 }
