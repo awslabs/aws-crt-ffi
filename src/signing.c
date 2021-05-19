@@ -20,7 +20,8 @@ struct _aws_crt_signing_config_aws {
 };
 
 aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void) {
-    aws_crt_signing_config_aws *signing_config = aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_signing_config_aws));
+    aws_crt_signing_config_aws *signing_config =
+        aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_signing_config_aws));
     signing_config->config.config_type = AWS_SIGNING_CONFIG_AWS;
     return signing_config;
 }
