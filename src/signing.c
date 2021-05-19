@@ -57,6 +57,7 @@ void aws_crt_signing_config_aws_set_region(
     size_t region_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(region, region_length);
     aws_byte_buf_init_copy(&signing_config->region, aws_crt_allocator(), &input);
+    signing_config->config.region = aws_byte_cursor_from_buf(&signing_config->region);
 }
 
 void aws_crt_signing_config_aws_set_service(
@@ -65,6 +66,7 @@ void aws_crt_signing_config_aws_set_service(
     size_t service_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(service, service_length);
     aws_byte_buf_init_copy(&signing_config->service, aws_crt_allocator(), &input);
+    signing_config->config.service = aws_byte_cursor_from_buf(&signing_config->service);
 }
 
 void aws_crt_signing_config_aws_set_use_double_uri_encode(
@@ -91,6 +93,7 @@ void aws_crt_signing_config_aws_set_signed_body_value(
     size_t signed_body_length) {
     struct aws_byte_buf input = aws_byte_buf_from_array(signed_body, signed_body_length);
     aws_byte_buf_init_copy(&signing_config->signed_body_value, aws_crt_allocator(), &input);
+    signing_config->config.signed_body_value = aws_byte_cursor_from_buf(&signing_config->signed_body_value);
 }
 
 void aws_crt_signing_config_aws_set_signed_body_header_type(
