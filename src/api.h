@@ -49,7 +49,7 @@ aws_crt_promise *aws_crt_promise_new(void);
 void aws_crt_promise_delete(aws_crt_promise *promise);
 _Bool aws_crt_promise_wait(aws_crt_promise *promise);
 _Bool aws_crt_promise_wait_for(aws_crt_promise *promise, size_t milliseconds);
-void aws_crt_promise_complete(aws_crt_promise *promise, void *value, void (*dtor)(void*));
+void aws_crt_promise_complete(aws_crt_promise *promise, void *value, void (*dtor)(void *));
 void aws_crt_promise_fail(aws_crt_promise *promise, int error_code);
 _Bool aws_crt_promise_completed(aws_crt_promise *promise);
 int aws_crt_promise_error_code(aws_crt_promise *promise);

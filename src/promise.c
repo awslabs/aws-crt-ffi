@@ -50,7 +50,8 @@ _Bool aws_crt_promise_wait(aws_crt_promise *promise) {
 
 _Bool aws_crt_promise_wait_for(aws_crt_promise *promise, size_t milliseconds) {
     aws_mutex_lock(&promise->mutex);
-    aws_condition_variable_wait_for_pred(&promise->cv, &promise->mutex, (int64_t)milliseconds, s_promise_completed, promise);
+    aws_condition_variable_wait_for_pred(
+        &promise->cv, &promise->mutex, (int64_t)milliseconds, s_promise_completed, promise);
     aws_mutex_unlock(&promise->mutex);
     return aws_crt_promise_completed(promise) && promise->error_code == 0;
 }
@@ -62,8 +63,9 @@ _Bool aws_crt_promise_completed(aws_crt_promise *promise) {
     return complete;
 }
 
-void aws_crt_promise_complete(aws_crt_promise *promise, void *value, void (*dtor)(void*)) {
-    AWS_FATAL_ASSERT(!aws_crt_promise_completed(promise) && "aws_crt_promise_complete: cannot complete a promise more than once");
+void aws_crt_promise_complete(aws_crt_promise *promise, void *value, void (*dtor)(void *)) {
+    AWS_FATAL_ASSERT(
+        !aws_crt_promise_completed(promise) && "aws_crt_promise_complete: cannot complete a promise more than once");
     aws_mutex_lock(&promise->mutex);
     promise->value = value;
     promise->dtor = dtor;
@@ -73,7 +75,8 @@ void aws_crt_promise_complete(aws_crt_promise *promise, void *value, void (*dtor
 }
 
 void aws_crt_promise_fail(aws_crt_promise *promise, int error_code) {
-    AWS_FATAL_ASSERT(!aws_crt_promise_completed(promise) && "aws_crt_promise_fail: cannot fail a promise more than once");
+    AWS_FATAL_ASSERT(
+        !aws_crt_promise_completed(promise) && "aws_crt_promise_fail: cannot fail a promise more than once");
     aws_mutex_lock(&promise->mutex);
     promise->error_code = error_code;
     promise->complete = true;
