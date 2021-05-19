@@ -37,21 +37,22 @@ AWS_CRT_API const char *aws_crt_error_debug_str(int);
 AWS_CRT_API void aws_crt_reset_error(void);
 
 typedef struct aws_mutex aws_crt_mutex;
-AWS_CRT_API aws_crt_mutex *aws_crt_mutex_new(void);
-AWS_CRT_API void aws_crt_mutex_delete(aws_crt_mutex *mutex);
-AWS_CRT_API void aws_crt_mutex_lock(aws_crt_mutex *mutex);
-AWS_CRT_API void aws_crt_mutex_unlock(aws_crt_mutex *mutex);
+aws_crt_mutex *aws_crt_mutex_new(void);
+void aws_crt_mutex_delete(aws_crt_mutex *mutex);
+void aws_crt_mutex_lock(aws_crt_mutex *mutex);
+void aws_crt_mutex_unlock(aws_crt_mutex *mutex);
 
 typedef struct _aws_crt_promise aws_crt_promise;
-AWS_CRT_API aws_crt_promise *aws_crt_promise_new(void);
-AWS_CRT_API void aws_crt_promise_delete(aws_crt_promise *promise);
-AWS_CRT_API _Bool aws_crt_promise_wait(aws_crt_promise *promise);
-AWS_CRT_API _Bool aws_crt_promise_wait_for(aws_crt_promise *promise, size_t milliseconds);
-AWS_CRT_API void aws_crt_promise_complete(aws_crt_promise *promise, void *value);
-AWS_CRT_API void aws_crt_promise_fail(aws_crt_promise *promise, int error_code);
-AWS_CRT_API _Bool aws_crt_promise_completed(aws_crt_promise *promise);
-AWS_CRT_API int aws_crt_promise_error_code(aws_crt_promise *promise);
-AWS_CRT_API void *aws_crt_promise_value(aws_crt_promise *promise);
+aws_crt_promise *aws_crt_promise_new(void);
+void aws_crt_promise_delete(aws_crt_promise *promise);
+_Bool aws_crt_promise_wait(aws_crt_promise *promise);
+_Bool aws_crt_promise_wait_for(aws_crt_promise *promise, size_t milliseconds);
+void aws_crt_promise_complete(aws_crt_promise *promise, void *value, void (*dtor)(void*));
+void aws_crt_promise_fail(aws_crt_promise *promise, int error_code);
+_Bool aws_crt_promise_completed(aws_crt_promise *promise);
+int aws_crt_promise_error_code(aws_crt_promise *promise);
+void *aws_crt_promise_value(aws_crt_promise *promise);
+void *aws_crt_promise_take_value(aws_crt_promise *promise);
 
 /* IO */
 typedef struct aws_event_loop_group aws_crt_event_loop_group;
