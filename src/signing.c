@@ -108,6 +108,10 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
     signing_config->config.expiration_in_seconds = expiration_in_seconds;
 }
 
+void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_config, uint64_t timestamp) {
+    aws_date_time_init_epoch_secs(&signing_config->config.date, (double)timestamp);
+}
+
 aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
     return aws_signable_new_http_request(aws_crt_allocator(), request->message);
 }
