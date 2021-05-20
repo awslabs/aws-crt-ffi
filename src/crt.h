@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
+#include <aws/common/common.h>
 #include "api.h"
 
 /* Utility functions for use within this library */

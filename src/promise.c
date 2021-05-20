@@ -3,9 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-#include "api.h"
+#include "crt.h"
 
-#include <aws/common/atomics.h>
 #include <aws/common/condition_variable.h>
 #include <aws/common/mutex.h>
 
@@ -15,6 +14,7 @@ struct _aws_crt_promise {
     bool complete;
     int error_code;
     void *value;
+    /* destructor for value, will be invoked if the value is not taken */
     void (*dtor)(void *);
 };
 

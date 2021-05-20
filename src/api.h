@@ -5,7 +5,16 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-#include <aws/common/common.h>
+/*
+ * NOTE: This header gets processed by libffi's FFI header parser. Includes and macros will not be
+ * evaluated, so they are stripped before installation. While int types work, bool does not, so
+ * you will see _Bool throughout the API (C99 standard). This also means that implementations must
+ * use _Bool in their signatures, or they will create linking problems on some platforms.
+ *
+ * There are also some functions in this header that are not decorated with AWS_CRT_API. This is for
+ * functions that are useful to native language extension authors linking to this library, but are not
+ * for FFI consumption, or do not obey ref-counted ownership rules like the other resources in the FFI API.
+ */
 
 /* AWS_CRT_API marks a function as public */
 #if defined(_WIN32)
@@ -19,7 +28,6 @@
 #endif
 
 /* Public function definitions */
-AWS_EXTERN_C_BEGIN
 
 /* CRT */
 AWS_CRT_API void aws_crt_init(void);
@@ -368,7 +376,5 @@ AWS_CRT_API int aws_crt_sign_request_aws(
     const aws_crt_signing_config_aws *signing_config,
     aws_crt_signing_complete_fn *on_complete,
     void *user_data);
-
-AWS_EXTERN_C_END
 
 #endif /* AWS_CRT_API_H */
