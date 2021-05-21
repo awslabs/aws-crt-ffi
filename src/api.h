@@ -44,14 +44,6 @@ AWS_CRT_API const char *aws_crt_error_name(int);
 AWS_CRT_API const char *aws_crt_error_debug_str(int);
 AWS_CRT_API void aws_crt_reset_error(void);
 
-void *aws_crt_current_thread_id(void);
-
-typedef struct aws_mutex aws_crt_mutex;
-aws_crt_mutex *aws_crt_mutex_new(void);
-void aws_crt_mutex_delete(aws_crt_mutex *mutex);
-void aws_crt_mutex_lock(aws_crt_mutex *mutex);
-void aws_crt_mutex_unlock(aws_crt_mutex *mutex);
-
 typedef struct _aws_crt_promise aws_crt_promise;
 aws_crt_promise *aws_crt_promise_new(void);
 void aws_crt_promise_delete(aws_crt_promise *promise);
