@@ -328,7 +328,7 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_header_type(
 AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
     aws_crt_signing_config_aws *signing_config,
     uint64_t expiration_in_seconds);
-AWS_CRT_API void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_config, uint64_t timestamp);
+AWS_CRT_API void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_config, uint64_t seconds_since_epoch);
 
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;
