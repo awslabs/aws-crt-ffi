@@ -20,14 +20,14 @@ typedef aws_crt_input_stream_options aws_external_input_stream;
 
 aws_crt_input_stream_options *aws_crt_input_stream_options_new() {
     aws_crt_input_stream_options *options =
-        aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_input_stream_options));
+        aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_input_stream_options));
     AWS_FATAL_ASSERT(options != NULL);
     AWS_ZERO_STRUCT(*options);
     return options;
 }
 
 void aws_crt_input_stream_options_release(aws_crt_input_stream_options *options) {
-    aws_mem_release(aws_crt_allocator(), options);
+    aws_mem_release(aws_crt_default_allocator(), options);
 }
 
 void aws_crt_input_stream_options_set_user_data(aws_crt_input_stream_options *options, void *user_data) {
@@ -90,7 +90,7 @@ static int s_external_input_stream_get_length(struct aws_input_stream *stream, i
 static void s_external_input_stream_destroy(struct aws_input_stream *stream) {
     aws_external_input_stream *ext_stream = stream->impl;
     ext_stream->destroy(ext_stream->user_data);
-    aws_mem_release(aws_crt_allocator(), stream);
+    aws_mem_release(aws_crt_default_allocator(), stream);
 }
 
 static struct aws_input_stream_vtable s_external_input_stream_vtable = {
@@ -105,13 +105,13 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
     aws_crt_input_stream *stream = NULL;
     aws_external_input_stream *impl = NULL;
     aws_mem_acquire_many(
-        aws_crt_allocator(), 2, &stream, sizeof(aws_crt_input_stream), &impl, sizeof(aws_external_input_stream));
+        aws_crt_default_allocator(), 2, &stream, sizeof(aws_crt_input_stream), &impl, sizeof(aws_external_input_stream));
     AWS_FATAL_ASSERT(stream != NULL && impl != NULL);
     AWS_ZERO_STRUCT(*stream);
     AWS_ZERO_STRUCT(*impl);
 
     *impl = *options;
-    stream->allocator = aws_crt_allocator();
+    stream->allocator = aws_crt_default_allocator();
     stream->impl = impl;
     stream->vtable = &s_external_input_stream_vtable;
     return stream;

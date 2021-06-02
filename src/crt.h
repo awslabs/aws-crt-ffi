@@ -12,7 +12,4 @@
 
 /* Utility functions for use within this library */
 
-/* Get default allocator */
-struct aws_allocator *aws_crt_allocator(void);
-
 #endif /* AWS_CRT_CRT_H */

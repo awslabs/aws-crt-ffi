@@ -34,6 +34,9 @@ AWS_CRT_API void aws_crt_init(void);
 AWS_CRT_API void aws_crt_clean_up(void);
 AWS_CRT_API int aws_crt_test_error(int);
 
+typedef struct aws_allocator aws_crt_allocator;
+
+AWS_CRT_API aws_crt_allocator *aws_crt_default_allocator(void);
 AWS_CRT_API void *aws_crt_mem_acquire(size_t size);
 AWS_CRT_API void *aws_crt_mem_calloc(size_t element_count, size_t element_size);
 AWS_CRT_API void aws_crt_mem_release(void *mem);
