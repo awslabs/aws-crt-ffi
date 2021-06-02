@@ -55,6 +55,7 @@ void aws_crt_signing_config_aws_set_region(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *region,
     size_t region_length) {
+    aws_byte_buf_clean_up(&signing_config->region);
     struct aws_byte_buf input = aws_byte_buf_from_array(region, region_length);
     aws_byte_buf_init_copy(&signing_config->region, aws_crt_allocator(), &input);
     signing_config->config.region = aws_byte_cursor_from_buf(&signing_config->region);
@@ -64,6 +65,7 @@ void aws_crt_signing_config_aws_set_service(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *service,
     size_t service_length) {
+    aws_byte_buf_clean_up(&signing_config->service);
     struct aws_byte_buf input = aws_byte_buf_from_array(service, service_length);
     aws_byte_buf_init_copy(&signing_config->service, aws_crt_allocator(), &input);
     signing_config->config.service = aws_byte_cursor_from_buf(&signing_config->service);
@@ -91,6 +93,7 @@ void aws_crt_signing_config_aws_set_signed_body_value(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *signed_body,
     size_t signed_body_length) {
+    aws_byte_buf_clean_up(&signing_config->signed_body_value);
     struct aws_byte_buf input = aws_byte_buf_from_array(signed_body, signed_body_length);
     aws_byte_buf_init_copy(&signing_config->signed_body_value, aws_crt_allocator(), &input);
     signing_config->config.signed_body_value = aws_byte_cursor_from_buf(&signing_config->signed_body_value);
