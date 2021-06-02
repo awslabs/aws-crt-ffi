@@ -124,7 +124,9 @@ aws_crt_signable *aws_crt_signable_new_from_chunk(
     const uint8_t *previous_signature,
     size_t previous_signature_length) {
     return aws_signable_new_chunk(
-        aws_crt_default_allocator(), chunk_stream, aws_byte_cursor_from_array(previous_signature, previous_signature_length));
+        aws_crt_default_allocator(),
+        chunk_stream,
+        aws_byte_cursor_from_array(previous_signature, previous_signature_length));
 }
 
 aws_crt_signable *aws_crt_signable_new_from_canonical_request(

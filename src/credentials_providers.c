@@ -278,7 +278,8 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
 }
 
 aws_crt_credentials_provider_sts_web_identity_options *aws_crt_credentials_provider_sts_web_identity_options_new(void) {
-    return aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_credentials_provider_sts_web_identity_options));
+    return aws_mem_calloc(
+        aws_crt_default_allocator(), 1, sizeof(aws_crt_credentials_provider_sts_web_identity_options));
 }
 
 void aws_crt_credentials_provider_sts_web_identity_options_release(

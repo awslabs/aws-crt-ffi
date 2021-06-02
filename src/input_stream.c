@@ -105,7 +105,12 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
     aws_crt_input_stream *stream = NULL;
     aws_external_input_stream *impl = NULL;
     aws_mem_acquire_many(
-        aws_crt_default_allocator(), 2, &stream, sizeof(aws_crt_input_stream), &impl, sizeof(aws_external_input_stream));
+        aws_crt_default_allocator(),
+        2,
+        &stream,
+        sizeof(aws_crt_input_stream),
+        &impl,
+        sizeof(aws_external_input_stream));
     AWS_FATAL_ASSERT(stream != NULL && impl != NULL);
     AWS_ZERO_STRUCT(*stream);
     AWS_ZERO_STRUCT(*impl);
