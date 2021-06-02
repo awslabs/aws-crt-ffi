@@ -11,12 +11,12 @@
 #include <aws/compression/compression.h>
 #include <aws/http/http.h>
 
-struct aws_allocator *aws_crt_allocator(void) {
+aws_crt_allocator *aws_crt_default_allocator(void) {
     return aws_default_allocator();
 }
 
 void aws_crt_init(void) {
-    struct aws_allocator *allocator = aws_crt_allocator();
+    struct aws_allocator *allocator = aws_crt_default_allocator();
     aws_common_library_init(allocator);
     aws_io_library_init(allocator);
     aws_compression_library_init(allocator);
@@ -44,13 +44,13 @@ struct aws_crt_test_struct *aws_crt_test_pointer_error(void) {
 }
 
 void *aws_crt_mem_acquire(size_t size) {
-    return aws_mem_acquire(aws_crt_allocator(), size);
+    return aws_mem_acquire(aws_crt_default_allocator(), size);
 }
 
 void *aws_crt_mem_calloc(size_t element_count, size_t element_size) {
-    return aws_mem_calloc(aws_crt_allocator(), element_count, element_size);
+    return aws_mem_calloc(aws_crt_default_allocator(), element_count, element_size);
 }
 
 void aws_crt_mem_release(void *ptr) {
-    aws_mem_release(aws_crt_allocator(), ptr);
+    aws_mem_release(aws_crt_default_allocator(), ptr);
 }
