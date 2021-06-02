@@ -47,6 +47,10 @@ void *aws_crt_mem_acquire(size_t size) {
     return aws_mem_acquire(aws_crt_allocator(), size);
 }
 
+void *aws_crt_mem_calloc(size_t element_count, size_t element_size) {
+    return aws_mem_calloc(aws_crt_allocator(), element_count, element_size);
+}
+
 void aws_crt_mem_release(void *ptr) {
     aws_mem_release(aws_crt_allocator(), ptr);
 }
