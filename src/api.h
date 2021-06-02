@@ -5,7 +5,16 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-#include <aws/common/common.h>
+/*
+ * NOTE: This header gets processed by libffi's FFI header parser. Includes and macros will not be
+ * evaluated, so they are stripped before installation. While int types work, bool does not, so
+ * you will see _Bool throughout the API (C99 standard). This also means that implementations must
+ * use _Bool in their signatures, or they will create linking problems on some platforms.
+ *
+ * There are also some functions in this header that are not decorated with AWS_CRT_API. This is for
+ * functions that are useful to native language extension authors linking to this library, but are not
+ * for FFI consumption, or do not obey ref-counted ownership rules like the other resources in the FFI API.
+ */
 
 /* AWS_CRT_API marks a function as public */
 #if defined(_WIN32)
@@ -19,7 +28,6 @@
 #endif
 
 /* Public function definitions */
-AWS_EXTERN_C_BEGIN
 
 /* CRT */
 AWS_CRT_API void aws_crt_init(void);
@@ -27,6 +35,7 @@ AWS_CRT_API void aws_crt_clean_up(void);
 AWS_CRT_API int aws_crt_test_error(int);
 
 AWS_CRT_API void *aws_crt_mem_acquire(size_t size);
+AWS_CRT_API void *aws_crt_mem_calloc(size_t element_count, size_t element_size);
 AWS_CRT_API void aws_crt_mem_release(void *mem);
 
 /* Errors */
@@ -320,6 +329,9 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_signed_body_header_type(
 AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
     aws_crt_signing_config_aws *signing_config,
     uint64_t expiration_in_seconds);
+AWS_CRT_API void aws_crt_signing_config_aws_set_date(
+    aws_crt_signing_config_aws *signing_config,
+    uint64_t seconds_since_epoch);
 
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;
@@ -333,15 +345,19 @@ AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_canonical_request(
     size_t request_length);
 AWS_CRT_API void aws_crt_signable_release(aws_crt_signable *signable);
 
-/* aws_sign_request_aws */
+/* aws_signing_result */
 typedef struct aws_signing_result aws_crt_signing_result;
+AWS_CRT_API void aws_crt_signing_result_release(aws_crt_signing_result *result);
+AWS_CRT_API int aws_crt_signing_result_apply_to_http_request(
+    const aws_crt_signing_result *result,
+    aws_crt_http_message *request);
+
+/* aws_sign_request_aws */
 typedef void(aws_crt_signing_complete_fn)(aws_crt_signing_result *result, int error_code, void *user_data);
 AWS_CRT_API int aws_crt_sign_request_aws(
     aws_crt_signable *signable,
     const aws_crt_signing_config_aws *signing_config,
     aws_crt_signing_complete_fn *on_complete,
     void *user_data);
-
-AWS_EXTERN_C_END
 
 #endif /* AWS_CRT_API_H */

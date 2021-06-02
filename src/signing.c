@@ -6,6 +6,7 @@
 
 #include <aws/auth/signable.h>
 #include <aws/auth/signing.h>
+#include <aws/auth/signing_result.h>
 #include <aws/common/string.h>
 #include <aws/http/request_response.h>
 
@@ -19,7 +20,10 @@ struct _aws_crt_signing_config_aws {
 };
 
 aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void) {
-    return aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_signing_config_aws));
+    aws_crt_signing_config_aws *signing_config =
+        aws_mem_calloc(aws_crt_allocator(), 1, sizeof(aws_crt_signing_config_aws));
+    signing_config->config.config_type = AWS_SIGNING_CONFIG_AWS;
+    return signing_config;
 }
 
 void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_config) {
@@ -51,16 +55,20 @@ void aws_crt_signing_config_aws_set_region(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *region,
     size_t region_length) {
+    aws_byte_buf_clean_up(&signing_config->region);
     struct aws_byte_buf input = aws_byte_buf_from_array(region, region_length);
     aws_byte_buf_init_copy(&signing_config->region, aws_crt_allocator(), &input);
+    signing_config->config.region = aws_byte_cursor_from_buf(&signing_config->region);
 }
 
 void aws_crt_signing_config_aws_set_service(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *service,
     size_t service_length) {
+    aws_byte_buf_clean_up(&signing_config->service);
     struct aws_byte_buf input = aws_byte_buf_from_array(service, service_length);
     aws_byte_buf_init_copy(&signing_config->service, aws_crt_allocator(), &input);
+    signing_config->config.service = aws_byte_cursor_from_buf(&signing_config->service);
 }
 
 void aws_crt_signing_config_aws_set_use_double_uri_encode(
@@ -85,8 +93,10 @@ void aws_crt_signing_config_aws_set_signed_body_value(
     aws_crt_signing_config_aws *signing_config,
     const uint8_t *signed_body,
     size_t signed_body_length) {
+    aws_byte_buf_clean_up(&signing_config->signed_body_value);
     struct aws_byte_buf input = aws_byte_buf_from_array(signed_body, signed_body_length);
     aws_byte_buf_init_copy(&signing_config->signed_body_value, aws_crt_allocator(), &input);
+    signing_config->config.signed_body_value = aws_byte_cursor_from_buf(&signing_config->signed_body_value);
 }
 
 void aws_crt_signing_config_aws_set_signed_body_header_type(
@@ -99,6 +109,10 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
     aws_crt_signing_config_aws *signing_config,
     uint64_t expiration_in_seconds) {
     signing_config->config.expiration_in_seconds = expiration_in_seconds;
+}
+
+void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_config, uint64_t seconds_since_epoch) {
+    aws_date_time_init_epoch_secs(&signing_config->config.date, (double)seconds_since_epoch);
 }
 
 aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
@@ -122,6 +136,15 @@ aws_crt_signable *aws_crt_signable_new_from_canonical_request(
 
 void aws_crt_signable_release(aws_crt_signable *signable) {
     aws_signable_destroy(signable);
+}
+
+int aws_crt_signing_result_apply_to_http_request(const aws_crt_signing_result *result, aws_crt_http_message *request) {
+    return aws_apply_signing_result_to_http_request(request->message, aws_crt_allocator(), result);
+}
+
+void aws_crt_signing_result_release(aws_crt_signing_result *result) {
+    aws_signing_result_clean_up(result);
+    aws_mem_release(aws_crt_allocator(), result);
 }
 
 int aws_crt_sign_request_aws(

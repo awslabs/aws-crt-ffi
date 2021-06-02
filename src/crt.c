@@ -6,6 +6,7 @@
 
 #include <aws/auth/auth.h>
 #include <aws/cal/cal.h>
+#include <aws/common/mutex.h>
 #include <aws/common/ref_count.h>
 #include <aws/compression/compression.h>
 #include <aws/http/http.h>
@@ -44,6 +45,10 @@ struct aws_crt_test_struct *aws_crt_test_pointer_error(void) {
 
 void *aws_crt_mem_acquire(size_t size) {
     return aws_mem_acquire(aws_crt_allocator(), size);
+}
+
+void *aws_crt_mem_calloc(size_t element_count, size_t element_size) {
+    return aws_mem_calloc(aws_crt_allocator(), element_count, element_size);
 }
 
 void aws_crt_mem_release(void *ptr) {
