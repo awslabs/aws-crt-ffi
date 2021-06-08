@@ -7,18 +7,15 @@
 #include "crt.h"
 
 aws_crt_hash *aws_crt_sha1_new(void) {
-    struct aws_allocator *allocator = aws_crt_default_allocator();
-    return aws_sha1_new(allocator);
+    return aws_sha1_new(aws_crt_default_allocator());
 }
 
 aws_crt_hash *aws_crt_sha256_new(void) {
-    struct aws_allocator *allocator = aws_crt_default_allocator();
-    return aws_sha256_new(allocator);
+    return aws_sha256_new(aws_crt_default_allocator());
 }
 
 aws_crt_hash *aws_crt_md5_new(void) {
-    struct aws_allocator *allocator = aws_crt_default_allocator();
-    return aws_md5_new(allocator);
+    return aws_md5_new(aws_crt_default_allocator());
 }
 
 int aws_crt_hash_update(aws_crt_hash *hash, uint8_t *buffer, uint32_t buffer_size) {
