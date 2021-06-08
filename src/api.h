@@ -363,4 +363,17 @@ AWS_CRT_API int aws_crt_sign_request_aws(
     aws_crt_signing_complete_fn *on_complete,
     void *user_data);
 
+/* aws_checksums */
+AWS_CRT_API uint32_t aws_crt_crc32(const uint8_t *input, int length, uint32_t previous);
+AWS_CRT_API uint32_t aws_crt_crc32c(const uint8_t *input, int length, uint32_t previous);
+
+/* aws_hash */
+typedef struct aws_hash aws_crt_hash;
+AWS_CRT_API aws_crt_hash aws_crt_sha1_new(void);
+AWS_CRT_API aws_crt_hash aws_crt_sha256_new(void);
+AWS_CRT_API aws_crt_hash aws_crt_md5_new(void);
+AWS_CRT_API void aws_crt_hash_update(aws_crt_hash *hash, uint8_t *buffer, uint32_t buffer_size);
+AWS_CRT_API void aws_crt_hash_digest(aws_crt_hash *hash, size_t truncate_to, uint8_t *buffer);
+AWS_CRT_API void aws_crt_hash_destroy(aws_crt_hash *hash);
+
 #endif /* AWS_CRT_API_H */
