@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 
-#include "aws/cal/hash.h"
 #include "crt.h"
+#include <aws/cal/hash.h>
 
 aws_crt_hash *aws_crt_sha1_new(void) {
     return aws_sha1_new(aws_crt_default_allocator());
