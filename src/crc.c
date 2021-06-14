@@ -10,7 +10,7 @@
 uint32_t crc_common(
     uint32_t (*checksum_fn)(const uint8_t *, int, uint32_t),
     const uint8_t *buffer,
-    uint32_t length,
+    size_t length,
     uint32_t previous) {
 
     uint32_t val = previous;
@@ -23,10 +23,10 @@ uint32_t crc_common(
     return val;
 }
 
-uint32_t aws_crt_crc32(const uint8_t *input, uint32_t length, uint32_t previous) {
+uint32_t aws_crt_crc32(const uint8_t *input, size_t length, uint32_t previous) {
     return crc_common(aws_checksums_crc32, input, length, previous);
 }
 
-uint32_t aws_crt_crc32c(const uint8_t *input, uint32_t length, uint32_t previous) {
+uint32_t aws_crt_crc32c(const uint8_t *input, size_t length, uint32_t previous) {
     return crc_common(aws_checksums_crc32, input, length, previous);
 }
