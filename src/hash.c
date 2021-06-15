@@ -27,7 +27,6 @@ int aws_crt_hash_update(aws_crt_hash *hash, uint8_t *buffer, uint32_t buffer_siz
 }
 
 void aws_crt_hash_digest(aws_crt_hash *hash, size_t truncate_to, uint8_t *buffer) {
-
     struct aws_byte_buf digest_buf = aws_byte_buf_from_array(buffer, hash->digest_size);
     digest_buf.len = 0;
     aws_hash_finalize(hash, &digest_buf, truncate_to);
