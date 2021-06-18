@@ -31,6 +31,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/crt/aws-c-common/cmake"
 include(AwsFindPackage)
 
 set(IN_SOURCE_BUILD ON)
+set(SEARCH_LIBCRYPTO OFF CACHE BOOL "Let S2N use libcrypto from AWS-LC.")
 
 # Don't compile tests in subdirectories.
 # Turn off using `option` instead of `set`, or CTest will declare
@@ -44,7 +45,7 @@ set(BUILD_SHARED_LIBS OFF)
 # CRT Libraries
 add_subdirectory(crt/aws-c-common)
 if (UNIX AND NOT APPLE)
-    include(crt/aws-c-cal/cmake/modules/aws-lc.cmake)
+    add_subdirectory(crt/aws-lc)
     add_subdirectory(crt/s2n)
 endif()
 add_subdirectory(crt/aws-c-io)
