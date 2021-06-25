@@ -18,8 +18,3 @@ struct _aws_crt_http_message {
     struct aws_http_message *message;
     struct aws_byte_buf encoded_message;
 };
-
-struct _aws_crt_buf {
-    struct aws_http_headers *headers;
-    struct aws_byte_buf encoded_headers;
-};
