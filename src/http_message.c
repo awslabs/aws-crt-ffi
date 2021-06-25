@@ -51,7 +51,7 @@ void aws_crt_http_headers_release(aws_crt_http_headers *headers) {
     aws_mem_release(aws_crt_default_allocator(), headers);
 }
 
-void aws_crt_http_headers_to_blob(const aws_crt_http_headers *headers, uint8_t **out_blob, size_t *out_blob_length) {
+void aws_crt_http_headers_to_blob(const aws_crt_http_headers *headers, aws_crt_buf *out_blob) {
     aws_crt_http_headers *mutable_headers = (aws_crt_http_headers *)headers;
     aws_byte_buf_clean_up(&mutable_headers->encoded_headers);
     aws_byte_buf_init(&mutable_headers->encoded_headers, aws_crt_default_allocator(), 256);
@@ -68,8 +68,8 @@ void aws_crt_http_headers_to_blob(const aws_crt_http_headers *headers, uint8_t *
         aws_byte_buf_write_be32(&mutable_headers->encoded_headers, (uint32_t)header.value.len);
         aws_byte_buf_write_from_whole_cursor(&mutable_headers->encoded_headers, header.value);
     }
-    *out_blob = headers->encoded_headers.buffer;
-    *out_blob_length = headers->encoded_headers.len;
+    out_blob->blob = headers->encoded_headers.buffer;
+    out_blob->length = headers->encoded_headers.len;
 }
 
 aws_crt_http_message *aws_crt_http_message_new_from_blob(const uint8_t *blob, size_t blob_length) {
@@ -103,13 +103,17 @@ bad_format:
     return NULL;
 }
 
+void aws_crt_http_message_set_body_stream(aws_crt_http_message *message, aws_crt_input_stream *body_stream) {
+    aws_http_message_set_body_stream(message->message, body_stream);
+}
+
 void aws_crt_http_message_release(aws_crt_http_message *message) {
     aws_http_message_release(message->message);
     aws_byte_buf_clean_up(&message->encoded_message);
     aws_mem_release(aws_crt_default_allocator(), message);
 }
 
-void aws_crt_http_message_to_blob(const aws_crt_http_message *message, uint8_t **out_blob, size_t *out_blob_length) {
+void aws_crt_http_message_to_blob(const aws_crt_http_message *message, aws_crt_buf *out_blob) {
     aws_crt_http_message *mutable_message = (aws_crt_http_message *)message;
 
     struct aws_byte_cursor method;
@@ -136,6 +140,6 @@ void aws_crt_http_message_to_blob(const aws_crt_http_message *message, uint8_t *
     aws_byte_buf_write_from_whole_cursor(&mutable_message->encoded_message, path);
     aws_byte_buf_write_from_whole_cursor(&mutable_message->encoded_message, header_blob);
 
-    *out_blob = message->encoded_message.buffer;
-    *out_blob_length = message->encoded_message.len;
+    out_blob->blob = message->encoded_message.buffer;
+    out_blob->length = message->encoded_message.len;
 }
