@@ -127,7 +127,9 @@ void aws_crt_http_message_to_blob(const aws_crt_http_message *message, aws_crt_b
     aws_crt_http_headers headers = {
         .headers = http_headers,
     };
-    aws_crt_http_headers_to_blob(&headers, &header_blob.ptr, &header_blob.len);
+
+    struct aws_crt_buf new_blob = {.blob = header_blob.ptr, .length = header_blob.len};
+    aws_crt_http_headers_to_blob(&headers, &new_blob);
 
     aws_byte_buf_clean_up(&mutable_message->encoded_message);
     aws_byte_buf_init(
