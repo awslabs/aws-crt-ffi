@@ -123,13 +123,16 @@ void aws_crt_http_message_to_blob(const aws_crt_http_message *message, aws_crt_b
     aws_http_message_get_request_path(message->message, &path);
 
     struct aws_http_headers *http_headers = aws_http_message_get_headers(message->message);
-    struct aws_byte_cursor header_blob;
+    aws_crt_buf header_buf;
     aws_crt_http_headers headers = {
         .headers = http_headers,
     };
 
-    struct aws_crt_buf new_blob = {.blob = header_blob.ptr, .length = header_blob.len};
-    aws_crt_http_headers_to_blob(&headers, &new_blob);
+    aws_crt_http_headers_to_blob(&headers, &header_buf);
+    struct aws_byte_cursor header_blob = {
+        .ptr = header_buf.blob,
+        .len = header_buf.length,
+    };
 
     aws_byte_buf_clean_up(&mutable_message->encoded_message);
     aws_byte_buf_init(
