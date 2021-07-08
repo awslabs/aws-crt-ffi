@@ -41,6 +41,10 @@ AWS_CRT_API void *aws_crt_mem_acquire(size_t size);
 AWS_CRT_API void *aws_crt_mem_calloc(size_t element_count, size_t element_size);
 AWS_CRT_API void aws_crt_mem_release(void *mem);
 
+AWS_CRT_API uint64_t aws_crt_mem_bytes(void);
+AWS_CRT_API uint64_t aws_crt_mem_count(void);
+AWS_CRT_API void aws_crt_mem_dump(void);
+
 /* Errors */
 AWS_CRT_API int aws_crt_last_error(void);
 AWS_CRT_API const char *aws_crt_error_str(int);
