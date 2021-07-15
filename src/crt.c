@@ -22,7 +22,7 @@ struct aws_allocator *init_allocator(void) {
     enum aws_mem_trace_level trace_level = AWS_MEMTRACE_NONE;
     struct aws_string *mem_tracing_key = aws_string_new_from_c_str(s_crt_allocator, "AWS_CRT_MEMORY_TRACING");
     struct aws_string *mem_tracing_value = NULL;
-    if (!aws_get_environment_value(s_crt_allocator, mem_tracing_key, &mem_tracing_value)) {
+    if (aws_get_environment_value(s_crt_allocator, mem_tracing_key, &mem_tracing_value) == AWS_OP_SUCCESS && mem_tracing_value != NULL) {
         int tracing_value = (int)strtol((const char *)aws_string_bytes(mem_tracing_value), NULL, 10);
         if (tracing_value < 0 || tracing_value > AWS_MEMTRACE_STACKS) {
             tracing_value = 0;
