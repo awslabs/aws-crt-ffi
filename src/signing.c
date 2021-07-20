@@ -115,6 +115,12 @@ void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_con
     aws_date_time_init_epoch_secs(&signing_config->config.date, (double)seconds_since_epoch);
 }
 
+void aws_crt_signing_config_aws_set_should_sign_header_fn(
+aws_crt_signing_config_aws *signing_config,
+    aws_crt_should_sign_header_fn should_sign_header_fn) {
+        signing_config->config.should_sign_header = should_sign_header_fn;
+}
+
 aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
     return aws_signable_new_http_request(aws_crt_default_allocator(), request->message);
 }

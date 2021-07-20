@@ -296,6 +296,7 @@ typedef enum aws_crt_signed_body_header_type {
     AWS_CRT_SIGNED_BODY_HEADER_TYPE_NONE,
     AWS_CRT_SIGNED_BODY_HEADER_TYPE_X_AMZ_CONTENT_SHA256,
 } aws_crt_signed_body_header_type;
+typedef bool(aws_crt_should_sign_header_fn)(const struct aws_byte_cursor *name, void *userdata);
 AWS_CRT_API aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void);
 AWS_CRT_API void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_config);
 
@@ -338,6 +339,9 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_expiration_in_seconds(
 AWS_CRT_API void aws_crt_signing_config_aws_set_date(
     aws_crt_signing_config_aws *signing_config,
     uint64_t seconds_since_epoch);
+AWS_CRT_API void aws_crt_signing_config_aws_set_should_sign_header_fn(
+    aws_crt_signing_config_aws *signing_config,
+    aws_crt_should_sign_header_fn should_sign_header_fn);
 
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;

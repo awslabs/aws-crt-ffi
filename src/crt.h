@@ -7,6 +7,7 @@
 
 /* clang-format off */
 #include <aws/common/common.h> /* must be present so api.h knows about inttypes and allocators */
+#include <aws/common/byte_buf.h>
 #include "api.h"
 /* clang-format on */
 
