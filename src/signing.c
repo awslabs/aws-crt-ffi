@@ -14,6 +14,7 @@
 
 struct _aws_crt_signing_config_aws {
     struct aws_signing_config_aws config;
+    aws_crt_should_sign_header_fn *should_sign_header;
     struct aws_byte_buf region;
     struct aws_byte_buf service;
     struct aws_byte_buf signed_body_value;
@@ -113,6 +114,17 @@ void aws_crt_signing_config_aws_set_expiration_in_seconds(
 
 void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_config, uint64_t seconds_since_epoch) {
     aws_date_time_init_epoch_secs(&signing_config->config.date, (double)seconds_since_epoch);
+}
+
+/* translate between the FFI version of the callback and the auth/signer version */
+static bool should_sign_header_thunk(const struct aws_byte_cursor *name, void *user_data) {
+    aws_crt_signing_config_aws *signing_config = user_data;
+    return signing_config->should_sign_header((const char *)name->ptr, name->len, signing_config);
+}
+
+void aws_crt_signing_aws_set_should_sign_header_fn(aws_crt_signing_config_aws *signing_config, aws_crt_should_sign_header_fn *should_sign_header_fn) {
+    signing_config->should_sign_header = should_sign_header_fn;
+    signing_config->config.should_sign_header = should_sign_header_thunk;
 }
 
 aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
