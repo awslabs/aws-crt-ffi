@@ -123,7 +123,7 @@ static bool should_sign_header_thunk(const struct aws_byte_cursor *name, void *u
     return signing_config->should_sign_header((const char *)name->ptr, name->len, signing_config->should_sign_header_user_data);
 }
 
-void aws_crt_signing_aws_set_should_sign_header_fn(
+void aws_crt_signing_config_aws_set_should_sign_header_fn(
     aws_crt_signing_config_aws *signing_config,
     aws_crt_should_sign_header_fn *should_sign_header_fn, void *user_data) {
     /* store the target function and user data */
