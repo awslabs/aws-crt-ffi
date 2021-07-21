@@ -120,12 +120,14 @@ void aws_crt_signing_config_aws_set_date(aws_crt_signing_config_aws *signing_con
 /* translate between the FFI version of the callback and the auth/signer version */
 static bool should_sign_header_thunk(const struct aws_byte_cursor *name, void *user_data) {
     aws_crt_signing_config_aws *signing_config = user_data;
-    return signing_config->should_sign_header((const char *)name->ptr, name->len, signing_config->should_sign_header_user_data);
+    return signing_config->should_sign_header(
+        (const char *)name->ptr, name->len, signing_config->should_sign_header_user_data);
 }
 
 void aws_crt_signing_config_aws_set_should_sign_header_fn(
     aws_crt_signing_config_aws *signing_config,
-    aws_crt_should_sign_header_fn *should_sign_header_fn, void *user_data) {
+    aws_crt_should_sign_header_fn *should_sign_header_fn,
+    void *user_data) {
     /* store the target function and user data */
     signing_config->should_sign_header = should_sign_header_fn;
     signing_config->should_sign_header_user_data = user_data;
