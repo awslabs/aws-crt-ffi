@@ -135,6 +135,10 @@ void aws_crt_signing_config_aws_set_should_sign_header_fn(
     signing_config->config.should_sign_header_ud = signing_config;
 }
 
+_Bool aws_crt_signing_config_aws_validate(aws_crt_signing_config_aws *signing_config) {
+    return aws_validate_aws_signing_config_aws(&signing_config->config) == AWS_OP_SUCCESS;
+}
+
 aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
     return aws_signable_new_http_request(aws_crt_default_allocator(), request->message);
 }

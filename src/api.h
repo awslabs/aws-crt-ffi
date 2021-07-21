@@ -346,6 +346,8 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_should_sign_header_fn(
     aws_crt_should_sign_header_fn *should_sign_header_fn,
     void *user_data);
 
+AWS_CRT_API _Bool aws_crt_signing_config_aws_validate(aws_crt_signing_config_aws *signing_config);
+
 /* aws_signable */
 typedef struct aws_signable aws_crt_signable;
 AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *http_request);
