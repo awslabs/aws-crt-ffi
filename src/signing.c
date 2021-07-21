@@ -122,7 +122,9 @@ static bool should_sign_header_thunk(const struct aws_byte_cursor *name, void *u
     return signing_config->should_sign_header((const char *)name->ptr, name->len, signing_config);
 }
 
-void aws_crt_signing_aws_set_should_sign_header_fn(aws_crt_signing_config_aws *signing_config, aws_crt_should_sign_header_fn *should_sign_header_fn) {
+void aws_crt_signing_aws_set_should_sign_header_fn(
+    aws_crt_signing_config_aws *signing_config,
+    aws_crt_should_sign_header_fn *should_sign_header_fn) {
     signing_config->should_sign_header = should_sign_header_fn;
     signing_config->config.should_sign_header = should_sign_header_thunk;
 }
