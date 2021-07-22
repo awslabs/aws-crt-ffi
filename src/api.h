@@ -45,6 +45,11 @@ AWS_CRT_API uint64_t aws_crt_mem_bytes(void);
 AWS_CRT_API uint64_t aws_crt_mem_count(void);
 AWS_CRT_API void aws_crt_mem_dump(void);
 
+/* Resources */
+AWS_CRT_API void aws_crt_resource_set_user_data(void *resource, void *user_data, void (*dtor)(void *));
+AWS_CRT_API void *aws_crt_resource_get_user_data(void *resource);
+AWS_CRT_API void *aws_crt_resource_take_user_data(void *resource);
+
 /* Errors */
 AWS_CRT_API int aws_crt_last_error(void);
 AWS_CRT_API const char *aws_crt_error_str(int);
@@ -53,7 +58,7 @@ AWS_CRT_API const char *aws_crt_error_debug_str(int);
 AWS_CRT_API void aws_crt_reset_error(void);
 
 /* IO */
-typedef struct aws_event_loop_group aws_crt_event_loop_group;
+typedef struct _aws_crt_event_loop_group aws_crt_event_loop_group;
 typedef struct _aws_crt_event_loop_group_options aws_crt_event_loop_group_options;
 AWS_CRT_API aws_crt_event_loop_group_options *aws_crt_event_loop_group_options_new(void);
 AWS_CRT_API void aws_crt_event_loop_group_options_release(aws_crt_event_loop_group_options *options);
@@ -65,7 +70,7 @@ AWS_CRT_API aws_crt_event_loop_group *aws_crt_event_loop_group_acquire(aws_crt_e
 AWS_CRT_API void aws_crt_event_loop_group_release(aws_crt_event_loop_group *elg);
 
 /* Input stream */
-typedef struct aws_input_stream aws_crt_input_stream;
+typedef struct _aws_crt_input_stream aws_crt_input_stream;
 typedef struct _aws_crt_input_stream_options aws_crt_input_stream_options;
 typedef struct _aws_crt_input_stream_status {
     _Bool is_end_of_stream;
@@ -127,7 +132,7 @@ AWS_CRT_API void aws_crt_http_message_release(aws_crt_http_message *message);
 AWS_CRT_API void aws_crt_http_message_to_blob(const aws_crt_http_message *message, aws_crt_buf *out_blob);
 
 /* Auth */
-typedef struct aws_credentials aws_crt_credentials;
+typedef struct _aws_crt_credentials aws_crt_credentials;
 typedef struct _aws_crt_credentials_options aws_crt_credentials_options;
 AWS_CRT_API aws_crt_credentials_options *aws_crt_credentials_options_new(void);
 AWS_CRT_API void aws_crt_credentials_options_release(aws_crt_credentials_options *options);
@@ -146,12 +151,13 @@ AWS_CRT_API void aws_crt_credentials_options_set_session_token(
 AWS_CRT_API void aws_crt_credentials_options_set_expiration_timepoint_seconds(
     aws_crt_credentials_options *options,
     uint64_t expiration_timepoint_seconds);
+
 AWS_CRT_API aws_crt_credentials *aws_crt_credentials_new(const aws_crt_credentials_options *options);
 AWS_CRT_API aws_crt_credentials *aws_crt_credentials_acquire(aws_crt_credentials *credentials);
 AWS_CRT_API void aws_crt_credentials_release(aws_crt_credentials *credentials);
 
 /* Credentials providers */
-typedef struct aws_credentials_provider aws_crt_credentials_provider;
+typedef struct _aws_crt_credentials_provider aws_crt_credentials_provider;
 /* Generic credentials provider acquire/release */
 AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(
     aws_crt_credentials_provider *credentials_provider);
@@ -179,7 +185,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_static_ne
     const aws_crt_credentials_provider_static_options *options);
 
 /* environment credentials provider */
-typedef struct aws_credentials_provider_environment_options aws_crt_credentials_provider_environment_options;
+typedef struct _aws_crt_credentials_provider_environment_options aws_crt_credentials_provider_environment_options;
 AWS_CRT_API aws_crt_credentials_provider_environment_options *aws_crt_credentials_provider_environment_options_new(
     void);
 AWS_CRT_API void aws_crt_credentials_provider_environment_options_release(
@@ -188,7 +194,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_environme
     const aws_crt_credentials_provider_environment_options *options);
 
 /* profile credentials provider */
-typedef struct _aws_credentials_provider_profile_options aws_crt_credentials_provider_profile_options;
+typedef struct _aws_crt_credentials_provider_profile_options aws_crt_credentials_provider_profile_options;
 AWS_CRT_API aws_crt_credentials_provider_profile_options *aws_crt_credentials_provider_profile_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_profile_options_release(
     aws_crt_credentials_provider_profile_options *options);
@@ -208,7 +214,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_profile_n
     const aws_crt_credentials_provider_profile_options *options);
 
 /* cached credentials provider */
-typedef struct aws_credentials_provider_cached_options aws_crt_credentials_provider_cached_options;
+typedef struct _aws_crt_credentials_provider_cached_options aws_crt_credentials_provider_cached_options;
 AWS_CRT_API aws_crt_credentials_provider_cached_options *aws_crt_credentials_provider_cached_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_cached_options_release(
     aws_crt_credentials_provider_cached_options *options);
@@ -219,7 +225,7 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_cached_ne
     const aws_crt_credentials_provider_cached_options *options);
 
 /* IMDS credentials provider */
-typedef struct aws_credentials_provider_imds_options aws_crt_credentials_provider_imds_options;
+typedef struct _aws_crt_credentials_provider_imds_options aws_crt_credentials_provider_imds_options;
 typedef enum aws_crt_imds_protocol_version {
     AWS_CRT_IMDS_PROTOCOL_V2,
     AWS_CRT_IMDS_PROTOCOL_V1,
@@ -271,7 +277,8 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
     aws_crt_credentials_provider_x509_options *options);
 
 /* STS Web Identity provider */
-typedef struct aws_credentials_provider_sts_web_identity_options aws_crt_credentials_provider_sts_web_identity_options;
+typedef struct _aws_crt_credentials_provider_sts_web_identity_options
+    aws_crt_credentials_provider_sts_web_identity_options;
 AWS_CRT_API aws_crt_credentials_provider_sts_web_identity_options *
     aws_crt_credentials_provider_sts_web_identity_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_sts_web_identity_options_release(

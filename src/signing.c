@@ -8,11 +8,13 @@
 #include <aws/auth/signing.h>
 #include <aws/auth/signing_result.h>
 #include <aws/common/string.h>
-#include <aws/http/request_response.h>
 
+#include "credentials.h"
 #include "http.h"
+#include "input_stream.h"
 
 struct _aws_crt_signing_config_aws {
+    aws_crt_resource resource;
     struct aws_signing_config_aws config;
     aws_crt_should_sign_header_fn *should_sign_header;
     void *should_sign_header_user_data;
@@ -23,7 +25,7 @@ struct _aws_crt_signing_config_aws {
 
 aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void) {
     aws_crt_signing_config_aws *signing_config =
-        aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_signing_config_aws));
+        aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_signing_config_aws)));
     signing_config->config.config_type = AWS_SIGNING_CONFIG_AWS;
     return signing_config;
 }
@@ -32,7 +34,7 @@ void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_conf
     aws_byte_buf_clean_up(&signing_config->region);
     aws_byte_buf_clean_up(&signing_config->service);
     aws_byte_buf_clean_up_secure(&signing_config->signed_body_value);
-    aws_mem_release(aws_crt_default_allocator(), signing_config);
+    aws_crt_resource_release(&signing_config->resource);
 }
 
 void aws_crt_signing_config_aws_set_algorithm(
@@ -50,7 +52,7 @@ void aws_crt_signing_config_aws_set_signature_type(
 void aws_crt_signing_config_aws_set_credentials_provider(
     aws_crt_signing_config_aws *signing_config,
     aws_crt_credentials_provider *credentials_provider) {
-    signing_config->config.credentials_provider = credentials_provider;
+    signing_config->config.credentials_provider = credentials_provider->provider;
 }
 
 void aws_crt_signing_config_aws_set_region(
@@ -151,7 +153,7 @@ aws_crt_signable *aws_crt_signable_new_from_chunk(
     size_t previous_signature_length) {
     return aws_signable_new_chunk(
         aws_crt_default_allocator(),
-        chunk_stream,
+        &chunk_stream->stream,
         aws_byte_cursor_from_array(previous_signature, previous_signature_length));
 }
 
