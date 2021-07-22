@@ -101,7 +101,7 @@ void aws_crt_mem_dump(void) {
     aws_mem_tracer_dump(s_crt_allocator);
 }
 
-void aws_crt_resource_set_user_data(void *resource, void *user_data, void(*dtor)(void*)) {
+void aws_crt_resource_set_user_data(void *resource, void *user_data, void (*dtor)(void *)) {
     aws_crt_resource *res = resource;
     res->user_data = user_data;
     res->dtor = dtor;

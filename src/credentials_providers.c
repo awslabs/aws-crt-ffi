@@ -2,8 +2,8 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
-#include "crt.h"
 #include "credentials.h"
+#include "crt.h"
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider) {
     aws_credentials_provider_acquire(credentials_provider->provider);
@@ -61,8 +61,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_static_new(
     mutable_options->options.session_token = aws_byte_cursor_from_buf(&options->session_token);
     aws_crt_credentials_provider *provider =
         aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_credentials_provider)));
-    provider->provider =
-        aws_credentials_provider_new_static(aws_crt_default_allocator(), &options->options);
+    provider->provider = aws_credentials_provider_new_static(aws_crt_default_allocator(), &options->options);
     return provider;
 }
 
@@ -156,8 +155,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_cached_new(
     return provider;
 }
 
-aws_crt_credentials_provider_imds_options *
-    aws_crt_credentials_provider_imds_options_new(void) {
+aws_crt_credentials_provider_imds_options *aws_crt_credentials_provider_imds_options_new(void) {
     return aws_crt_resource_new(
         aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_credentials_provider_imds_options)));
 }
@@ -224,7 +222,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_ecs_new(
     mutable_options->options.auth_token = aws_byte_cursor_from_buf(&options->auth_token);
     aws_crt_credentials_provider *provider =
         aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_credentials_provider)));
-    provider->provider =  aws_credentials_provider_new_ecs(aws_crt_default_allocator(), &options->options);
+    provider->provider = aws_credentials_provider_new_ecs(aws_crt_default_allocator(), &options->options);
     return provider;
 }
 
@@ -275,8 +273,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
     return provider;
 }
 
-aws_crt_credentials_provider_sts_web_identity_options *
-    aws_crt_credentials_provider_sts_web_identity_options_new(void) {
+aws_crt_credentials_provider_sts_web_identity_options *aws_crt_credentials_provider_sts_web_identity_options_new(void) {
     return aws_crt_resource_new(
         aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_credentials_provider_sts_web_identity_options)));
 }
@@ -290,6 +287,6 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_sts_web_identity_new(
     const aws_crt_credentials_provider_sts_web_identity_options *options) {
     aws_crt_credentials_provider *provider =
         aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_credentials_provider)));
-    provider->provider =  aws_credentials_provider_new_sts_web_identity(aws_crt_default_allocator(), &options->options);
+    provider->provider = aws_credentials_provider_new_sts_web_identity(aws_crt_default_allocator(), &options->options);
     return provider;
 }

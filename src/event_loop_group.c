@@ -39,8 +39,7 @@ aws_crt_event_loop_group *aws_crt_event_loop_group_new(const aws_crt_event_loop_
         .shutdown_callback_fn = elg_shutdown,
         .shutdown_callback_user_data = elg,
     };
-    elg->elg = aws_event_loop_group_new_default(
-        aws_crt_default_allocator(), options->max_threads, &shutdown_options);
+    elg->elg = aws_event_loop_group_new_default(aws_crt_default_allocator(), options->max_threads, &shutdown_options);
     return elg;
 }
 

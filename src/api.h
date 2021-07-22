@@ -47,7 +47,7 @@ AWS_CRT_API void aws_crt_mem_dump(void);
 
 /* Resources */
 AWS_CRT_API void aws_crt_resource_set_user_data(void *resource, void *user_data, void (*dtor)(void *));
-AWS_CRT_API void* aws_crt_resource_get_user_data(void *resource);
+AWS_CRT_API void *aws_crt_resource_get_user_data(void *resource);
 AWS_CRT_API void *aws_crt_resource_take_user_data(void *resource);
 
 /* Errors */
@@ -277,7 +277,8 @@ AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
     aws_crt_credentials_provider_x509_options *options);
 
 /* STS Web Identity provider */
-typedef struct _aws_crt_credentials_provider_sts_web_identity_options aws_crt_credentials_provider_sts_web_identity_options;
+typedef struct _aws_crt_credentials_provider_sts_web_identity_options
+    aws_crt_credentials_provider_sts_web_identity_options;
 AWS_CRT_API aws_crt_credentials_provider_sts_web_identity_options *
     aws_crt_credentials_provider_sts_web_identity_options_new(void);
 AWS_CRT_API void aws_crt_credentials_provider_sts_web_identity_options_release(
