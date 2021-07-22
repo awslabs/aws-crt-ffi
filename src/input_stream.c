@@ -10,7 +10,6 @@
 aws_crt_input_stream_options *aws_crt_input_stream_options_new() {
     aws_crt_input_stream_options *options =
         aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_input_stream_options)));
-    AWS_ZERO_STRUCT(*options);
     return options;
 }
 
