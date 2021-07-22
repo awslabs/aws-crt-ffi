@@ -100,3 +100,44 @@ uint64_t aws_crt_mem_count(void) {
 void aws_crt_mem_dump(void) {
     aws_mem_tracer_dump(s_crt_allocator);
 }
+
+void aws_crt_resource_set_user_data(void *resource, void *user_data, void(*dtor)(void*)) {
+    aws_crt_resource *res = resource;
+    res->user_data = user_data;
+    res->dtor = dtor;
+}
+
+void *aws_crt_resource_get_user_data(void *resource) {
+    aws_crt_resource *res = resource;
+    return res->user_data;
+}
+
+void *aws_crt_resource_take_user_data(void *resource) {
+    aws_crt_resource *res = resource;
+    void *user_data = res->user_data;
+    res->user_data = NULL;
+    res->dtor = NULL;
+    return user_data;
+}
+
+void resource_dtor(void *ptr) {
+    aws_crt_resource *resource = ptr;
+    if (resource->user_data && resource->dtor) {
+        resource->dtor(resource->user_data);
+    }
+    aws_crt_mem_release(ptr);
+}
+
+void *aws_crt_resource_new(void *object) {
+    aws_crt_resource *resource = object;
+    aws_ref_count_init(&resource->rc, resource, resource_dtor);
+    return object;
+}
+
+void aws_crt_resource_acquire(aws_crt_resource *resource) {
+    aws_ref_count_acquire(&resource->rc);
+}
+
+void aws_crt_resource_release(aws_crt_resource *resource) {
+    aws_ref_count_release(&resource->rc);
+}

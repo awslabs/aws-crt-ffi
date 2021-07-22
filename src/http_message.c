@@ -3,11 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0.
  */
 #include "crt.h"
-
 #include "http.h"
+#include "input_stream.h"
 
 aws_crt_http_headers *aws_crt_http_headers_new_from_blob(const uint8_t *blob, size_t blob_length) {
-    aws_crt_http_headers *headers = aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_http_headers));
+    aws_crt_http_headers *headers =
+        aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_http_headers)));
     headers->headers = aws_http_headers_new(aws_crt_default_allocator());
     struct aws_byte_cursor cursor = aws_byte_cursor_from_array(blob, blob_length);
     while (cursor.len) {
@@ -42,13 +43,14 @@ bad_format:
 
 aws_crt_http_headers *aws_crt_http_headers_acquire(aws_crt_http_headers *headers) {
     aws_http_headers_acquire(headers->headers);
+    aws_crt_resource_acquire(&headers->resource);
     return headers;
 }
 
 void aws_crt_http_headers_release(aws_crt_http_headers *headers) {
     aws_http_headers_release(headers->headers);
     aws_byte_buf_clean_up(&headers->encoded_headers);
-    aws_mem_release(aws_crt_default_allocator(), headers);
+    aws_crt_resource_release(&headers->resource);
 }
 
 void aws_crt_http_headers_to_blob(const aws_crt_http_headers *headers, aws_crt_buf *out_blob) {
@@ -91,7 +93,8 @@ aws_crt_http_message *aws_crt_http_message_new_from_blob(const uint8_t *blob, si
         goto bad_format;
     }
 
-    aws_crt_http_message *message = aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_http_message));
+    aws_crt_http_message *message =
+        aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_http_message)));
     message->message = aws_http_message_new_request_with_headers(aws_crt_default_allocator(), headers->headers);
     aws_http_message_set_request_method(message->message, method);
     aws_http_message_set_request_path(message->message, path);
@@ -104,13 +107,13 @@ bad_format:
 }
 
 void aws_crt_http_message_set_body_stream(aws_crt_http_message *message, aws_crt_input_stream *body_stream) {
-    aws_http_message_set_body_stream(message->message, body_stream);
+    aws_http_message_set_body_stream(message->message, &body_stream->stream);
 }
 
 void aws_crt_http_message_release(aws_crt_http_message *message) {
     aws_http_message_release(message->message);
     aws_byte_buf_clean_up(&message->encoded_message);
-    aws_mem_release(aws_crt_default_allocator(), message);
+    aws_crt_resource_release(&message->resource);
 }
 
 void aws_crt_http_message_to_blob(const aws_crt_http_message *message, aws_crt_buf *out_blob) {

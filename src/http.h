@@ -10,11 +10,13 @@
 
 /* Privately defined structures */
 struct _aws_crt_http_headers {
+    aws_crt_resource resource;
     struct aws_http_headers *headers;
     struct aws_byte_buf encoded_headers;
 };
 
 struct _aws_crt_http_message {
+    aws_crt_resource resource;
     struct aws_http_message *message;
     struct aws_byte_buf encoded_message;
 };
