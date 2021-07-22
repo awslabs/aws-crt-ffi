@@ -4,9 +4,6 @@
  */
 #include "crt.h"
 
-#include <aws/auth/credentials.h>
-#include <aws/common/string.h>
-
 #include "credentials.h"
 
 aws_crt_credentials_options *aws_crt_credentials_options_new() {

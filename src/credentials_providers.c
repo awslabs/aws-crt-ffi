@@ -2,8 +2,10 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
-#include "credentials.h"
+
 #include "crt.h"
+
+#include "credentials.h"
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_acquire(aws_crt_credentials_provider *credentials_provider) {
     aws_credentials_provider_acquire(credentials_provider->provider);

@@ -120,7 +120,7 @@ void *aws_crt_resource_take_user_data(void *resource) {
     return user_data;
 }
 
-void resource_dtor(void *ptr) {
+static void resource_dtor(void *ptr) {
     aws_crt_resource *resource = ptr;
     if (resource->user_data && resource->dtor) {
         resource->dtor(resource->user_data);

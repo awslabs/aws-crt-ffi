@@ -2,8 +2,10 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
-#include "input_stream.h"
+
 #include "crt.h"
+
+#include "input_stream.h"
 
 aws_crt_input_stream_options *aws_crt_input_stream_options_new() {
     aws_crt_input_stream_options *options =
