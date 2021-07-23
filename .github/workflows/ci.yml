@@ -84,10 +84,12 @@ jobs:
   rust-tests:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
     - name: Rust test suite
       run: |
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
-        source $HOME/.cargo/env
         pushd aws-crt-sys
         cargo build
         cargo test
