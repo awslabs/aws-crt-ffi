@@ -92,6 +92,8 @@ jobs:
         toolchain: stable
     - name: Rust test suite
       run: |
+        CC=clang
+        CXX=clang++
         pushd aws-crt-sys
         cargo build
         cargo test
