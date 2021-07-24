@@ -7,6 +7,7 @@
 extern crate bindgen;
 use std::env;
 use std::path::Path;
+use bindgen::EnumVariation;
 
 #[cfg(windows)]
 fn configure_link_for_platform() {
@@ -84,13 +85,18 @@ fn compile_aws_crt_ffi() {
 fn generate_bindings() {
     let bindings = bindgen::Builder::default()
         .header("../src/api.h")
-        .blocklist_type(".*va_list.*")
-        .blocklist_type(".*pthread.*")
+        // .blocklist_type(".*va_list.*")
+        // .blocklist_type(".*pthread.*")
+        // .blocklist_item("^PRI[a-zX].+")
+        // .blocklist_item("^SCN[a-zX].+")
+        .allowlist_function("^aws_crt.*")
+        .allowlist_type("^aws_crt.*")
         .raw_line("#![allow(dead_code)]")
         .raw_line("#![allow(non_upper_case_globals)]")
         .raw_line("#![allow(non_camel_case_types)]")
         .raw_line("#![allow(non_snake_case)]")
         .raw_line("#![allow(deref_nullptr)]")
+        .default_enum_style(EnumVariation::NewType {is_bitfield: false})
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .rustfmt_bindings(true)
         .generate()
@@ -102,6 +108,10 @@ fn generate_bindings() {
 }
 
 fn main() {
+    println!("cargo:rerun-if-changed=../src/api.h");
+    println!("cargo:rerun-if-env-changed=CC");
+    println!("cargo:rerun-if-env-changed=CFLAGS");
+
     compile_aws_crt_ffi();
     generate_bindings();
 }
