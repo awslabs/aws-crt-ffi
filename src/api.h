@@ -16,8 +16,8 @@
  * for FFI consumption, or do not obey ref-counted ownership rules like the other resources in the FFI API.
  */
 
-#include <stddef.h>
 #include <inttypes.h>
+#include <stddef.h>
 
 /* AWS_CRT_API marks a function as public */
 #if defined(_WIN32)
