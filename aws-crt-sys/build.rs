@@ -85,19 +85,19 @@ fn compile_aws_crt_ffi() {
 fn generate_bindings() {
     let bindings = bindgen::Builder::default()
         .header("../src/api.h")
-        // .blocklist_type(".*va_list.*")
-        // .blocklist_type(".*pthread.*")
-        // .blocklist_item("^PRI[a-zX].+")
-        // .blocklist_item("^SCN[a-zX].+")
+        // Only generate types/functions starting with aws_crt and their dependents
         .allowlist_function("^aws_crt.*")
         .allowlist_type("^aws_crt.*")
+        // Prevent rust from emitting a bazillion warnings about C-style code
         .raw_line("#![allow(dead_code)]")
         .raw_line("#![allow(non_upper_case_globals)]")
         .raw_line("#![allow(non_camel_case_types)]")
         .raw_line("#![allow(non_snake_case)]")
         .raw_line("#![allow(deref_nullptr)]")
+        // Enums will be generated as struct/impl constants
         .default_enum_style(EnumVariation::NewType {is_bitfield: false})
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        // Make the generated code actually readable
         .rustfmt_bindings(true)
         .generate()
         .expect("Unable to generate bindings for aws-crt-ffi");
