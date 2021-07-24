@@ -5,10 +5,11 @@
  */
 
 extern crate bindgen;
-use std::path::Path;
+use std::env;
+use std::path::{Path, PathBuf};
 
 #[cfg(windows)]
-fn add_system_deps_to_link_line() {
+fn configure_link_for_platform() {
     println!("cargo:rustc-link-lib={}", "Secur32");
     println!("cargo:rustc-link-lib={}", "Crypt32");
     println!("cargo:rustc-link-lib={}", "Advapi32");
@@ -19,18 +20,18 @@ fn add_system_deps_to_link_line() {
 }
 
 #[cfg(windows)]
-fn add_system_cmake_customizations(_: &mut cmake::Config) {
+fn configure_cmake_for_platform(_: &mut cmake::Config) {
 
 }
 
 #[cfg(target_vendor = "apple")]
-fn add_system_deps_to_link_line() {
+fn configure_link_for_platform() {
     println!("cargo:rustc-link-lib=framework={}", "CoreFoundation");
     println!("cargo:rustc-link-lib=framework={}", "Security");
 }
 
 #[cfg(target_vendor = "apple")]
-fn add_system_cmake_customizations(cmake_config: &mut cmake::Config) {
+fn configure_cmake_for_platform(cmake_config: &mut cmake::Config) {
     cmake_config.define(
         "CMAKE_OSX_SYSROOT",
         "PATH=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
@@ -38,20 +39,20 @@ fn add_system_cmake_customizations(cmake_config: &mut cmake::Config) {
 }
 
 #[cfg(all(unix, not(target_vendor = "apple")))]
-fn add_system_deps_to_link_line() {
+fn configure_link_for_platform() {
     println!("cargo:rustc-link-lib={}", "s2n");
     println!("cargo:rustc-link-lib={}", "crypto");
     println!("cargo:rustc-link-lib={}", "rt");
 }
 
 #[cfg(all(unix, not(target_vendor = "apple")))]
-fn add_system_cmake_customizations(_: &mut cmake::Config) {
+fn configure_cmake_for_platform(_: &mut cmake::Config) {
 
 }
 
 fn compile_aws_crt_ffi() {
-    let profile = std::env::var("PROFILE").unwrap();
-    let out_dir = std::env::var("OUT_DIR").unwrap();
+    let profile = env::var("PROFILE").unwrap();
+    let out_dir = env::var("OUT_DIR").unwrap();
 
     let cmake_build_type = match profile.as_str() {
         "debug" => "Debug",
@@ -64,7 +65,7 @@ fn compile_aws_crt_ffi() {
         .define("CMAKE_INSTALL_LIBDIR", "lib")
         .define("BUILD_SHARED_LIBS", "OFF");
 
-    add_system_cmake_customizations(&mut cmake_config);
+    configure_cmake_for_platform(&mut cmake_config);
     cmake_config.build();
 
     println!("cargo:rustc-link-search={}", Path::new(&out_dir).join("lib").to_str().unwrap());
@@ -77,7 +78,7 @@ fn compile_aws_crt_ffi() {
     println!("cargo:rustc-link-lib={}", "aws-c-cal");
     println!("cargo:rustc-link-lib={}", "aws-checksums");
     println!("cargo:rustc-link-lib={}", "aws-c-common");
-    add_system_deps_to_link_line();
+    configure_link_for_platform();
 }
 
 fn generate_bindings() {
@@ -89,7 +90,7 @@ fn generate_bindings() {
         .rustfmt_bindings(true)
         .generate()
         .expect("Unable to generate bindings for aws-crt-ffi");
-    let out_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
         .write_to_file(out_path.join("bindings.rs"))
         .expect("Unable to write generated bindings");
