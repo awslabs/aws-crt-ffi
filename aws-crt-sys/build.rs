@@ -3,7 +3,6 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
-use aws_crt_c_flags::{CRTModuleBuildInfo, HeaderType};
 use std::path::Path;
 
 #[cfg(windows)]
@@ -51,36 +50,26 @@ fn add_system_cmake_customizations(_: &mut cmake::Config) {
 fn main() {
     let profile = std::env::var("PROFILE").unwrap();
     let out_dir = std::env::var("OUT_DIR").unwrap();
+    let cc = std::env::var("CC").unwrap_or("cc".to_string());
+    let cxx = std::env::var("CXX").unwrap_or("c++".to_string());
+
     let cmake_build_type = match profile.as_str() {
         "debug" => "Debug",
         _ => "RelWithDebInfo",
     };
 
-    let cmake_binaries = Path::new(out_dir.as_str()).join(Path::new("cmake"));
-    //let cmake_install = Path::new(out_dir.as_str()).join(Path::new("cmake/install"));
-
     let mut cmake_config = cmake::Config::new("..");
     cmake_config
         .profile(cmake_build_type)
+        .very_verbose(true)
+        .define("CMAKE_C_COMPILER", cc.to_string())
+        .define("CMAKE_CXX_COMPILER", cxx.to_string())
+        .define("CMAKE_ASM_COMPILER", cc.to_string())
         .define("CMAKE_INSTALL_LIBDIR", "lib")
         .define("BUILD_SHARED_LIBS", "OFF");
 
     add_system_cmake_customizations(&mut cmake_config);
     cmake_config.build();
-
-    // let mut build_info = CRTModuleBuildInfo::new("aws-checksums");
-    // build_info.module_links_dependency("aws-crt-ffi");
-    //
-    // // Add source to include dirs, and then add all source files
-    // let source_dir = Path::new("../src");
-    // build_info.include_dir(source_dir, HeaderType::Private);
-    // for entry in source_dir.read_dir().expect("No source files found in ../src") {
-    //     if let Ok(entry) = entry {
-    //         build_info.file(entry.path().as_path());
-    //     }
-    // }
-    //
-    // build_info.build();
 
     println!("cargo:rustc-link-search={}", Path::new(&out_dir).join("lib").to_str().unwrap());
     println!("cargo:rustc-link-lib={}", "aws-crt-ffi");

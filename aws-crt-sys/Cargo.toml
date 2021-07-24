@@ -7,8 +7,4 @@ links = "aws-crt"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [build-dependencies]
-aws-crt-c-flags = { git = "https://github.com/awslabs/aws-c-common", branch="move_to_rust_phase1" }
 cmake = "0.1"
-
-[dependencies]
-aws-crt-common-sys = { git = "https://github.com/awslabs/aws-c-common", branch="move_to_rust_phase1" }
