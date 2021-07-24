@@ -50,8 +50,6 @@ fn add_system_cmake_customizations(_: &mut cmake::Config) {
 fn main() {
     let profile = std::env::var("PROFILE").unwrap();
     let out_dir = std::env::var("OUT_DIR").unwrap();
-    //let cc = std::env::var("CC").unwrap_or("cc".to_string());
-    //let cxx = std::env::var("CXX").unwrap_or("c++".to_string());
 
     let cmake_build_type = match profile.as_str() {
         "debug" => "Debug",
@@ -61,10 +59,6 @@ fn main() {
     let mut cmake_config = cmake::Config::new("..");
     cmake_config
         .profile(cmake_build_type)
-        .very_verbose(true)
-        // .define("CMAKE_C_COMPILER", cc.to_string())
-        // .define("CMAKE_CXX_COMPILER", cxx.to_string())
-        // .define("CMAKE_ASM_COMPILER", cc.to_string())
         .define("CMAKE_INSTALL_LIBDIR", "lib")
         .define("BUILD_SHARED_LIBS", "OFF");
 
