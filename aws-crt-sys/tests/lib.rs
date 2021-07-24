@@ -7,6 +7,7 @@ mod tests {
     use once_cell::sync::Lazy;
     use std::sync::Mutex;
     use std::ffi::CStr;
+    use std::env;
 
     // CRT tests must be run serially because they affect global state
     // As a result, we inject a mutex into each test using the CRT
@@ -18,9 +19,12 @@ mod tests {
                 Ok(guard) => guard,
                 Err(poisoned) => poisoned.into_inner(),
             };
+            env::set_var("AWS_CRT_MEMORY_TRACING", "2");
             unsafe {
                 aws_crt_init();
                 (|| $test)();
+                aws_crt_thread_join_all();
+                assert!(aws_crt_mem_bytes() == 0);
                 aws_crt_clean_up();
             }
         }

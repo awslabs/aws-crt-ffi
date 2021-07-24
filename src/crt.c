@@ -50,12 +50,12 @@ aws_crt_allocator *aws_crt_default_allocator(void) {
 
 void aws_crt_init(void) {
     init_allocator();
-    aws_common_library_init(aws_crt_default_allocator());
-    aws_io_library_init(aws_crt_default_allocator());
-    aws_compression_library_init(aws_crt_default_allocator());
-    aws_http_library_init(aws_crt_default_allocator());
-    aws_cal_library_init(aws_crt_default_allocator());
-    aws_auth_library_init(aws_crt_default_allocator());
+    aws_common_library_init(aws_default_allocator());
+    aws_io_library_init(aws_default_allocator());
+    aws_compression_library_init(aws_default_allocator());
+    aws_http_library_init(aws_default_allocator());
+    aws_cal_library_init(aws_default_allocator());
+    aws_auth_library_init(aws_default_allocator());
 }
 
 void aws_crt_clean_up(void) {
@@ -99,4 +99,8 @@ uint64_t aws_crt_mem_count(void) {
 
 void aws_crt_mem_dump(void) {
     aws_mem_tracer_dump(s_crt_allocator);
+}
+
+void aws_crt_thread_join_all(void) {
+    aws_thread_join_all_managed();
 }
