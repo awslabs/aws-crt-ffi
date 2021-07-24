@@ -40,6 +40,7 @@ mod tests {
             aws_crt_event_loop_group_options_set_max_threads(options, 1);
             let elg = aws_crt_event_loop_group_new(options);
             aws_crt_event_loop_group_release(elg);
+            aws_crt_event_loop_group_options_release(options);
         });
     }
 
@@ -91,6 +92,42 @@ mod tests {
                 crc = aws_crt_crc32c(z, 1, crc);
             });
             assert!(crc == 0x8A9136AA);
+        });
+    }
+
+    #[test]
+    fn test_empty_aws_credentials() {
+        with_crt!({
+            let options = aws_crt_credentials_options_new();
+            // This should fail, since the credentials are empty and therefore invalid
+            let creds = aws_crt_credentials_new(options);
+            assert!(creds.is_null());
+            aws_crt_credentials_options_release(options);
+        });
+    }
+
+    fn get_test_credentials_options() -> *mut aws_crt_credentials_options {
+        unsafe {
+            let options = aws_crt_credentials_options_new();
+            let access_key_id = "TESTAWSACCESSKEYID";
+            let secret_access_key = "TESTSECRETaccesskeyThatDefinitelyDoesntWork";
+            let session_token = "ThisIsMyTestSessionTokenIMadeItUpMyself";
+            aws_crt_credentials_options_set_access_key_id(options, access_key_id.as_ptr(), access_key_id.len() as u64);
+            aws_crt_credentials_options_set_secret_access_key(options, secret_access_key.as_ptr(), secret_access_key.len() as u64);
+            aws_crt_credentials_options_set_session_token(options, session_token.as_ptr(), session_token.len() as u64);
+            aws_crt_credentials_options_set_expiration_timepoint_seconds(options, 42);
+            options
+        }
+    }
+
+    #[test]
+    fn test_credentials_lifetime() {
+        with_crt!({
+            let options = get_test_credentials_options();
+            let creds = aws_crt_credentials_new(options);
+            assert!(!creds.is_null());
+            aws_crt_credentials_release(creds);
+            aws_crt_credentials_options_release(options);
         });
     }
 }
