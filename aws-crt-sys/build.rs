@@ -3,6 +3,8 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0.
  */
+
+extern crate bindgen;
 use std::path::Path;
 
 #[cfg(windows)]
@@ -47,7 +49,7 @@ fn add_system_cmake_customizations(_: &mut cmake::Config) {
 
 }
 
-fn main() {
+fn compile_aws_crt_ffi() {
     let profile = std::env::var("PROFILE").unwrap();
     let out_dir = std::env::var("OUT_DIR").unwrap();
 
@@ -76,4 +78,24 @@ fn main() {
     println!("cargo:rustc-link-lib={}", "aws-checksums");
     println!("cargo:rustc-link-lib={}", "aws-c-common");
     add_system_deps_to_link_line();
+}
+
+fn generate_bindings() {
+    let bindings = bindgen::Builder::default()
+        .header("../src/api.h")
+        .blocklist_type(".*va_list.*")
+        .blocklist_type(".*pthread.*")
+        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+        .rustfmt_bindings(true)
+        .generate()
+        .expect("Unable to generate bindings for aws-crt-ffi");
+    let out_path = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap());
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Unable to write generated bindings");
+}
+
+fn main() {
+    compile_aws_crt_ffi();
+    generate_bindings();
 }

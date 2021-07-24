@@ -1,6 +1,7 @@
 
-#[allow(dead_code)]
-extern "C" {
-    pub fn aws_crt_init();
-    pub fn aws_crt_clean_up();
-}
+#![allow(dead_code)]
+#![allow(non_upper_case_globals)]
+#![allow(non_camel_case_types)]
+#![allow(non_snake_case)]
+
+include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
