@@ -6,7 +6,7 @@
 
 extern crate bindgen;
 use std::env;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 #[cfg(windows)]
 fn configure_link_for_platform() {
@@ -86,13 +86,18 @@ fn generate_bindings() {
         .header("../src/api.h")
         .blocklist_type(".*va_list.*")
         .blocklist_type(".*pthread.*")
+        .raw_line("#![allow(dead_code)]")
+        .raw_line("#![allow(non_upper_case_globals)]")
+        .raw_line("#![allow(non_camel_case_types)]")
+        .raw_line("#![allow(non_snake_case)]")
+        .raw_line("#![allow(deref_nullptr)]")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         .rustfmt_bindings(true)
         .generate()
         .expect("Unable to generate bindings for aws-crt-ffi");
-    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+
     bindings
-        .write_to_file(out_path.join("bindings.rs"))
+        .write_to_file(Path::new("src/lib.rs"))
         .expect("Unable to write generated bindings");
 }
 
