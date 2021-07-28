@@ -45,7 +45,11 @@ set(BUILD_SHARED_LIBS OFF)
 # CRT Libraries
 add_subdirectory(crt/aws-c-common)
 if (UNIX AND NOT APPLE)
-    set(DISABLE_PERL ON)
+    if (CMAKE_SYSTEM_PROCESSOR STREQUAL arm OR
+        CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l)
+    else()
+        set(DISABLE_PERL ON)
+    endif()
     set(DISABLE_GO ON)
     set(SEARCH_LIBCRYPTO OFF)
     set(BUILD_LIBSSL OFF)
