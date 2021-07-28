@@ -136,4 +136,23 @@ mod tests {
             aws_crt_credentials_options_release(options);
         });
     }
+
+    #[test]
+    fn test_signing_config_aws() {
+        with_crt!({
+            let access_key_id = "TESTAWSACCESSKEYID";
+            let secret_access_key = "TESTSECRETaccesskeyThatDefinitelyDoesntWork";
+            let session_token = "ThisIsMyTestSessionTokenIMadeItUpMyself";
+            let cred_options = aws_crt_credentials_provider_static_options_new();
+            aws_crt_credentials_provider_static_options_set_access_key_id(cred_options, access_key_id.as_ptr(), access_key_id.len());
+            aws_crt_credentials_provider_static_options_set_secret_access_key(cred_options, secret_access_key.as_ptr(), secret_access_key.len());
+            aws_crt_credentials_provider_static_options_set_session_token(cred_options, session_token.as_ptr(), session_token.len());
+            let provider = aws_crt_credentials_provider_static_new(cred_options);
+            let sc = aws_crt_signing_config_aws_new();
+            aws_crt_signing_config_aws_set_credentials_provider(sc, provider);
+            aws_crt_signing_config_aws_release(sc);
+            aws_crt_credentials_provider_release(provider);
+            aws_crt_credentials_provider_static_options_release(cred_options);
+        });
+    }
 }
