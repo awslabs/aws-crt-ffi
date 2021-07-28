@@ -8,8 +8,7 @@
 #include "input_stream.h"
 
 aws_crt_input_stream_options *aws_crt_input_stream_options_new() {
-    aws_crt_input_stream_options *options =
-        aws_crt_resource_new(sizeof(aws_crt_input_stream_options));
+    aws_crt_input_stream_options *options = aws_crt_resource_new(sizeof(aws_crt_input_stream_options));
     return options;
 }
 

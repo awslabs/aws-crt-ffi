@@ -46,8 +46,7 @@ static enum aws_signing_config_type signing_config_type(const aws_crt_signing_co
 }
 
 aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void) {
-    aws_crt_signing_config_aws *signing_config =
-        aws_crt_resource_new(sizeof(aws_crt_signing_config_aws));
+    aws_crt_signing_config_aws *signing_config = aws_crt_resource_new(sizeof(aws_crt_signing_config_aws));
     signing_config->config.config_type = AWS_SIGNING_CONFIG_AWS;
     return signing_config;
 }

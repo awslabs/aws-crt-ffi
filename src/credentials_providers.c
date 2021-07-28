@@ -60,8 +60,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_static_new(
     mutable_options->options.access_key_id = aws_byte_cursor_from_buf(&options->access_key_id);
     mutable_options->options.secret_access_key = aws_byte_cursor_from_buf(&options->secret_access_key);
     mutable_options->options.session_token = aws_byte_cursor_from_buf(&options->session_token);
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_static(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -77,8 +76,7 @@ void aws_crt_credentials_provider_environment_options_release(
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_environment_new(
     const aws_crt_credentials_provider_environment_options *options) {
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_environment(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -125,8 +123,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_profile_new(
     mutable_options->options.profile_name_override = aws_byte_cursor_from_buf(&options->profile_name);
     mutable_options->options.config_file_name_override = aws_byte_cursor_from_buf(&options->config_file_name);
     mutable_options->options.credentials_file_name_override = aws_byte_cursor_from_buf(&options->credentials_file_name);
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_profile(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -147,8 +144,7 @@ void aws_crt_credentials_provider_cached_options_set_refresh_time_in_millisecond
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_cached_new(
     const aws_crt_credentials_provider_cached_options *options) {
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_cached(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -169,8 +165,7 @@ void aws_crt_credentials_provider_imds_options_set_imds_version(
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_imds_new(
     const aws_crt_credentials_provider_imds_options *options) {
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_imds(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -216,8 +211,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_ecs_new(
     mutable_options->options.host = aws_byte_cursor_from_buf(&options->host);
     mutable_options->options.path_and_query = aws_byte_cursor_from_buf(&options->path_and_query);
     mutable_options->options.auth_token = aws_byte_cursor_from_buf(&options->auth_token);
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_ecs(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -262,8 +256,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_x509_new(
     options->options.thing_name = aws_byte_cursor_from_buf(&options->thing_name);
     options->options.role_alias = aws_byte_cursor_from_buf(&options->role_alias);
     options->options.endpoint = aws_byte_cursor_from_buf(&options->endpoint);
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_x509(aws_crt_default_allocator(), &options->options);
     return provider;
 }
@@ -279,8 +272,7 @@ void aws_crt_credentials_provider_sts_web_identity_options_release(
 
 aws_crt_credentials_provider *aws_crt_credentials_provider_sts_web_identity_new(
     const aws_crt_credentials_provider_sts_web_identity_options *options) {
-    aws_crt_credentials_provider *provider =
-        aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
+    aws_crt_credentials_provider *provider = aws_crt_resource_new(sizeof(aws_crt_credentials_provider));
     provider->provider = aws_credentials_provider_new_sts_web_identity(aws_crt_default_allocator(), &options->options);
     return provider;
 }

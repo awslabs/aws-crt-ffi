@@ -8,8 +8,7 @@
 #include "input_stream.h"
 
 aws_crt_http_headers *aws_crt_http_headers_new_from_blob(const uint8_t *blob, size_t blob_length) {
-    aws_crt_http_headers *headers =
-        aws_crt_resource_new(sizeof(aws_crt_http_headers));
+    aws_crt_http_headers *headers = aws_crt_resource_new(sizeof(aws_crt_http_headers));
     headers->headers = aws_http_headers_new(aws_crt_default_allocator());
     struct aws_byte_cursor cursor = aws_byte_cursor_from_array(blob, blob_length);
     while (cursor.len) {
@@ -94,8 +93,7 @@ aws_crt_http_message *aws_crt_http_message_new_from_blob(const uint8_t *blob, si
         goto bad_format;
     }
 
-    aws_crt_http_message *message =
-        aws_crt_resource_new(sizeof(aws_crt_http_message));
+    aws_crt_http_message *message = aws_crt_resource_new(sizeof(aws_crt_http_message));
     message->message = aws_http_message_new_request_with_headers(aws_crt_default_allocator(), headers->headers);
     aws_http_message_set_request_method(message->message, method);
     aws_http_message_set_request_path(message->message, path);
