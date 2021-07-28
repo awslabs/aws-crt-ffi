@@ -46,6 +46,7 @@ set(BUILD_SHARED_LIBS OFF)
 add_subdirectory(crt/aws-c-common)
 if (UNIX AND NOT APPLE)
     if (CMAKE_SYSTEM_PROCESSOR STREQUAL arm OR
+        CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64 OR
         CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l)
     else()
         set(DISABLE_PERL ON)
