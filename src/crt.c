@@ -101,8 +101,11 @@ void aws_crt_mem_dump(void) {
     aws_mem_tracer_dump(s_crt_allocator);
 }
 
-void aws_crt_thread_join_all(void) {
-    aws_thread_join_all_managed();
+int aws_crt_thread_join_all(uint64_t timeout_ns) {
+    if (timeout_ns > 0) {
+        aws_thread_set_managed_join_timeout_ns(timeout_ns);
+    }
+    return aws_thread_join_all_managed();
 }
 
 void aws_crt_resource_set_user_data(void *resource, void *user_data, void (*dtor)(void *)) {

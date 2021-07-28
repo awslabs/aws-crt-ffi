@@ -23,7 +23,9 @@ mod tests {
             unsafe {
                 aws_crt_init();
                 (|| $test)();
-                aws_crt_thread_join_all();
+                // wait for 10 seconds for all threads to join or fail
+                let join_result = aws_crt_thread_join_all(10 * 1000 * 1000);
+                assert!(join_result == 0);
                 assert!(aws_crt_mem_bytes() == 0);
                 aws_crt_clean_up();
             }
@@ -61,7 +63,7 @@ mod tests {
     fn test_crc32_on_zeroes() {
         with_crt!({
             let zeroes: Vec<u8> = vec![0; 32];
-            let crc = aws_crt_crc32(zeroes.as_ptr(), zeroes.len() as u64, 0);
+            let crc = aws_crt_crc32(zeroes.as_ptr(), zeroes.len(), 0);
             assert!(crc == 0x190A55AD);
         });
     }
@@ -82,7 +84,7 @@ mod tests {
     fn test_crc32c_on_zeroes() {
         with_crt!({
             let zeroes: Vec<u8> = vec![0; 32];
-            let crc = aws_crt_crc32c(zeroes.as_ptr(), zeroes.len() as u64, 0);
+            let crc = aws_crt_crc32c(zeroes.as_ptr(), zeroes.len(), 0);
             assert!(crc == 0x8A9136AA);
         });
     }
@@ -116,9 +118,9 @@ mod tests {
             let access_key_id = "TESTAWSACCESSKEYID";
             let secret_access_key = "TESTSECRETaccesskeyThatDefinitelyDoesntWork";
             let session_token = "ThisIsMyTestSessionTokenIMadeItUpMyself";
-            aws_crt_credentials_options_set_access_key_id(options, access_key_id.as_ptr(), access_key_id.len() as u64);
-            aws_crt_credentials_options_set_secret_access_key(options, secret_access_key.as_ptr(), secret_access_key.len() as u64);
-            aws_crt_credentials_options_set_session_token(options, session_token.as_ptr(), session_token.len() as u64);
+            aws_crt_credentials_options_set_access_key_id(options, access_key_id.as_ptr(), access_key_id.len());
+            aws_crt_credentials_options_set_secret_access_key(options, secret_access_key.as_ptr(), secret_access_key.len());
+            aws_crt_credentials_options_set_session_token(options, session_token.as_ptr(), session_token.len());
             aws_crt_credentials_options_set_expiration_timepoint_seconds(options, 42);
             options
         }

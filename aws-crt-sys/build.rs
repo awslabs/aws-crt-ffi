@@ -88,6 +88,7 @@ fn generate_bindings() {
         // Only generate types/functions starting with aws_crt and their dependents
         .allowlist_function("^aws_crt.*")
         .allowlist_type("^aws_crt.*")
+        .size_t_is_usize(true)
         // Prevent rust from emitting a bazillion warnings about C-style code
         .raw_line("#![allow(dead_code)]")
         .raw_line("#![allow(non_upper_case_globals)]")

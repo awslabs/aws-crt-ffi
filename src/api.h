@@ -60,7 +60,8 @@ AWS_CRT_API const char *aws_crt_error_name(int);
 AWS_CRT_API const char *aws_crt_error_debug_str(int);
 AWS_CRT_API void aws_crt_reset_error(void);
 
-AWS_CRT_API void aws_crt_thread_join_all(void);
+/* a timeout of 0 indicates wait forever */
+AWS_CRT_API int aws_crt_thread_join_all(uint64_t timeout_ns);
 
 /* IO */
 typedef struct _aws_crt_event_loop_group aws_crt_event_loop_group;
