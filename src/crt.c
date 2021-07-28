@@ -139,7 +139,8 @@ void aws_crt_resource_init(aws_crt_resource *resource) {
     aws_ref_count_init(&resource->rc, resource, resource_dtor);
 }
 
-void *aws_crt_resource_new(void *object) {
+void *aws_crt_resource_new(size_t size_of_object) {
+    void *object = aws_crt_mem_calloc(1, size_of_object);
     aws_crt_resource *resource = object;
     aws_crt_resource_init(resource);
     return object;

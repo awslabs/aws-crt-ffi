@@ -9,7 +9,7 @@
 
 aws_crt_input_stream_options *aws_crt_input_stream_options_new() {
     aws_crt_input_stream_options *options =
-        aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_input_stream_options)));
+        aws_crt_resource_new(sizeof(aws_crt_input_stream_options));
     return options;
 }
 
@@ -88,7 +88,7 @@ static struct aws_input_stream_vtable s_external_input_stream_vtable = {
 };
 
 aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_options *options) {
-    aws_crt_input_stream *stream = aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_input_stream)));
+    aws_crt_input_stream *stream = aws_crt_resource_new(sizeof(aws_crt_input_stream));
     AWS_ZERO_STRUCT(stream->stream);
     AWS_ZERO_STRUCT(stream->impl);
 
