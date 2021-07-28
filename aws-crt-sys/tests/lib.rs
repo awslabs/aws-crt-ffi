@@ -24,7 +24,7 @@ mod tests {
                 aws_crt_init();
                 (|| $test)();
                 // wait for 10 seconds for all threads to join or fail
-                let join_result = aws_crt_thread_join_all(10 * 1000 * 1000);
+                let join_result = aws_crt_thread_join_all(10 * 1000 * 1000 * 1000);
                 assert!(join_result == 0);
                 assert!(aws_crt_mem_bytes() == 0);
                 aws_crt_clean_up();
