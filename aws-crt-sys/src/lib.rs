@@ -727,6 +727,12 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
+pub struct _aws_crt_signing_config {
+    _unused: [u8; 0],
+}
+pub type aws_crt_signing_config = _aws_crt_signing_config;
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
 pub struct _aws_crt_signing_config_aws {
     _unused: [u8; 0],
 }
@@ -882,10 +888,10 @@ extern "C" {
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub struct aws_signable {
+pub struct _aws_crt_signable {
     _unused: [u8; 0],
 }
-pub type aws_crt_signable = aws_signable;
+pub type aws_crt_signable = _aws_crt_signable;
 extern "C" {
     pub fn aws_crt_signable_new_from_http_request(
         http_request: *const aws_crt_http_message,
@@ -935,6 +941,16 @@ extern "C" {
         signing_config: *const aws_crt_signing_config_aws,
         on_complete: aws_crt_signing_complete_fn,
         user_data: *mut ::std::os::raw::c_void,
+    ) -> ::std::os::raw::c_int;
+}
+extern "C" {
+    pub fn aws_crt_test_verify_sigv4a_signing(
+        signable: *const aws_crt_signable,
+        config: *const aws_crt_signing_config,
+        expected_canonical_request: *const ::std::os::raw::c_char,
+        signature: *const ::std::os::raw::c_char,
+        ecc_key_pub_x: *const ::std::os::raw::c_char,
+        ecc_key_pub_y: *const ::std::os::raw::c_char,
     ) -> ::std::os::raw::c_int;
 }
 extern "C" {

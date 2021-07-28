@@ -179,8 +179,7 @@ static aws_crt_signable *signable_new(struct aws_signable *signable) {
     return resource;
 }
 
-aws_crt_signable *
-    aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
+aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
     return signable_new(aws_signable_new_http_request(aws_crt_default_allocator(), request->message));
 }
 
