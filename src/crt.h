@@ -28,6 +28,7 @@ typedef struct _aws_crt_resource {
  * NOTE: Whatever structure is passed in here MUST have an aws_crt_resource as its first member
  */
 void *aws_crt_resource_new(void *object);
+void aws_crt_resource_init(aws_crt_resource *resource);
 
 void aws_crt_resource_acquire(aws_crt_resource *resource);
 void aws_crt_resource_release(aws_crt_resource *resource);

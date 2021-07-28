@@ -128,9 +128,13 @@ static void resource_dtor(void *ptr) {
     aws_crt_mem_release(ptr);
 }
 
+void aws_crt_resource_init(aws_crt_resource *resource) {
+    aws_ref_count_init(&resource->rc, resource, resource_dtor);
+}
+
 void *aws_crt_resource_new(void *object) {
     aws_crt_resource *resource = object;
-    aws_ref_count_init(&resource->rc, resource, resource_dtor);
+    aws_crt_resource_init(resource);
     return object;
 }
 

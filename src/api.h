@@ -286,6 +286,8 @@ AWS_CRT_API void aws_crt_credentials_provider_sts_web_identity_options_release(
 AWS_CRT_API aws_crt_credentials_provider *aws_crt_credentials_provider_sts_web_identity_new(
     const aws_crt_credentials_provider_sts_web_identity_options *options);
 
+typedef struct _aws_crt_signing_config aws_crt_signing_config;
+
 /* aws_signing_config_aws */
 typedef struct _aws_crt_signing_config_aws aws_crt_signing_config_aws;
 typedef enum aws_crt_signing_algorithm {
@@ -356,7 +358,7 @@ AWS_CRT_API void aws_crt_signing_config_aws_set_should_sign_header_fn(
 AWS_CRT_API _Bool aws_crt_signing_config_aws_validate(aws_crt_signing_config_aws *signing_config);
 
 /* aws_signable */
-typedef struct aws_signable aws_crt_signable;
+typedef struct _aws_crt_signable aws_crt_signable;
 AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *http_request);
 AWS_CRT_API aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
@@ -381,6 +383,15 @@ AWS_CRT_API int aws_crt_sign_request_aws(
     const aws_crt_signing_config_aws *signing_config,
     aws_crt_signing_complete_fn *on_complete,
     void *user_data);
+
+/* testing only validation of SigV4A signing parameters */
+AWS_CRT_API int aws_crt_test_verify_sigv4a_signing(
+    const aws_crt_signable *signable,
+    const aws_crt_signing_config *config,
+    const char *expected_canonical_request,
+    const char *signature,
+    const char *ecc_key_pub_x,
+    const char *ecc_key_pub_y);
 
 /* aws_checksums */
 AWS_CRT_API uint32_t aws_crt_crc32(const uint8_t *input, size_t length, uint32_t previous);
