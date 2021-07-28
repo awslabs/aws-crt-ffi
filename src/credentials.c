@@ -49,13 +49,18 @@ void aws_crt_credentials_options_set_expiration_timepoint_seconds(
 
 aws_crt_credentials *aws_crt_credentials_new(const aws_crt_credentials_options *options) {
     struct aws_allocator *allocator = aws_crt_default_allocator();
-    aws_crt_credentials *creds = aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_credentials)));
-    creds->credentials = aws_credentials_new(
+    struct aws_credentials *credentials = aws_credentials_new(
         allocator,
         aws_byte_cursor_from_buf(&options->access_key_id),
         aws_byte_cursor_from_buf(&options->secret_access_key),
         aws_byte_cursor_from_buf(&options->session_token),
         options->expiration_timepoint_seconds);
+    if (!credentials) {
+        return NULL;
+    }
+
+    aws_crt_credentials *creds = aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_credentials)));
+    creds->credentials = credentials;
     return creds;
 }
 
