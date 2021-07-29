@@ -13,8 +13,15 @@
 #include "http.h"
 #include "input_stream.h"
 
-struct _aws_crt_signing_config_aws {
+/* Use the same casting mechanism from auth, always put the signing_config_xxx struct right after this one
+ * in the derived structs, and casting will work
+ */
+struct _aws_crt_signing_config {
     aws_crt_resource resource;
+};
+
+struct _aws_crt_signing_config_aws {
+    aws_crt_signing_config crt_base;
     struct aws_signing_config_aws config;
     aws_crt_should_sign_header_fn *should_sign_header;
     void *should_sign_header_user_data;
@@ -23,9 +30,23 @@ struct _aws_crt_signing_config_aws {
     struct aws_byte_buf signed_body_value;
 };
 
+/* base should always be the first thing after the resource member */
+static struct aws_signing_config_base *signing_config_base(const aws_crt_signing_config *signing_config) {
+    return (void *)(((char *)signing_config) + sizeof(aws_crt_resource));
+}
+
+static void *signing_config_downcast(const aws_crt_signing_config *signing_config, enum aws_signing_config_type type) {
+    struct aws_signing_config_base *base = signing_config_base(signing_config);
+    AWS_FATAL_ASSERT(base->config_type == type);
+    return base;
+}
+
+static enum aws_signing_config_type signing_config_type(const aws_crt_signing_config *signing_config) {
+    return signing_config_base(signing_config)->config_type;
+}
+
 aws_crt_signing_config_aws *aws_crt_signing_config_aws_new(void) {
-    aws_crt_signing_config_aws *signing_config =
-        aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_signing_config_aws)));
+    aws_crt_signing_config_aws *signing_config = aws_crt_resource_new(sizeof(aws_crt_signing_config_aws));
     signing_config->config.config_type = AWS_SIGNING_CONFIG_AWS;
     return signing_config;
 }
@@ -34,7 +55,7 @@ void aws_crt_signing_config_aws_release(aws_crt_signing_config_aws *signing_conf
     aws_byte_buf_clean_up(&signing_config->region);
     aws_byte_buf_clean_up(&signing_config->service);
     aws_byte_buf_clean_up_secure(&signing_config->signed_body_value);
-    aws_crt_resource_release(&signing_config->resource);
+    aws_crt_resource_release(&signing_config->crt_base.resource);
 }
 
 void aws_crt_signing_config_aws_set_algorithm(
@@ -143,29 +164,44 @@ _Bool aws_crt_signing_config_aws_validate(aws_crt_signing_config_aws *signing_co
     return aws_validate_aws_signing_config_aws(&signing_config->config) == AWS_OP_SUCCESS;
 }
 
+struct _aws_crt_signable {
+    aws_crt_resource resource;
+    struct aws_signable *signable;
+};
+
+static aws_crt_signable *signable_new(struct aws_signable *signable) {
+    if (!signable) {
+        return NULL;
+    }
+    aws_crt_signable *resource = aws_crt_resource_new(sizeof(aws_crt_signable));
+    resource->signable = signable;
+    return resource;
+}
+
 aws_crt_signable *aws_crt_signable_new_from_http_request(const aws_crt_http_message *request) {
-    return aws_signable_new_http_request(aws_crt_default_allocator(), request->message);
+    return signable_new(aws_signable_new_http_request(aws_crt_default_allocator(), request->message));
 }
 
 aws_crt_signable *aws_crt_signable_new_from_chunk(
     aws_crt_input_stream *chunk_stream,
     const uint8_t *previous_signature,
     size_t previous_signature_length) {
-    return aws_signable_new_chunk(
+    return signable_new(aws_signable_new_chunk(
         aws_crt_default_allocator(),
         &chunk_stream->stream,
-        aws_byte_cursor_from_array(previous_signature, previous_signature_length));
+        aws_byte_cursor_from_array(previous_signature, previous_signature_length)));
 }
 
 aws_crt_signable *aws_crt_signable_new_from_canonical_request(
     const uint8_t *canonical_request,
     size_t canonical_request_length) {
-    return aws_signable_new_canonical_request(
-        aws_crt_default_allocator(), aws_byte_cursor_from_array(canonical_request, canonical_request_length));
+    return signable_new(aws_signable_new_canonical_request(
+        aws_crt_default_allocator(), aws_byte_cursor_from_array(canonical_request, canonical_request_length)));
 }
 
 void aws_crt_signable_release(aws_crt_signable *signable) {
-    aws_signable_destroy(signable);
+    aws_signable_destroy(signable->signable);
+    aws_crt_resource_release(&signable->resource);
 }
 
 int aws_crt_signing_result_apply_to_http_request(const aws_crt_signing_result *result, aws_crt_http_message *request) {
@@ -184,8 +220,29 @@ int aws_crt_sign_request_aws(
     void *user_data) {
     return aws_sign_request_aws(
         aws_crt_default_allocator(),
-        signable,
+        signable->signable,
         (struct aws_signing_config_base *)&signing_config->config,
         on_complete,
         user_data);
+}
+
+int aws_crt_test_verify_sigv4a_signing(
+    const aws_crt_signable *signable,
+    const aws_crt_signing_config *config,
+    const char *expected_canonical_request,
+    const char *signature,
+    const char *ecc_key_pub_x,
+    const char *ecc_key_pub_y) {
+
+    AWS_FATAL_ASSERT(signing_config_type(config) == AWS_SIGNING_CONFIG_AWS);
+    struct aws_signing_config_base *config_base = signing_config_downcast(config, AWS_SIGNING_CONFIG_AWS);
+
+    return aws_verify_sigv4a_signing(
+        aws_crt_default_allocator(),
+        signable->signable,
+        config_base,
+        aws_byte_cursor_from_c_str(expected_canonical_request),
+        aws_byte_cursor_from_c_str(signature),
+        aws_byte_cursor_from_c_str(ecc_key_pub_x),
+        aws_byte_cursor_from_c_str(ecc_key_pub_y));
 }

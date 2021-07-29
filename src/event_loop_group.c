@@ -17,7 +17,7 @@ struct _aws_crt_event_loop_group {
 };
 
 aws_crt_event_loop_group_options *aws_crt_event_loop_group_options_new() {
-    return aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_event_loop_group_options)));
+    return aws_crt_resource_new(sizeof(aws_crt_event_loop_group_options));
 }
 
 void aws_crt_event_loop_group_options_release(aws_crt_event_loop_group_options *options) {
@@ -34,7 +34,7 @@ void elg_shutdown(void *user_data) {
 }
 
 aws_crt_event_loop_group *aws_crt_event_loop_group_new(const aws_crt_event_loop_group_options *options) {
-    aws_crt_event_loop_group *elg = aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_event_loop_group)));
+    aws_crt_event_loop_group *elg = aws_crt_resource_new(sizeof(aws_crt_event_loop_group));
     struct aws_shutdown_callback_options shutdown_options = {
         .shutdown_callback_fn = elg_shutdown,
         .shutdown_callback_user_data = elg,

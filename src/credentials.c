@@ -7,7 +7,7 @@
 #include "credentials.h"
 
 aws_crt_credentials_options *aws_crt_credentials_options_new() {
-    return aws_crt_resource_new(aws_mem_calloc(aws_crt_default_allocator(), 1, sizeof(aws_crt_credentials_options)));
+    return aws_crt_resource_new(sizeof(aws_crt_credentials_options));
 }
 
 void aws_crt_credentials_options_release(aws_crt_credentials_options *options) {
@@ -59,7 +59,7 @@ aws_crt_credentials *aws_crt_credentials_new(const aws_crt_credentials_options *
         return NULL;
     }
 
-    aws_crt_credentials *creds = aws_crt_resource_new(aws_crt_mem_calloc(1, sizeof(aws_crt_credentials)));
+    aws_crt_credentials *creds = aws_crt_resource_new(sizeof(aws_crt_credentials));
     creds->credentials = credentials;
     return creds;
 }
