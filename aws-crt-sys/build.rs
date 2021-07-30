@@ -51,9 +51,24 @@ fn configure_cmake_for_platform(_: &mut cmake::Config) {
 
 }
 
+fn cmake_bool(flag: bool) -> String {
+    match flag {
+        true => "ON".to_owned(),
+        false => "OFF".to_owned()
+    }
+}
+
+fn env_to_bool(env_var: &str) -> bool {
+    match env_var.to_ascii_lowercase().as_str() {
+        "1" | "true" | "on" | "yes" => true,
+        _ => false
+    }
+}
+
 fn compile_aws_crt_ffi() {
     let profile = env::var("PROFILE").unwrap();
     let out_dir = env::var("OUT_DIR").unwrap();
+    let use_openssl = env_to_bool(&env::var("USE_OPENSSL").unwrap_or("false".to_owned()));
 
     let cmake_build_type = match profile.as_str() {
         "debug" => "Debug",
@@ -64,7 +79,8 @@ fn compile_aws_crt_ffi() {
     cmake_config
         .profile(cmake_build_type)
         .define("CMAKE_INSTALL_LIBDIR", "lib")
-        .define("BUILD_SHARED_LIBS", "OFF");
+        .define("BUILD_SHARED_LIBS", "OFF")
+        .define("USE_OPENSSL", cmake_bool(use_openssl));
 
     configure_cmake_for_platform(&mut cmake_config);
     cmake_config.build();
@@ -112,6 +128,7 @@ fn main() {
     println!("cargo:rerun-if-changed=../src/api.h");
     println!("cargo:rerun-if-env-changed=CC");
     println!("cargo:rerun-if-env-changed=CFLAGS");
+    println!("cargo:rerun-if-env-changed=USE_OPENSSL");
 
     compile_aws_crt_ffi();
     generate_bindings();

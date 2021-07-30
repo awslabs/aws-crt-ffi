@@ -83,6 +83,10 @@ jobs:
 
   rust-tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        openssl: ["0", "1"]
+
     steps:
     - uses: actions/checkout@v2
       with:
@@ -95,6 +99,7 @@ jobs:
       run: |
         export CC=clang
         export CXX=clang++
+        export USE_OPENSSL=${{matrix.openssl}}
         pushd aws-crt-sys
         cargo build
         cargo test
