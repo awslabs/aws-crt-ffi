@@ -7,7 +7,7 @@ on:
       - '!main'
 
 env:
-  BUILDER_VERSION: v0.8.20
+  BUILDER_VERSION: v0.8.9
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
@@ -23,13 +23,10 @@ jobs:
           - manylinux1-x86
           - manylinux2014-x64
           - manylinux2014-x86
-          - manylinux2014-aarch64
-          - debian-stretch-arm32v7
           - al2-x64
       fail-fast: false
     steps:
-    - name: Install qemu/docker
-      run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
     - name: Build ${{ env.PACKAGE_NAME }}
       run: |
         echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
@@ -89,6 +86,7 @@ jobs:
     strategy:
       matrix:
         openssl: ["0", "1"]
+    name: Rust Tests (USE_OPENSSL=${{matrix.openssl}})
 
     steps:
     - uses: actions/checkout@v2
