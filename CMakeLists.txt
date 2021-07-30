@@ -59,7 +59,7 @@ if (UNIX AND NOT APPLE)
         # Allow dynamic/system version of libcrypto to be found/used
         # Find it here, instead of letting s2n or CAL do the looking
         set(BUILD_SHARED_LIBS ON)
-        find_package(crypto REQUIRED)
+        find_package(LibCrypto REQUIRED)
         set(BUILD_SHARED_LIBS OFF)
     endif()
     add_subdirectory(crt/s2n)
