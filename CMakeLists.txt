@@ -45,9 +45,8 @@ set(BUILD_SHARED_LIBS OFF)
 # CRT Libraries
 add_subdirectory(crt/aws-c-common)
 if (UNIX AND NOT APPLE)
-    if (CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64 OR
-        CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l)
-    else()
+    if (NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64) AND
+        NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l))
         set(DISABLE_PERL ON)
     endif()
     set(DISABLE_GO ON)
