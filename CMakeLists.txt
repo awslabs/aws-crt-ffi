@@ -56,8 +56,15 @@ if (UNIX AND NOT APPLE)
         add_subdirectory(crt/aws-lc)
     else()
         set(SEARCH_LIBCRYPTO ON)
-        # Allow dynamic/system version of libcrypto to be found/used
-        # Find it here, instead of letting s2n or CAL do the looking
+        # Find the system libcrypto and propagate its location to s2n's find script
+        find_package(OpenSSL REQUIRED)
+        set(LibCrypto_INCLUDE_DIR ${OPENSSL_INCLUDE_DIR})
+        set(LibCrypto_LIBRARY ${OPENSSL_CRYPTO_LIBRARY})
+        if (LibCrypto_LIBRARY MATCHES ".so$")
+            set(LibCrypto_SHARED_LIBRARY ${LibCrypto_LIBRARY})
+        else()
+            set(LibCrypto_STATIC_LIBRARY ${LibCrypto_LIBRARY})
+        endif()
     endif()
     add_subdirectory(crt/s2n)
 endif()
