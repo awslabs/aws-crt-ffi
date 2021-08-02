@@ -51,19 +51,19 @@ aws_crt_allocator *aws_crt_default_allocator(void) {
 void aws_crt_init(void) {
     init_allocator();
     aws_common_library_init(aws_default_allocator());
+    aws_cal_library_init(aws_default_allocator());
     aws_io_library_init(aws_default_allocator());
     aws_compression_library_init(aws_default_allocator());
     aws_http_library_init(aws_default_allocator());
-    aws_cal_library_init(aws_default_allocator());
     aws_auth_library_init(aws_default_allocator());
 }
 
 void aws_crt_clean_up(void) {
     aws_auth_library_clean_up();
-    aws_cal_library_clean_up();
     aws_http_library_clean_up();
     aws_compression_library_clean_up();
     aws_io_library_clean_up();
+    aws_cal_library_clean_up();
     aws_common_library_clean_up();
     shutdown_allocator();
 }
