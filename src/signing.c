@@ -73,7 +73,7 @@ void aws_crt_signing_config_aws_set_signature_type(
 void aws_crt_signing_config_aws_set_credentials_provider(
     aws_crt_signing_config_aws *signing_config,
     aws_crt_credentials_provider *credentials_provider) {
-    signing_config->config.credentials_provider = credentials_provider->provider;
+    signing_config->config.credentials_provider = credentials_provider ? credentials_provider->provider : NULL;
 }
 
 void aws_crt_signing_config_aws_set_region(
