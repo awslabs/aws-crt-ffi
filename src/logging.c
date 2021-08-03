@@ -11,7 +11,8 @@
 #include <aws/common/string.h>
 
 static struct aws_log_subject_info s_log_subject_infos[] = {
-    DEFINE_LOG_SUBJECT_INFO(AWS_LS_CRT, "crt", "CRT host language messages"),
+    DEFINE_LOG_SUBJECT_INFO(AWS_LS_CRT_HOST_LANGUAGE, "host-language", "CRT host language messages"),
+    DEFINE_LOG_SUBJECT_INFO(AWS_LS_CRT_FFI, "crt", "CRT FFI library internal messages"),
 };
 
 static struct aws_log_subject_info_list log_subject_list = {
@@ -137,7 +138,7 @@ void aws_crt_log_stop(void) {
 }
 
 void aws_crt_log_message(aws_crt_log_level level, const uint8_t *message, size_t length) {
-    AWS_LOGF((enum aws_log_level)level, AWS_LS_CRT, "%*s", (int)length, message);
+    AWS_LOGF((enum aws_log_level)level, AWS_LS_CRT_HOST_LANGUAGE, "%*s", (int)length, message);
 }
 
 static int crt_log_writer_write(struct aws_log_writer *writer, const struct aws_string *output) {

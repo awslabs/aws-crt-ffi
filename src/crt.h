@@ -8,10 +8,22 @@
 /* clang-format off */
 #include <aws/common/common.h> /* must be present so api.h knows about inttypes and allocators */
 #include <aws/common/ref_count.h>
+#include <aws/common/logging.h>
 #include "api.h"
 /* clang-format on */
 
-enum aws_napi_log_subject { AWS_LS_CRT = 0x900 };
+#define AWS_CRT_FFI_PACKAGE_ID 12
+enum aws_crt_ffi_errors {
+    AWS_ERROR_FFI_GENERAL = AWS_ERROR_ENUM_BEGIN_RANGE(AWS_CRT_FFI_PACKAGE_ID),
+    AWS_ERROR_FFI_END_RANGE = AWS_ERROR_ENUM_END_RANGE(AWS_CRT_FFI_PACKAGE_ID),
+};
+
+enum aws_crt_ffi_log_subject {
+    AWS_LS_CRT_HOST_LANGUAGE = AWS_LOG_SUBJECT_BEGIN_RANGE(AWS_CRT_FFI_PACKAGE_ID),
+    AWS_LS_CRT_FFI,
+    AWS_LS_CRT_LAST = AWS_LOG_SUBJECT_END_RANGE(AWS_CRT_FFI_PACKAGE_ID),
+};
+
 void aws_crt_log_init(void);
 
 /**
