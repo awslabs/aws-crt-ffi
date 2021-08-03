@@ -78,7 +78,11 @@ extern "C" {
     pub fn aws_crt_reset_error();
 }
 pub type aws_crt_log_callback = ::std::option::Option<
-    unsafe extern "C" fn(message: *const ::std::os::raw::c_char, length: usize),
+    unsafe extern "C" fn(
+        message: *const ::std::os::raw::c_char,
+        length: usize,
+        user_data: *mut ::std::os::raw::c_void,
+    ),
 >;
 extern "C" {
     pub fn aws_crt_log_to_stdout();
@@ -87,7 +91,10 @@ extern "C" {
     pub fn aws_crt_log_to_stderr();
 }
 extern "C" {
-    pub fn aws_crt_log_to_callback(callback: *mut aws_crt_log_callback);
+    pub fn aws_crt_log_to_callback(
+        callback: *mut aws_crt_log_callback,
+        user_data: *mut ::std::os::raw::c_void,
+    );
 }
 extern "C" {
     pub fn aws_crt_log_to_file(filename: *const ::std::os::raw::c_char);

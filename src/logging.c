@@ -25,7 +25,8 @@ static struct logger_impl {
     struct aws_log_channel *channel;
     struct aws_log_formatter *formatter;
     struct aws_log_writer writer;
-    void (*log_write)(const char *, size_t);
+    aws_crt_log_callback log_write;
+    void *user_data;
 } crt_logger_impl;
 
 static enum aws_log_level crt_logger_get_level(struct aws_logger *logger, aws_log_subject_t ignored) {
@@ -134,7 +135,7 @@ void aws_crt_log_message(aws_crt_log_level level, const uint8_t *message, size_t
 
 static int crt_log_writer_write(struct aws_log_writer *writer, const struct aws_string *output) {
     struct logger_impl *impl = writer->impl;
-    impl->log_write((const char *)aws_string_bytes(output), output->len);
+    impl->log_write((const char *)aws_string_bytes(output), output->len, impl->user_data);
     return AWS_OP_SUCCESS;
 }
 
@@ -149,7 +150,7 @@ static struct aws_log_writer_vtable crt_log_writer_vtable = {
     .clean_up = crt_log_writer_clean_up,
 };
 
-void aws_crt_log_to_callback(aws_crt_log_callback *callback) {
+void aws_crt_log_to_callback(aws_crt_log_callback *callback, void *user_data) {
     crt_logger_impl.channel = aws_mem_calloc(aws_default_allocator(), 1, sizeof(struct aws_logger_pipeline));
     if (crt_logger_impl.channel == NULL) {
         goto cleanup;
@@ -165,6 +166,7 @@ void aws_crt_log_to_callback(aws_crt_log_callback *callback) {
     }
 
     *(void **)(&crt_logger_impl.log_write) = callback;
+    crt_logger_impl.user_data = user_data;
     crt_logger_impl.writer.vtable = &crt_log_writer_vtable;
     crt_logger_impl.writer.allocator = aws_default_allocator();
     crt_logger_impl.writer.impl = &crt_logger_impl;

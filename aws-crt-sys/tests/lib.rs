@@ -33,22 +33,24 @@ mod tests {
     }
 
     use aws_crt_sys::*;
+    use std::os::raw::c_void;
 
     #[test]
     fn test_crt_bootstrapping() {
         with_crt!({});
     }
 
-    pub unsafe extern "C" fn test_log_callback(msg: *const i8, len: usize) {
+    pub unsafe extern "C" fn test_log_callback(msg: *const i8, len: usize, user_data: *mut c_void) {
         let message = String::from_raw_parts(msg as *mut u8, len, len);
         assert!(message.contains("THIS IS A TEST"));
+        assert!(!user_data.is_null())
     }
 
     #[test]
     fn test_crt_logging() {
         with_crt!({
-            aws_crt_log_to_callback(&mut Some(test_log_callback));
             let msg = "THIS IS A TEST";
+            aws_crt_log_to_callback(&mut Some(test_log_callback), msg.as_ptr() as *mut c_void);
             aws_crt_log_message(aws_crt_log_level::AWS_CRT_LOG_INFO, msg.as_ptr(), msg.len());
         });
     }

@@ -61,10 +61,10 @@ AWS_CRT_API const char *aws_crt_error_debug_str(int);
 AWS_CRT_API void aws_crt_reset_error(void);
 
 /* logging */
-typedef void (*aws_crt_log_callback)(const char *message, size_t length);
+typedef void (*aws_crt_log_callback)(const char *message, size_t length, void *user_data);
 AWS_CRT_API void aws_crt_log_to_stdout(void);
 AWS_CRT_API void aws_crt_log_to_stderr(void);
-AWS_CRT_API void aws_crt_log_to_callback(aws_crt_log_callback *callback);
+AWS_CRT_API void aws_crt_log_to_callback(aws_crt_log_callback *callback, void *user_data);
 AWS_CRT_API void aws_crt_log_to_file(const char *filename);
 
 typedef enum _aws_crt_log_level {
