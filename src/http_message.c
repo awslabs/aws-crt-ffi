@@ -106,7 +106,7 @@ bad_format:
 }
 
 void aws_crt_http_message_set_body_stream(aws_crt_http_message *message, aws_crt_input_stream *body_stream) {
-    aws_http_message_set_body_stream(message->message, &body_stream->stream);
+    aws_http_message_set_body_stream(message->message, body_stream ? &body_stream->stream : NULL);
 }
 
 void aws_crt_http_message_release(aws_crt_http_message *message) {
