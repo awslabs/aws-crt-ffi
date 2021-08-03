@@ -183,7 +183,7 @@ void aws_crt_log_to_callback(aws_crt_log_callback *callback, void *user_data) {
     crt_logger_impl.writer.allocator = aws_default_allocator();
     crt_logger_impl.writer.impl = &crt_logger_impl;
 
-    if (aws_log_channel_init_background(crt_logger_impl.channel, aws_default_allocator(), &crt_logger_impl.writer)) {
+    if (aws_log_channel_init_foreground(crt_logger_impl.channel, aws_default_allocator(), &crt_logger_impl.writer)) {
         goto cleanup;
     }
 
