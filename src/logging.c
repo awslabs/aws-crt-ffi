@@ -129,6 +129,13 @@ void aws_crt_log_to_file(const char *filename) {
     aws_logger_init_standard(&crt_logger, aws_default_allocator(), &options);
 }
 
+void aws_crt_log_stop(void) {
+    if (aws_crt_log_installed()) {
+        aws_logger_set(NULL);
+        crt_logger_clean_up(&crt_logger);
+    }
+}
+
 void aws_crt_log_message(aws_crt_log_level level, const uint8_t *message, size_t length) {
     AWS_LOGF((enum aws_log_level)level, AWS_LS_CRT, "%*s", (int)length, message);
 }
@@ -151,6 +158,11 @@ static struct aws_log_writer_vtable crt_log_writer_vtable = {
 };
 
 void aws_crt_log_to_callback(aws_crt_log_callback *callback, void *user_data) {
+    if (callback == NULL) {
+        aws_crt_log_stop();
+        return;
+    }
+
     crt_logger_impl.channel = aws_mem_calloc(aws_default_allocator(), 1, sizeof(struct aws_logger_pipeline));
     if (crt_logger_impl.channel == NULL) {
         goto cleanup;

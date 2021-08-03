@@ -99,6 +99,9 @@ extern "C" {
 extern "C" {
     pub fn aws_crt_log_to_file(filename: *const ::std::os::raw::c_char);
 }
+extern "C" {
+    pub fn aws_crt_log_stop();
+}
 impl _aws_crt_log_level {
     pub const AWS_CRT_LOG_NONE: _aws_crt_log_level = _aws_crt_log_level(0);
 }

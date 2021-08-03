@@ -66,6 +66,7 @@ AWS_CRT_API void aws_crt_log_to_stdout(void);
 AWS_CRT_API void aws_crt_log_to_stderr(void);
 AWS_CRT_API void aws_crt_log_to_callback(aws_crt_log_callback *callback, void *user_data);
 AWS_CRT_API void aws_crt_log_to_file(const char *filename);
+AWS_CRT_API void aws_crt_log_stop(void);
 
 typedef enum _aws_crt_log_level {
     AWS_CRT_LOG_NONE = 0,
