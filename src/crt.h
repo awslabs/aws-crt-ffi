@@ -12,6 +12,7 @@
 /* clang-format on */
 
 enum aws_napi_log_subject { AWS_LS_CRT = 0x900 };
+void aws_crt_log_init(void);
 
 /**
  * Every object that can be vended externally (into a consuming library/language) should
