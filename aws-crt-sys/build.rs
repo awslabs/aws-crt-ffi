@@ -35,7 +35,7 @@ fn configure_link_for_platform() {
 fn configure_cmake_for_platform(cmake_config: &mut cmake::Config) {
     cmake_config.define(
         "CMAKE_OSX_SYSROOT",
-        "PATH=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
     );
 }
 

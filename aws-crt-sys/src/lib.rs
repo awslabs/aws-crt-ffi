@@ -77,6 +77,62 @@ extern "C" {
 extern "C" {
     pub fn aws_crt_reset_error();
 }
+pub type aws_crt_log_callback = ::std::option::Option<
+    unsafe extern "C" fn(
+        message: *const ::std::os::raw::c_char,
+        length: usize,
+        user_data: *mut ::std::os::raw::c_void,
+    ),
+>;
+extern "C" {
+    pub fn aws_crt_log_to_stdout();
+}
+extern "C" {
+    pub fn aws_crt_log_to_stderr();
+}
+extern "C" {
+    pub fn aws_crt_log_to_callback(
+        callback: *mut aws_crt_log_callback,
+        user_data: *mut ::std::os::raw::c_void,
+    );
+}
+extern "C" {
+    pub fn aws_crt_log_to_file(filename: *const ::std::os::raw::c_char);
+}
+extern "C" {
+    pub fn aws_crt_log_stop();
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_NONE: _aws_crt_log_level = _aws_crt_log_level(0);
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_FATAL: _aws_crt_log_level = _aws_crt_log_level(1);
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_ERROR: _aws_crt_log_level = _aws_crt_log_level(2);
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_WARN: _aws_crt_log_level = _aws_crt_log_level(3);
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_INFO: _aws_crt_log_level = _aws_crt_log_level(4);
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_DEBUG: _aws_crt_log_level = _aws_crt_log_level(5);
+}
+impl _aws_crt_log_level {
+    pub const AWS_CRT_LOG_TRACE: _aws_crt_log_level = _aws_crt_log_level(6);
+}
+#[repr(transparent)]
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq)]
+pub struct _aws_crt_log_level(pub ::std::os::raw::c_uint);
+pub use self::_aws_crt_log_level as aws_crt_log_level;
+extern "C" {
+    pub fn aws_crt_log_set_level(log_level: aws_crt_log_level);
+}
+extern "C" {
+    pub fn aws_crt_log_message(level: aws_crt_log_level, message: *const u8, length: usize);
+}
 extern "C" {
     pub fn aws_crt_thread_join_all(timeout_ns: u64) -> ::std::os::raw::c_int;
 }

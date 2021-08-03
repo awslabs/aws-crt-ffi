@@ -56,6 +56,8 @@ void aws_crt_init(void) {
     aws_compression_library_init(aws_default_allocator());
     aws_http_library_init(aws_default_allocator());
     aws_auth_library_init(aws_default_allocator());
+
+    aws_crt_log_init();
 }
 
 void aws_crt_clean_up(void) {
