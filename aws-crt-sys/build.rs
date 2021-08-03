@@ -64,7 +64,8 @@ fn compile_aws_crt_ffi() {
     cmake_config
         .profile(cmake_build_type)
         .define("CMAKE_INSTALL_LIBDIR", "lib")
-        .define("BUILD_SHARED_LIBS", "OFF");
+        .define("BUILD_SHARED_LIBS", "OFF")
+        .define("USE_OPENSSL", env::var("USE_OPENSSL").unwrap_or("false".to_owned()));
 
     configure_cmake_for_platform(&mut cmake_config);
     cmake_config.build();
@@ -112,6 +113,7 @@ fn main() {
     println!("cargo:rerun-if-changed=../src/api.h");
     println!("cargo:rerun-if-env-changed=CC");
     println!("cargo:rerun-if-env-changed=CFLAGS");
+    println!("cargo:rerun-if-env-changed=USE_OPENSSL");
 
     compile_aws_crt_ffi();
     generate_bindings();
