@@ -39,6 +39,20 @@ mod tests {
         with_crt!({});
     }
 
+    pub unsafe extern "C" fn test_log_callback(msg: *const i8, len: usize) {
+        let message = String::from_raw_parts(msg as *mut u8, len, len);
+        assert!(message.contains("THIS IS A TEST"));
+    }
+
+    #[test]
+    fn test_crt_logging() {
+        with_crt!({
+            aws_crt_log_to_callback(&mut Some(test_log_callback));
+            let msg = "THIS IS A TEST";
+            aws_crt_log_message(aws_crt_log_level::AWS_CRT_LOG_INFO, msg.as_ptr(), msg.len());
+        });
+    }
+
     #[test]
     fn test_elg_lifetime() {
         with_crt!({

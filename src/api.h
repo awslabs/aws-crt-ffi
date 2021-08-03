@@ -60,6 +60,25 @@ AWS_CRT_API const char *aws_crt_error_name(int);
 AWS_CRT_API const char *aws_crt_error_debug_str(int);
 AWS_CRT_API void aws_crt_reset_error(void);
 
+/* logging */
+typedef void (*aws_crt_log_callback)(const char *message, size_t length);
+AWS_CRT_API void aws_crt_log_to_stdout(void);
+AWS_CRT_API void aws_crt_log_to_stderr(void);
+AWS_CRT_API void aws_crt_log_to_callback(aws_crt_log_callback *callback);
+AWS_CRT_API void aws_crt_log_to_file(const char *filename);
+
+typedef enum _aws_crt_log_level {
+    AWS_CRT_LOG_NONE = 0,
+    AWS_CRT_LOG_FATAL = 1,
+    AWS_CRT_LOG_ERROR = 2,
+    AWS_CRT_LOG_WARN = 3,
+    AWS_CRT_LOG_INFO = 4,
+    AWS_CRT_LOG_DEBUG = 5,
+    AWS_CRT_LOG_TRACE = 6,
+} aws_crt_log_level;
+AWS_CRT_API void aws_crt_log_set_level(aws_crt_log_level log_level);
+AWS_CRT_API void aws_crt_log_message(aws_crt_log_level level, const uint8_t *message, size_t length);
+
 /* a timeout of 0 indicates wait forever */
 AWS_CRT_API int aws_crt_thread_join_all(uint64_t timeout_ns);
 

@@ -56,6 +56,9 @@ void aws_crt_init(void) {
     aws_http_library_init(aws_default_allocator());
     aws_cal_library_init(aws_default_allocator());
     aws_auth_library_init(aws_default_allocator());
+
+    extern void aws_crt_log_init(void);
+    aws_crt_log_init();
 }
 
 void aws_crt_clean_up(void) {

@@ -11,6 +11,8 @@
 #include "api.h"
 /* clang-format on */
 
+enum aws_napi_log_subject { AWS_LS_CRT = 0x900 };
+
 /**
  * Every object that can be vended externally (into a consuming library/language) should
  * have a resource as its first member. This acts as a refcount and a place to store associated
