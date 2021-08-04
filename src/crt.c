@@ -12,6 +12,10 @@
 #include <aws/common/environment.h>
 #include <aws/common/string.h>
 
+#if defined(AWS_OS_POSIX) && !defined(AWS_OS_APPLE)
+#include <s2n.h>
+#endif
+
 struct aws_allocator *s_crt_allocator = NULL;
 
 struct aws_allocator *init_allocator(void) {
@@ -68,6 +72,12 @@ void aws_crt_clean_up(void) {
     aws_cal_library_clean_up();
     aws_common_library_clean_up();
     shutdown_allocator();
+}
+
+void aws_crt_crypto_share(void) {
+#if defined(AWS_OS_POSIX) && !defined(AWS_OS_APPLE)
+    s2n_crypto_disable_init();
+#endif
 }
 
 int aws_crt_test_error(int err) {

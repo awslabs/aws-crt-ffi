@@ -36,6 +36,7 @@
 AWS_CRT_API void aws_crt_init(void);
 AWS_CRT_API void aws_crt_clean_up(void);
 AWS_CRT_API int aws_crt_test_error(int);
+AWS_CRT_API void aws_crt_crypto_share(void);
 
 typedef struct aws_allocator aws_crt_allocator;
 
