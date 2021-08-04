@@ -13,7 +13,7 @@
 #include <aws/common/string.h>
 
 #if defined(AWS_OS_POSIX) && !defined(AWS_OS_APPLE)
-#include <s2n.h>
+#    include <s2n.h>
 #endif
 
 struct aws_allocator *s_crt_allocator = NULL;
