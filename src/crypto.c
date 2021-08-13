@@ -9,6 +9,11 @@ void aws_crt_crypto_share(void) {
     /* Prevent s2n from initializing or de-initializing crypto */
     s2n_crypto_disable_init();
 
+    /*
+     * OpenSSL prior to 1.1.x has idempotency issues with initialization and shutdown.
+     * We initialize it minimally ourselves here, since s2n has been told not to.
+     * Cleanup is handled by OpenSSL's atexit handler
+     */
 #    if !S2N_OPENSSL_VERSION_AT_LEAST(1, 1, 0)
     OPENSSL_add_all_algorithms();
 #    else

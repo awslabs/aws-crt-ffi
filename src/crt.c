@@ -40,6 +40,10 @@ struct aws_allocator *init_allocator(void) {
 void shutdown_allocator(void) {
     /* destroy/unwrap traced allocator, then destroy it */
     s_crt_allocator = aws_mem_tracer_destroy(s_crt_allocator);
+    /* If there are leaks (e.g. OPENSSL), shutting down the allocator will crash */
+    if (aws_small_block_allocator_bytes_active(s_crt_allocator)) {
+        return;
+    }
     aws_small_block_allocator_destroy(s_crt_allocator);
     s_crt_allocator = NULL;
 }
