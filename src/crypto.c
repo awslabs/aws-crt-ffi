@@ -20,13 +20,13 @@ void init_crypto(void) {
     OPENSSL_add_all_algorithms();
 #    else
     OPENSSL_init_crypto(
-        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS | OPENSSL_INIT_NO_ATEXIT, NULL);
+        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS |
+            OPENSSL_INIT_NO_ATEXIT,
+        NULL);
 #    endif
 }
 
-void shutdown_crypto(void) {
-
-}
+void shutdown_crypto(void) {}
 
 #else
 void aws_crt_crypto_share(void) {}
