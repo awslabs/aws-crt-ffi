@@ -1,7 +1,7 @@
 
 #include "crt.h"
 
-#if defined(AWS_OS_POSIX) && !defined(AWS_OS_APPLE)
+#if defined(AWS_OS_LINUX)
 #    include <openssl/crypto.h>
 #    include <s2n.h>
 
