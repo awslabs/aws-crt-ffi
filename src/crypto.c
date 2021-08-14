@@ -20,14 +20,10 @@ void init_crypto(void) {
      * We initialize it minimally ourselves here, since s2n has been told not to.
      * Cleanup is handled by OpenSSL's atexit handler
      */
-#    if AWS_OPENSSL_VERSION_AT_LEAST(1, 1, 1)
+#    if AWS_OPENSSL_VERSION_AT_LEAST(1, 1, 0)
     OPENSSL_init_crypto(
-        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS |
-            OPENSSL_INIT_NO_ATEXIT,
+        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS,
         NULL);
-#    elif AWS_OPENSSL_VERSION_AT_LEAST(1, 1, 0)
-    OPENSSL_init_crypto(
-        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS, NULL);
 #    else
     OpenSSL_add_all_algorithms();
 #    endif
