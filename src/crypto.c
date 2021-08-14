@@ -9,6 +9,7 @@
 void aws_crt_crypto_share(void) {
     /* Prevent s2n from initializing or de-initializing crypto */
     s2n_crypto_disable_init();
+    s2n_disable_atexit();
 }
 
 #    define AWS_OPENSSL_VERSION_AT_LEAST(major, minor, fix)                                                            \
