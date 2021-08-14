@@ -24,8 +24,7 @@ void init_crypto(void) {
     OpenSSL_add_all_algorithms();
 #    else
     OPENSSL_init_crypto(
-        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS |
-            OPENSSL_INIT_NO_ATEXIT,
+        OPENSSL_INIT_LOAD_CRYPTO_STRINGS | OPENSSL_INIT_ADD_ALL_CIPHERS | OPENSSL_INIT_ADD_ALL_DIGESTS,
         NULL);
 #    endif
 }
