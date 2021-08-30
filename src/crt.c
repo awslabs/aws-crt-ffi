@@ -40,6 +40,10 @@ struct aws_allocator *init_allocator(void) {
 void shutdown_allocator(void) {
     /* destroy/unwrap traced allocator, then destroy it */
     s_crt_allocator = aws_mem_tracer_destroy(s_crt_allocator);
+    /* If there are leaks (e.g. OPENSSL), shutting down the allocator will crash */
+    if (aws_small_block_allocator_bytes_active(s_crt_allocator)) {
+        return;
+    }
     aws_small_block_allocator_destroy(s_crt_allocator);
     s_crt_allocator = NULL;
 }
@@ -48,8 +52,12 @@ aws_crt_allocator *aws_crt_default_allocator(void) {
     return s_crt_allocator;
 }
 
+extern void init_crypto(void);
+extern void shutdown_crypto(void);
+
 void aws_crt_init(void) {
     init_allocator();
+    init_crypto();
     aws_common_library_init(aws_default_allocator());
     aws_cal_library_init(aws_default_allocator());
     aws_io_library_init(aws_default_allocator());
@@ -67,6 +75,7 @@ void aws_crt_clean_up(void) {
     aws_io_library_clean_up();
     aws_cal_library_clean_up();
     aws_common_library_clean_up();
+    shutdown_crypto();
     shutdown_allocator();
 }
 
