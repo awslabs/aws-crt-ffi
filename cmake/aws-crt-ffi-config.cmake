@@ -5,6 +5,7 @@ if (UNIX AND NOT APPLE)
 endif()
 
 find_dependency(aws-c-common)
+find_dependency(aws-c-sdkutils)
 find_dependency(aws-c-cal)
 find_dependency(aws-c-io)
 find_dependency(aws-c-http)

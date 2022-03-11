@@ -79,6 +79,7 @@ fn compile_aws_crt_ffi() {
     println!("cargo:rustc-link-lib={}", "aws-c-io");
     println!("cargo:rustc-link-lib={}", "aws-c-cal");
     println!("cargo:rustc-link-lib={}", "aws-checksums");
+    println!("cargo:rustc-link-lib={}", "aws-c-sdkutils");
     println!("cargo:rustc-link-lib={}", "aws-c-common");
     configure_link_for_platform();
 }
