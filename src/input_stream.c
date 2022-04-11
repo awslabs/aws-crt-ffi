@@ -100,7 +100,7 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
 }
 
 void aws_crt_input_stream_release(aws_crt_input_stream *stream) {
-    aws_input_stream_destroy(&stream->stream);
+    aws_input_stream_release(&stream->stream);
     aws_crt_resource_release(&stream->resource);
 }
 
