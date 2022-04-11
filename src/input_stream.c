@@ -73,7 +73,8 @@ static int s_external_input_stream_get_length(struct aws_input_stream *stream, i
     return ext_stream->get_length(ext_stream->user_data, out_length);
 }
 
-static void s_external_input_stream_destroy(struct aws_input_stream *stream) {
+static void s_external_input_stream_destroy(void *user_data) {
+    struct aws_input_stream *stream = (struct aws_input_stream *)user_data;
     aws_external_input_stream *ext_stream = stream->impl;
     ext_stream->destroy(ext_stream->user_data);
 }
@@ -83,7 +84,6 @@ static struct aws_input_stream_vtable s_external_input_stream_vtable = {
     .read = s_external_input_stream_read,
     .get_status = s_external_input_stream_get_status,
     .get_length = s_external_input_stream_get_length,
-    .destroy = s_external_input_stream_destroy,
 };
 
 aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_options *options) {
@@ -92,9 +92,10 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
     AWS_ZERO_STRUCT(stream->impl);
 
     stream->impl = *options;
-    stream->stream.allocator = aws_crt_default_allocator();
     stream->stream.impl = &stream->impl;
     stream->stream.vtable = &s_external_input_stream_vtable;
+
+    aws_ref_count_init(&stream->stream.ref_count, &stream->stream, s_external_input_stream_destroy);
     return stream;
 }
 
