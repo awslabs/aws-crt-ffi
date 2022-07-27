@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 project(aws-crt-ffi C)
 message(STATUS "CMake ${CMAKE_VERSION}")
 
+option(BUILD_DEPS "Builds aws common runtime dependencies as part of build. Turn off if you want to control your dependency chain." ON)
 option(BUILD_SHARED_LIBS "Build shared library for FFI: default: ON" ON)
 
 if (POLICY CMP0069)
@@ -26,56 +27,62 @@ string(REPLACE ";" "${AWS_MODULE_DIR};" AWS_MODULE_PATH "${CMAKE_PREFIX_PATH}${A
 # Append that generated list to the module search path
 list(APPEND CMAKE_MODULE_PATH ${AWS_MODULE_PATH})
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/crt/aws-c-common/cmake")
 
-include(AwsFindPackage)
+if (BUILD_DEPS)
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/crt/aws-c-common/cmake")
 
-set(IN_SOURCE_BUILD ON)
-set(SEARCH_LIBCRYPTO OFF CACHE BOOL "Let S2N use libcrypto from AWS-LC.")
+    include(AwsFindPackage)
 
-# Don't compile tests in subdirectories.
-# Turn off using `option` instead of `set`, or CTest will declare
-# it as an option later and override the existing variable.
-set(BUILD_TESTING OFF)
+    set(IN_SOURCE_BUILD ON)
+    set(SEARCH_LIBCRYPTO OFF CACHE BOOL "Let S2N use libcrypto from AWS-LC.")
 
-# Disable BUILD_SHARED_LIBS for all CRT libs
-set(SHARED_FFI_LIB ${BUILD_SHARED_LIBS})
-set(BUILD_SHARED_LIBS OFF)
+    # Don't compile tests in subdirectories.
+    # Turn off using `option` instead of `set`, or CTest will declare
+    # it as an option later and override the existing variable.
+    set(BUILD_TESTING OFF)
 
-# CRT Libraries
-add_subdirectory(crt/aws-c-common)
-if (UNIX AND NOT APPLE)
-    if (NOT USE_OPENSSL)
-        if (NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64) AND
-            NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l))
-            set(DISABLE_PERL ON)
-        endif()
-        set(DISABLE_GO ON)
-        set(SEARCH_LIBCRYPTO OFF)
-        set(BUILD_LIBSSL OFF)
-        add_subdirectory(crt/aws-lc)
-    else()
-        set(SEARCH_LIBCRYPTO ON)
-        # Find the system libcrypto and propagate its location to s2n's find script
-        find_package(OpenSSL REQUIRED)
-        set(LibCrypto_INCLUDE_DIR ${OPENSSL_INCLUDE_DIR})
-        set(LibCrypto_LIBRARY ${OPENSSL_CRYPTO_LIBRARY})
-        if (LibCrypto_LIBRARY MATCHES ".so$")
-            set(LibCrypto_SHARED_LIBRARY ${LibCrypto_LIBRARY})
+    # Disable BUILD_SHARED_LIBS for all CRT libs
+    set(SHARED_FFI_LIB ${BUILD_SHARED_LIBS})
+    set(BUILD_SHARED_LIBS OFF)
+
+    # CRT Libraries
+    add_subdirectory(crt/aws-c-common)
+    if (UNIX AND NOT APPLE)
+        if (NOT USE_OPENSSL)
+            if (NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64) AND
+                NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l))
+                set(DISABLE_PERL ON)
+            endif()
+            set(DISABLE_GO ON)
+            set(SEARCH_LIBCRYPTO OFF)
+            set(BUILD_LIBSSL OFF)
+            add_subdirectory(crt/aws-lc)
         else()
-            set(LibCrypto_STATIC_LIBRARY ${LibCrypto_LIBRARY})
+            set(SEARCH_LIBCRYPTO ON)
+            # Find the system libcrypto and propagate its location to s2n's find script
+            find_package(OpenSSL REQUIRED)
+            set(LibCrypto_INCLUDE_DIR ${OPENSSL_INCLUDE_DIR})
+            set(LibCrypto_LIBRARY ${OPENSSL_CRYPTO_LIBRARY})
+            if (LibCrypto_LIBRARY MATCHES ".so$")
+                set(LibCrypto_SHARED_LIBRARY ${LibCrypto_LIBRARY})
+            else()
+                set(LibCrypto_STATIC_LIBRARY ${LibCrypto_LIBRARY})
+            endif()
         endif()
+        add_subdirectory(crt/s2n)
     endif()
-    add_subdirectory(crt/s2n)
+    add_subdirectory(crt/aws-c-sdkutils)
+    add_subdirectory(crt/aws-c-io)
+    add_subdirectory(crt/aws-c-cal)
+    add_subdirectory(crt/aws-c-compression)
+    add_subdirectory(crt/aws-c-http)
+    add_subdirectory(crt/aws-c-auth)
+    add_subdirectory(crt/aws-c-event-stream)
+    add_subdirectory(crt/aws-checksums)
+else()
+    include(AwsFindPackage)
+    set(IN_SOURCE_BUILD OFF)
 endif()
-add_subdirectory(crt/aws-c-sdkutils)
-add_subdirectory(crt/aws-c-io)
-add_subdirectory(crt/aws-c-cal)
-add_subdirectory(crt/aws-c-compression)
-add_subdirectory(crt/aws-c-http)
-add_subdirectory(crt/aws-c-auth)
-add_subdirectory(crt/aws-c-event-stream)
-add_subdirectory(crt/aws-checksums)
 
 # Restore BUILD_SHARED_LIBS for this project
 set(BUILD_SHARED_LIBS ${SHARED_FFI_LIB})
