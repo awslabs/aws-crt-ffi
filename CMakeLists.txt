@@ -89,6 +89,7 @@ set(BUILD_SHARED_LIBS ${SHARED_FFI_LIB})
 
 include(AwsCFlags)
 include(AwsSharedLibSetup)
+include(AwsSanitizers)
 
 file(GLOB AWS_CRT_SRC "src/*.h" "src/*.c")
 
