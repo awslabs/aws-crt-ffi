@@ -69,17 +69,17 @@ static int s_external_input_stream_get_status(struct aws_input_stream *stream, s
 }
 
 static int s_external_input_stream_get_length(struct aws_input_stream *stream, int64_t *out_length) {
-   aws_external_input_stream *ext_stream = stream->impl;
-   return ext_stream->get_length(ext_stream->user_data, out_length);
+    aws_external_input_stream *ext_stream = stream->impl;
+    return ext_stream->get_length(ext_stream->user_data, out_length);
 }
 
 static void s_external_input_stream_acquire(struct aws_input_stream *stream) {
-   aws_external_input_stream *options = stream->impl;
+    aws_external_input_stream *options = stream->impl;
     aws_crt_resource_acquire(&options->resource);
 }
 
 static void s_external_input_stream_release(struct aws_input_stream *stream) {
-   aws_external_input_stream *options = stream->impl;
+    aws_external_input_stream *options = stream->impl;
     aws_crt_resource_release(&options->resource);
 }
 
