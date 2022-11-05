@@ -54,26 +54,23 @@ static int s_external_input_stream_seek(
     struct aws_input_stream *stream,
     aws_off_t offset,
     enum aws_stream_seek_basis basis) {
-    aws_crt_input_stream *impl = stream->impl;
-    aws_external_input_stream ext_stream = impl->impl;
-    return ext_stream.seek(ext_stream.user_data, (int64_t)offset, (aws_crt_input_stream_seek_basis)basis);
+    aws_external_input_stream *ext_stream = stream->impl;
+    return ext_stream->seek(ext_stream->user_data, (int64_t)offset, (aws_crt_input_stream_seek_basis)basis);
 }
 
 static int s_external_input_stream_read(struct aws_input_stream *stream, struct aws_byte_buf *dest) {
-    aws_crt_input_stream *impl = stream->impl;
-    aws_external_input_stream ext_stream = impl->impl;
-    return ext_stream.read(ext_stream.user_data, dest->buffer, dest->capacity);
+    aws_external_input_stream *ext_stream = stream->impl;
+    return ext_stream->read(ext_stream->user_data, dest->buffer, dest->capacity);
 }
 
 static int s_external_input_stream_get_status(struct aws_input_stream *stream, struct aws_stream_status *status) {
-    aws_crt_input_stream *impl = stream->impl;
-    aws_external_input_stream ext_stream = impl->impl;
-    return ext_stream.get_status(ext_stream.user_data, (aws_crt_input_stream_status *)status);
+    aws_external_input_stream *ext_stream = stream->impl;
+    return ext_stream->get_status(ext_stream->user_data, (aws_crt_input_stream_status *)status);
 }
 
 static int s_external_input_stream_get_length(struct aws_input_stream *stream, int64_t *out_length) {
-   aws_external_input_stream *options = stream->impl;
-   return options->get_length(options->user_data, out_length);
+   aws_external_input_stream *ext_stream = stream->impl;
+   return ext_stream->get_length(ext_stream->user_data, out_length);
 }
 
 static void s_external_input_stream_acquire(struct aws_input_stream *stream) {
@@ -99,12 +96,7 @@ static void s_external_input_stream_destroy(void *user_data) {
     aws_external_input_stream *ext_stream = user_data;
     ext_stream->destroy(ext_stream->user_data);
 }
-//struct aws_input_stream {
-//    /* point to the impl only set if needed. */
-//    void *impl;
-//    const struct aws_input_stream_vtable *vtable;
-//    struct aws_ref_count ref_count;
-//};
+
 aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_options *options) {
     aws_crt_input_stream *stream = aws_crt_resource_new(sizeof(aws_crt_input_stream));
     AWS_ZERO_STRUCT(stream->stream);
