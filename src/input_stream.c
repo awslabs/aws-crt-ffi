@@ -107,7 +107,7 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
     stream->stream.impl = &stream->impl;
     stream->stream.vtable = &s_external_input_stream_vtable;
 
-    aws_crt_resource_set_user_data(&stream->resource, &stream, s_external_input_stream_destroy);
+    aws_crt_resource_set_user_data(&stream->resource, &stream->impl, s_external_input_stream_destroy);
     return stream;
 }
 
@@ -130,6 +130,5 @@ int aws_crt_input_stream_get_status(aws_crt_input_stream *stream, aws_crt_input_
 }
 
 int aws_crt_input_stream_get_length(aws_crt_input_stream *stream, int64_t *out_length) {
-
    return aws_input_stream_get_length(&stream->stream, out_length);
 }
