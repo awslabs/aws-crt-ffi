@@ -107,6 +107,7 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
     stream->stream.vtable = &s_external_input_stream_vtable;
 
     aws_crt_resource_set_user_data(&stream->resource, &stream->impl, s_external_input_stream_destroy);
+    
     return stream;
 }
 
