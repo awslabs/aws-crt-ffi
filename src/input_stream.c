@@ -102,7 +102,6 @@ aws_crt_input_stream *aws_crt_input_stream_new(const aws_crt_input_stream_option
     AWS_ZERO_STRUCT(stream->stream);
     AWS_ZERO_STRUCT(stream->impl);
 
-
     stream->impl = *options;
     stream->stream.impl = &stream->impl;
     stream->stream.vtable = &s_external_input_stream_vtable;
