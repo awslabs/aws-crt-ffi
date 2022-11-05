@@ -130,5 +130,5 @@ int aws_crt_input_stream_get_status(aws_crt_input_stream *stream, aws_crt_input_
 }
 
 int aws_crt_input_stream_get_length(aws_crt_input_stream *stream, int64_t *out_length) {
-   return aws_input_stream_get_length(&stream->stream, out_length);
+    return aws_input_stream_get_length(&stream->stream, out_length);
 }
