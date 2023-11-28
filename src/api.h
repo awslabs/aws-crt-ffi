@@ -325,6 +325,7 @@ typedef struct _aws_crt_signing_config_aws aws_crt_signing_config_aws;
 typedef enum aws_crt_signing_algorithm {
     AWS_CRT_SIGNING_ALGORITHM_V4 = 0,
     AWS_CRT_SIGNING_ALGORITHM_V4_ASYMMETRIC = 1,
+    AWS_CRT_SIGNING_ALGORITHM_V4_S3EXPRESS = 2,
 } aws_crt_signing_algorithm;
 typedef enum aws_crt_signature_type {
     AWS_CRT_SIGNATURE_TYPE_HTTP_REQUEST_HEADERS,
