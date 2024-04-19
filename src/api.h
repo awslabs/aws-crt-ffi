@@ -37,12 +37,6 @@ AWS_CRT_API void aws_crt_init(void);
 AWS_CRT_API void aws_crt_clean_up(void);
 AWS_CRT_API int aws_crt_test_error(int);
 
-/*
- * Tells CRT and S2N that libcrypto will be shared with other code in this application.
- * Must be called before `aws_crt_init` to have any effect
- */
-AWS_CRT_API void aws_crt_crypto_share(void);
-
 typedef struct aws_allocator aws_crt_allocator;
 
 AWS_CRT_API aws_crt_allocator *aws_crt_default_allocator(void);
