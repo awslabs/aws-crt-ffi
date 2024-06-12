@@ -6,7 +6,7 @@
 
 #include "credentials.h"
 
-aws_crt_credentials_options *aws_crt_credentials_options_new() {
+aws_crt_credentials_options *aws_crt_credentials_options_new(void) {
     return aws_crt_resource_new(sizeof(aws_crt_credentials_options));
 }
 
