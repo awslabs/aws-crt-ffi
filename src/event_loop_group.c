@@ -16,7 +16,7 @@ struct _aws_crt_event_loop_group {
     struct aws_event_loop_group *elg;
 };
 
-aws_crt_event_loop_group_options *aws_crt_event_loop_group_options_new() {
+aws_crt_event_loop_group_options *aws_crt_event_loop_group_options_new(void) {
     return aws_crt_resource_new(sizeof(aws_crt_event_loop_group_options));
 }
 

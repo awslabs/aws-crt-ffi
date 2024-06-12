@@ -65,7 +65,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_static_new(
     return provider;
 }
 
-aws_crt_credentials_provider_environment_options *aws_crt_credentials_provider_environment_options_new() {
+aws_crt_credentials_provider_environment_options *aws_crt_credentials_provider_environment_options_new(void) {
     return aws_crt_resource_new(sizeof(aws_crt_credentials_provider_environment_options));
 }
 
@@ -81,7 +81,7 @@ aws_crt_credentials_provider *aws_crt_credentials_provider_environment_new(
     return provider;
 }
 
-aws_crt_credentials_provider_profile_options *aws_crt_credentials_provider_profile_options_new() {
+aws_crt_credentials_provider_profile_options *aws_crt_credentials_provider_profile_options_new(void) {
     return aws_crt_resource_new(sizeof(aws_crt_credentials_provider_profile_options));
 }
 
