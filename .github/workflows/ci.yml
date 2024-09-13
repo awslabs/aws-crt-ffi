@@ -6,11 +6,11 @@ on:
       - 'main'
 
 env:
-  BUILDER_VERSION: v0.9.66
+  BUILDER_VERSION: v0.8.20
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
-  LINUX_BASE_IMAGE: ubuntu-22-x64
+  LINUX_BASE_IMAGE: ubuntu-16-x64
 
 jobs:
   linux-compat:
@@ -45,8 +45,10 @@ jobs:
         # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
     - name: Build ${{ env.PACKAGE_NAME }}
       run: |
-        aws s3 cp s3://aws-crt-test-stuff/ci/${{ env.BUILDER_VERSION }}/linux-container-ci.sh ./linux-container-ci.sh && chmod a+x ./linux-container-ci.sh
-        ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-ubuntu-18-x64 build -p ${{ env.PACKAGE_NAME }} --compiler=clang-${{ matrix.version }} --spec=downstream
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
+        export DOCKER_IMAGE=docker.pkg.github.com/awslabs/aws-crt-builder/aws-crt-${{ env.LINUX_BASE_IMAGE }}:${{ env.BUILDER_VERSION }}
+        docker pull $DOCKER_IMAGE
+        docker run --env GITHUB_REF $DOCKER_IMAGE --version=${{ env.BUILDER_VERSION  }} build -p ${{ env.PACKAGE_NAME }} --compiler=clang-${{ matrix.version }} --spec=downstream
 
   gcc-compat:
     runs-on: ubuntu-latest
@@ -88,7 +90,7 @@ jobs:
     name: Rust Tests (USE_OPENSSL=${{matrix.openssl}})
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
       with:
         submodules: 'recursive'
     - uses: actions-rs/toolchain@v1
