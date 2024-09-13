@@ -6,7 +6,7 @@ on:
       - 'main'
 
 env:
-  BUILDER_VERSION: v0.8.20
+  BUILDER_VERSION: v0.9.66
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
@@ -90,7 +90,7 @@ jobs:
     name: Rust Tests (USE_OPENSSL=${{matrix.openssl}})
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
     - uses: actions-rs/toolchain@v1
