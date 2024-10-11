@@ -1023,3 +1023,6 @@ extern "C" {
 extern "C" {
     pub fn aws_crt_crc32c(input: *const u8, length: usize, previous: u32) -> u32;
 }
+extern "C" {
+    pub fn aws_crt_crc64nvme(input: *const u8, length: usize, previous: u64) -> u64;
+}

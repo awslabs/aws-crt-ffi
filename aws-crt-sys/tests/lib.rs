@@ -118,6 +118,27 @@ mod tests {
     }
 
     #[test]
+    fn test_crc64nvme_on_zeroes() {
+        with_crt!({
+            let zeroes: Vec<u8> = vec![0; 32];
+            let crc = aws_crt_crc64nvme(zeroes.as_ptr(), zeroes.len(), 0);
+            assert!(crc == 0xCF3473434D4ECF3B);
+        });
+    }
+
+    #[test]
+    fn test_crc64nvme_on_zeroes_bytewise() {
+        with_crt!({
+            let zeroes: Vec<u8> = vec![0; 32];
+            let mut crc = 0;
+            zeroes.iter().for_each(|z| {
+                crc = aws_crt_crc64nvme(z, 1, crc);
+            });
+            assert!(crc == 0xCF3473434D4ECF3B);
+        });
+    }
+
+    #[test]
     fn test_empty_aws_credentials() {
         with_crt!({
             let options = aws_crt_credentials_options_new();

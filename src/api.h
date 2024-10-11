@@ -423,5 +423,6 @@ AWS_CRT_API int aws_crt_test_verify_sigv4a_signing(
 /* aws_checksums */
 AWS_CRT_API uint32_t aws_crt_crc32(const uint8_t *input, size_t length, uint32_t previous);
 AWS_CRT_API uint32_t aws_crt_crc32c(const uint8_t *input, size_t length, uint32_t previous);
+AWS_CRT_API uint64_t aws_crt_crc64nvme(const uint8_t *input, size_t length, uint64_t previous);
 
 #endif /* AWS_CRT_API_H */
