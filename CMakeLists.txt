@@ -48,30 +48,34 @@ if (BUILD_DEPS)
     # CRT Libraries
     add_subdirectory(crt/aws-c-common)
     if (UNIX AND NOT APPLE)
+        include(AwsPrebuildDependency)
         if (NOT USE_OPENSSL)
-            if (NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL aarch64) AND
-                NOT (CMAKE_SYSTEM_PROCESSOR STREQUAL armv7l))
-                set(DISABLE_PERL ON)
-            endif()
+            set(AWSLC_CMAKE_ARGUMENTS
+                -DDISABLE_GO=ON  # Build without using Go, we don't want the extra dependency
+                -DDISABLE_PERL=ON  # Build without using Perl, we don't want the extra dependency
+                -DBUILD_LIBSSL=OFF  # Don't need libssl, only need libcrypto
+                -DBUILD_TESTING=OFF
+            )
             if(CMAKE_C_COMPILER_ID MATCHES "GNU" AND CMAKE_C_COMPILER_VERSION VERSION_LESS "5.0")
-                set(MY_ASSEMBLER_IS_TOO_OLD_FOR_512AVX ON CACHE BOOL "Disable AVX512 on old GCC that not supports it")
+                # Disable AVX512 on old GCC that not supports it.
+                list(APPEND AWSLC_CMAKE_ARGUMENTS -DMY_ASSEMBLER_IS_TOO_OLD_FOR_512AVX=ON)
             endif()
-            set(DISABLE_GO ON)
-            set(SEARCH_LIBCRYPTO OFF)
-            set(BUILD_LIBSSL OFF)
-            add_subdirectory(crt/aws-lc)
-        else()
-            set(SEARCH_LIBCRYPTO ON)
-            # Find the system libcrypto and propagate its location to s2n's find script
-            find_package(OpenSSL REQUIRED)
-            set(LibCrypto_INCLUDE_DIR ${OPENSSL_INCLUDE_DIR})
-            set(LibCrypto_LIBRARY ${OPENSSL_CRYPTO_LIBRARY})
-            if (LibCrypto_LIBRARY MATCHES ".so$")
-                set(LibCrypto_SHARED_LIBRARY ${LibCrypto_LIBRARY})
-            else()
-                set(LibCrypto_STATIC_LIBRARY ${LibCrypto_LIBRARY})
-            endif()
+
+            # s2n-tls uses libcrypto during its configuration, so we need to prebuild aws-lc.
+            aws_prebuild_dependency(
+                DEPENDENCY_NAME AWSLC
+                SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/crt/aws-lc
+                CMAKE_ARGUMENTS ${AWSLC_CMAKE_ARGUMENTS}
+            )
         endif()
+        # prebuild s2n-tls.
+        aws_prebuild_dependency(
+            DEPENDENCY_NAME S2N
+            SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/crt/s2n
+            CMAKE_ARGUMENTS
+                -DUNSAFE_TREAT_WARNINGS_AS_ERRORS=OFF
+                -DBUILD_TESTING=OFF
+        )
         add_subdirectory(crt/s2n)
     endif()
     add_subdirectory(crt/aws-c-sdkutils)
