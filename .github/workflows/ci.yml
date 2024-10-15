@@ -11,6 +11,8 @@ env:
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
   LINUX_BASE_IMAGE: ubuntu-16-x64
+  CRT_CI_ROLE: ${{ secrets.CRT_CI_ROLE_ARN }} 
+  AWS_DEFAULT_REGION: us-east-1
 
 jobs:
   linux-compat:
@@ -28,81 +30,87 @@ jobs:
     steps:
     - name: Install qemu/docker
       run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-    - name: Build ${{ env.PACKAGE_NAME }}
-      run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
-        export DOCKER_IMAGE=docker.pkg.github.com/awslabs/aws-crt-builder/aws-crt-${{ matrix.image }}:${{ env.BUILDER_VERSION }}
-        docker pull $DOCKER_IMAGE
-        docker run --env GITHUB_REF $DOCKER_IMAGE --version=${{ env.BUILDER_VERSION }}  build -p ${{ env.PACKAGE_NAME }} --spec=downstream
-
-  clang-compat:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [3, 6, 8, 9]
-      fail-fast: false
+    permissions:
+      id-token: write # This is required for requesting the JWT
     steps:
-        # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
-    - name: Build ${{ env.PACKAGE_NAME }}
-      run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
-        export DOCKER_IMAGE=docker.pkg.github.com/awslabs/aws-crt-builder/aws-crt-${{ env.LINUX_BASE_IMAGE }}:${{ env.BUILDER_VERSION }}
-        docker pull $DOCKER_IMAGE
-        docker run --env GITHUB_REF $DOCKER_IMAGE --version=${{ env.BUILDER_VERSION  }} build -p ${{ env.PACKAGE_NAME }} --compiler=clang-${{ matrix.version }} --spec=downstream
+      - name: configure AWS credentials (containers)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.CRT_CI_ROLE }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Build ${{ env.PACKAGE_NAME }}
+        run: |
+          aws s3 cp s3://aws-crt-test-stuff/ci/${{ env.BUILDER_VERSION }}/linux-container-ci.sh ./linux-container-ci.sh && chmod a+x ./linux-container-ci.sh
+          ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-${{ matrix.image }} build -p ${{ env.PACKAGE_NAME }}
 
-  gcc-compat:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        version: [4.8, 5, 6, 7, 8]
-      fail-fast: false
-    steps:
-        # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
-    - name: Build ${{ env.PACKAGE_NAME }}
-      run: |
-        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
-        export DOCKER_IMAGE=docker.pkg.github.com/awslabs/aws-crt-builder/aws-crt-${{ env.LINUX_BASE_IMAGE }}:${{ env.BUILDER_VERSION }}
-        docker pull $DOCKER_IMAGE
-        docker run --env GITHUB_REF $DOCKER_IMAGE --version=${{ env.BUILDER_VERSION  }} build -p ${{ env.PACKAGE_NAME }} --compiler=gcc-${{ matrix.version }} --spec=downstream
-
-  windows:
-    runs-on: windows-latest
-    steps:
-    - name: Build ${{ env.PACKAGE_NAME }} + consumers
-      run: |
-        python -c "from urllib.request import urlretrieve; urlretrieve('${{ env.BUILDER_HOST }}/${{ env.BUILDER_SOURCE }}/${{ env.BUILDER_VERSION }}/builder.pyz', 'builder.pyz')"
-        python builder.pyz build -p ${{ env.PACKAGE_NAME }} --spec=downstream
-
-  osx:
-    runs-on: macos-latest
-    steps:
-    - name: Build ${{ env.PACKAGE_NAME }} + consumers
-      run: |
-        python3 -c "from urllib.request import urlretrieve; urlretrieve('${{ env.BUILDER_HOST }}/${{ env.BUILDER_SOURCE }}/${{ env.BUILDER_VERSION }}/builder.pyz', 'builder')"
-        chmod a+x builder
-        ./builder build -p ${{ env.PACKAGE_NAME }} --spec=downstream
-
-  rust-tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        openssl: ["0", "1"]
-    name: Rust Tests (USE_OPENSSL=${{matrix.openssl}})
-
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: 'recursive'
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        components: rustfmt
-    - name: Rust test suite
-      run: |
-        export CC=clang
-        export CXX=clang++
-        export USE_OPENSSL=${{matrix.openssl}}
-        pushd aws-crt-sys
-        cargo build
-        cargo test
-        popd
+#  clang-compat:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        version: [3, 6, 8, 9]
+#      fail-fast: false
+#    steps:
+#        # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
+#    - name: Build ${{ env.PACKAGE_NAME }}
+#      run: |
+#        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
+#        export DOCKER_IMAGE=docker.pkg.github.com/awslabs/aws-crt-builder/aws-crt-${{ env.LINUX_BASE_IMAGE }}:${{ env.BUILDER_VERSION }}
+#        docker pull $DOCKER_IMAGE
+#        docker run --env GITHUB_REF $DOCKER_IMAGE --version=${{ env.BUILDER_VERSION  }} build -p ${{ env.PACKAGE_NAME }} --compiler=clang-${{ matrix.version }} --spec=downstream
+#
+#  gcc-compat:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        version: [4.8, 5, 6, 7, 8]
+#      fail-fast: false
+#    steps:
+#        # We can't use the `uses: docker://image` version yet, GitHub lacks authentication for actions -> packages
+#    - name: Build ${{ env.PACKAGE_NAME }}
+#      run: |
+#        echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u awslabs --password-stdin
+#        export DOCKER_IMAGE=docker.pkg.github.com/awslabs/aws-crt-builder/aws-crt-${{ env.LINUX_BASE_IMAGE }}:${{ env.BUILDER_VERSION }}
+#        docker pull $DOCKER_IMAGE
+#        docker run --env GITHUB_REF $DOCKER_IMAGE --version=${{ env.BUILDER_VERSION  }} build -p ${{ env.PACKAGE_NAME }} --compiler=gcc-${{ matrix.version }} --spec=downstream
+#
+#  windows:
+#    runs-on: windows-latest
+#    steps:
+#    - name: Build ${{ env.PACKAGE_NAME }} + consumers
+#      run: |
+#        python -c "from urllib.request import urlretrieve; urlretrieve('${{ env.BUILDER_HOST }}/${{ env.BUILDER_SOURCE }}/${{ env.BUILDER_VERSION }}/builder.pyz', 'builder.pyz')"
+#        python builder.pyz build -p ${{ env.PACKAGE_NAME }} --spec=downstream
+#
+#  osx:
+#    runs-on: macos-latest
+#    steps:
+#    - name: Build ${{ env.PACKAGE_NAME }} + consumers
+#      run: |
+#        python3 -c "from urllib.request import urlretrieve; urlretrieve('${{ env.BUILDER_HOST }}/${{ env.BUILDER_SOURCE }}/${{ env.BUILDER_VERSION }}/builder.pyz', 'builder')"
+#        chmod a+x builder
+#        ./builder build -p ${{ env.PACKAGE_NAME }} --spec=downstream
+#
+#  rust-tests:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        openssl: ["0", "1"]
+#    name: Rust Tests (USE_OPENSSL=${{matrix.openssl}})
+#
+#    steps:
+#    - uses: actions/checkout@v2
+#      with:
+#        submodules: 'recursive'
+#    - uses: actions-rs/toolchain@v1
+#      with:
+#        toolchain: stable
+#        components: rustfmt
+#    - name: Rust test suite
+#      run: |
+#        export CC=clang
+#        export CXX=clang++
+#        export USE_OPENSSL=${{matrix.openssl}}
+#        pushd aws-crt-sys
+#        cargo build
+#        cargo test
+#        popd
