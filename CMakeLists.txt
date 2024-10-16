@@ -76,7 +76,6 @@ if (BUILD_DEPS)
                 -DUNSAFE_TREAT_WARNINGS_AS_ERRORS=OFF
                 -DBUILD_TESTING=OFF
         )
-        add_subdirectory(crt/s2n)
     endif()
     add_subdirectory(crt/aws-c-sdkutils)
     add_subdirectory(crt/aws-c-io)
