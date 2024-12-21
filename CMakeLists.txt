@@ -5,25 +5,6 @@ message(STATUS "CMake ${CMAKE_VERSION}")
 option(BUILD_DEPS "Builds aws common runtime dependencies as part of build. Turn off if you want to control your dependency chain." ON)
 option(BUILD_SHARED_LIBS "Build shared library for FFI: default: ON" ON)
 
-if (DEFINED CMAKE_PREFIX_PATH)
-    file(TO_CMAKE_PATH "${CMAKE_PREFIX_PATH}" CMAKE_PREFIX_PATH)
-endif()
-
-if(NOT DEFINED CMAKE_INSTALL_LIBDIR)
-    set(CMAKE_INSTALL_LIBDIR "lib")
-endif()
-
-if (UNIX AND NOT APPLE)
-    set(FIND_LIBRARY_USE_LIB64_PATHS true)
-endif()
-
-# This is required in order to append /lib/cmake to each element in CMAKE_PREFIX_PATH
-set(AWS_MODULE_DIR "/${CMAKE_INSTALL_LIBDIR}/cmake")
-string(REPLACE ";" "${AWS_MODULE_DIR};" AWS_MODULE_PATH "${CMAKE_PREFIX_PATH}${AWS_MODULE_DIR}")
-# Append that generated list to the module search path
-list(APPEND CMAKE_MODULE_PATH ${AWS_MODULE_PATH})
-
-
 if (BUILD_DEPS)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/crt/aws-c-common/cmake")
 
@@ -82,6 +63,9 @@ if (BUILD_DEPS)
     add_subdirectory(crt/aws-c-event-stream)
     add_subdirectory(crt/aws-checksums)
 else()
+    # this is required so we can use aws-c-common's CMake modules
+    find_package(aws-c-common REQUIRED)
+
     include(AwsFindPackage)
     set(IN_SOURCE_BUILD OFF)
 endif()
@@ -92,6 +76,7 @@ set(BUILD_SHARED_LIBS ${SHARED_FFI_LIB})
 include(AwsCFlags)
 include(AwsSharedLibSetup)
 include(AwsSanitizers)
+include(GNUInstallDirs)
 
 file(GLOB AWS_CRT_SRC "src/*.h" "src/*.c")
 
@@ -119,5 +104,5 @@ configure_file("cmake/${PROJECT_NAME}-config.cmake"
         @ONLY)
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
-        DESTINATION "${LIBRARY_DIRECTORY}/${PROJECT_NAME}/cmake/"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/"
         COMPONENT Development)
