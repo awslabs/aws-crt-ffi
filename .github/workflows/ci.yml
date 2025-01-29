@@ -11,12 +11,12 @@ env:
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
   LINUX_BASE_IMAGE: ubuntu-18-x64
-  CRT_CI_ROLE: ${{ secrets.CRT_CI_ROLE_ARN }} 
+  CRT_CI_ROLE: ${{ secrets.CRT_CI_ROLE_ARN }}
   AWS_DEFAULT_REGION: us-east-1
 
 jobs:
   linux-compat:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # temporarily downgrade to old ubuntu as 24.04 likes to segfault in the middle of the build for arm build
     strategy:
       matrix:
         image:
