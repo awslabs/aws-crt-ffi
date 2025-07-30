@@ -98,7 +98,7 @@ fn generate_bindings() {
         .raw_line("#![allow(non_snake_case)]")
         .raw_line("#![allow(deref_nullptr)]")
         // Enums will be generated as struct/impl constants
-        .default_enum_style(EnumVariation::NewType {is_bitfield: false})
+        .default_enum_style(EnumVariation::NewType {is_bitfield: false, is_global: true})
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         // Make the generated code actually readable
         .rustfmt_bindings(true)
