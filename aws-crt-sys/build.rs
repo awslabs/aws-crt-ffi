@@ -98,7 +98,7 @@ fn generate_bindings() {
         .raw_line("#![allow(non_snake_case)]")
         .raw_line("#![allow(deref_nullptr)]")
         // Generate enums as Rust enums with associated variants
-        .default_enum_style(EnumVariation::Rust)
+        .default_enum_style(EnumVariation::Rust { non_exhaustive: true })
         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
         // Make the generated code actually readable
         .rustfmt_bindings(true)
