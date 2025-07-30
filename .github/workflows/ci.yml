@@ -6,7 +6,7 @@ on:
       - 'main'
 
 env:
-  BUILDER_VERSION: v0.9.67
+  BUILDER_VERSION: v0.9.82
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
@@ -16,7 +16,7 @@ env:
 
 jobs:
   linux-compat:
-    runs-on: ubuntu-22.04  # temporarily downgrade to old ubuntu as 24.04 likes to segfault in the middle of the build for arm build
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         image:
