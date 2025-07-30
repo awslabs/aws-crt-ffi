@@ -193,7 +193,7 @@ pub struct _aws_crt_input_stream_options {
     _unused: [u8; 0],
 }
 pub type aws_crt_input_stream_options = _aws_crt_input_stream_options;
-#[repr(C, packed)]
+#[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct _aws_crt_input_stream_status {
     pub is_end_of_stream: bool,

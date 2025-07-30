@@ -136,6 +136,7 @@ jobs:
         export CC=clang
         export CXX=clang++
         export USE_OPENSSL=${{matrix.openssl}}
+        export RUST_BACKTRACE=1
         pushd aws-crt-sys
         cargo build
         cargo test
