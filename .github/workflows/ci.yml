@@ -131,12 +131,13 @@ jobs:
       with:
         toolchain: stable
         components: rustfmt
+    - name: Set environment variables
+      run: |
+        echo "CC=clang" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
+        echo "USE_OPENSSL=${{matrix.openssl}}" >> $GITHUB_ENV
     - name: Rust test suite
       run: |
-        export CC=clang
-        export CXX=clang++
-        export USE_OPENSSL=${{matrix.openssl}}
-        export RUST_BACKTRACE=1
         pushd aws-crt-sys
         cargo build
         cargo test
