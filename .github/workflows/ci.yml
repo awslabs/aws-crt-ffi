@@ -6,7 +6,7 @@ on:
       - 'main'
 
 env:
-  BUILDER_VERSION: v0.9.67
+  BUILDER_VERSION: v0.9.80
   BUILDER_SOURCE: releases
   BUILDER_HOST: https://d19elf31gohf1l.cloudfront.net
   PACKAGE_NAME: aws-crt-ffi
@@ -16,7 +16,7 @@ env:
 
 jobs:
   linux-compat:
-    runs-on: ubuntu-22.04  # temporarily downgrade to old ubuntu as 24.04 likes to segfault in the middle of the build for arm build
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         image:
@@ -24,7 +24,6 @@ jobs:
           - manylinux1-x86
           - manylinux2014-x64
           - manylinux2014-x86
-          - manylinux2014-aarch64
           - al2-x64
       fail-fast: false
     permissions:
@@ -32,6 +31,26 @@ jobs:
     steps:
       - name: Install qemu/docker
         run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      - name: configure AWS credentials (containers)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.CRT_CI_ROLE }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Build ${{ env.PACKAGE_NAME }}
+        run: |
+          aws s3 cp s3://aws-crt-test-stuff/ci/${{ env.BUILDER_VERSION }}/linux-container-ci.sh ./linux-container-ci.sh && chmod a+x ./linux-container-ci.sh
+          ./linux-container-ci.sh ${{ env.BUILDER_VERSION }} aws-crt-${{ matrix.image }} build -p ${{ env.PACKAGE_NAME }} --spec=downstream
+
+  linux-compat-arm64:
+    runs-on: ubuntu-24.04-arm
+    strategy:
+      matrix:
+        image:
+          - manylinux2014-aarch64
+      fail-fast: false
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    steps:
       - name: configure AWS credentials (containers)
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -105,18 +124,17 @@ jobs:
     name: Rust Tests (USE_OPENSSL=${{matrix.openssl}})
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: 'recursive'
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        components: rustfmt
+    - uses: dtolnay/rust-toolchain@stable
+    - name: Set environment variables
+      run: |
+        echo "CC=clang" >> $GITHUB_ENV
+        echo "CXX=clang++" >> $GITHUB_ENV
+        echo "USE_OPENSSL=${{matrix.openssl}}" >> $GITHUB_ENV
     - name: Rust test suite
       run: |
-        export CC=clang
-        export CXX=clang++
-        export USE_OPENSSL=${{matrix.openssl}}
         pushd aws-crt-sys
         cargo build
         cargo test
